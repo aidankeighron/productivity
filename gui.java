@@ -1,92 +1,110 @@
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.Scanner;
-import javafx.application.Application;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
+import java.awt.BorderLayout;
+import java.io.*;
+import java.util.*;
+import javax.swing.*;
 
-public class gui extends Application {
+import java.nio.file.Files;
+
+public class gui extends JFrame {
 	
-	ArrayList<CheckBox> checkBoxes = new ArrayList<CheckBox>();
+	static ArrayList<JCheckBox> checkBoxes = new ArrayList<JCheckBox>();
+	static JPanel checkListPannel = new JPanel();
 	static String currentDir = System.getProperty("user.dir");
 	static File checkListFile = new File(currentDir + "\\list.TXT");
+	static JFrame frame = new JFrame("Check List");
 	public static void main(String[] args) {
-		launch(args);
+		start();
+		checkBoxes();
 	}
 	
-	@Override
-	public void start(Stage primaryStage) throws Exception {
-		BorderPane root = new BorderPane();
-		Scene scene = new Scene(root, 450, 250);
-		VBox vbCenter = new VBox();
-		TextField input = new TextField();
-		input.setOnKeyPressed( event -> {
-			if( event.getCode() == KeyCode.ENTER ) {
-				addCheckBox(input.getText(), vbCenter);
-				input.setText("");
-				saveCheckBoxes();
-			}
-		});
-		vbCenter.getChildren().add(input);
-		
-		HBox hbButtons = new HBox();
-		Button reset = new Button("Reset");
-		reset.setOnAction( event  -> {
-			removeCheckBoxes(vbCenter);
-		});
-		hbButtons.getChildren().add(reset);
-		hbButtons.setAlignment(Pos.CENTER_LEFT);
-		
-		loadCheckBoxes(vbCenter);
-		
-		root.setPadding(new Insets(20));
-		root.setCenter(vbCenter);
-		root.setBottom(hbButtons);
-		primaryStage.setTitle("Checklist");
-		primaryStage.setScene(scene);
-		primaryStage.show();
-	}
-	
-	public void addCheckBox(String name, VBox vbCenter) {
-		CheckBox checkBox = new CheckBox(name);
-		checkBoxes.add(checkBox);
-		vbCenter.getChildren().add(checkBox);
-	}
-	
-	public void removeCheckBoxes(VBox vbCenter) {
-		for (CheckBox checkBox : checkBoxes) {
-			vbCenter.getChildren().remove(checkBox);			
+	public static void start() {
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		checkBoxes = new ArrayList<CheckBox>();
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setSize(400, 300);
+	}
+	
+	public static void checkBoxes() {
+		JTextField input = new JTextField();
+		input.addActionListener(e -> {
+			addCheckBox(input.getText());
+			input.setText("");
+			saveCheckBoxes();
+		});
+		
+		JButton reset = new JButton("Reset");
+		reset.addActionListener( e -> removeCheckBoxes());
+		
+		JButton clear = new JButton("Clear Selected");
+		clear.addActionListener(e -> clearSelected());
+
+		JPanel buttonPannel = new JPanel();
+		buttonPannel.add(reset);
+		buttonPannel.add(clear);
+		frame.add(input, BorderLayout.NORTH);
+		frame.add(buttonPannel, BorderLayout.SOUTH);
+		frame.add(checkListPannel, BorderLayout.CENTER);
+		loadCheckBoxes();
+		checkListPannel.setVisible(true);
+		frame.setVisible(true);
+	}
+
+	public static void add(JCheckBox box) { //Good
+		checkListPannel.add(box);
+		saveCheckBoxes();
+		frame.repaint();
+		frame.setVisible(true);
+	}
+	
+	public static void addCheckBox(String name) { //Good
+		JCheckBox checkBox = new JCheckBox(name);
+		checkBoxes.add(checkBox);
+		add(checkBox);
+	}
+
+	public static void clearSelected() { //Good
+		for (int i = checkBoxes.size() - 1; i >= 0; i--) {
+			if (checkBoxes.get(i).isSelected()) {
+				checkListPannel.remove(checkBoxes.get(i));
+				checkBoxes.remove(checkBoxes.get(i));
+			}
+		}
+		saveCheckBoxes();
+		frame.repaint();
+		frame.setVisible(true);
+	}
+	
+	public static void removeCheckBoxes() { //Good
+		for (JCheckBox checkBox : checkBoxes) {
+			checkListPannel.remove(checkBox);
+		}
+		checkBoxes = new ArrayList<JCheckBox>();
 		try {
 			clearTheFile(checkListFile);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		checkListPannel.repaint();
+		frame.repaint();
 	}
-
-	public static void clearTheFile(File file) throws IOException {
-        FileWriter fwOb = new FileWriter(file); 
-        PrintWriter pwOb = new PrintWriter(fwOb, false);
-        pwOb.flush();
-        pwOb.close();
-        fwOb.close();
-    }
 	
-	public void saveCheckBoxes() {
+	public static void clearTheFile(File file) throws IOException { //Good
+		FileWriter fwOb = new FileWriter(file); 
+		PrintWriter pwOb = new PrintWriter(fwOb, false);
+		pwOb.flush();
+		pwOb.close();
+		fwOb.close();
+	}
+	
+	public static void saveCheckBoxes() { //Good
+		try {
+			clearTheFile(checkListFile);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		String[] name = new String[checkBoxes.size()];
 		for (int i = 0; i < checkBoxes.size(); i++) {
 			name[i] = checkBoxes.get(i).getText();
@@ -94,17 +112,16 @@ public class gui extends Application {
 		writeData(name, checkListFile);
 	}
 	
-	public void loadCheckBoxes(VBox vb) {
+	public static void loadCheckBoxes() { //Good
 		String[] data = readData(checkListFile);
 		for (String s : data) {
-			CheckBox checkBox = new CheckBox(s);
+			JCheckBox checkBox = new JCheckBox(s);
+			add(checkBox);
 			checkBoxes.add(checkBox);
-			vb.getChildren().add(checkBox);
 		}
-		
 	}
-	
-	public String[] readData(File file) {
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	public static String[] readData(File file) {
 		String[] result = new String[0];
 		try {
 			result = new String[(int)Files.lines(file.toPath()).count()];
@@ -122,7 +139,7 @@ public class gui extends Application {
 		return result;
 	}
 	
-	public void writeData(String data, File file) {
+	public static void writeData(String data, File file) {
 		try  {
 			FileWriter writer = new FileWriter(file);
 			writer.write(data);
@@ -133,7 +150,7 @@ public class gui extends Application {
 		}
 	}
 	
-	public void writeData(String[] dataArr, File file) {
+	public static void writeData(String[] dataArr, File file) {
 		String data = "";
 		for (int i = 0; i < dataArr.length; i++) {
 			data += (dataArr[i] + "\n");
