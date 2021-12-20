@@ -2,7 +2,11 @@ import java.awt.BorderLayout;
 import java.io.*;
 import java.util.*;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.nio.file.Files;
 
 public class gui extends JFrame {
@@ -12,6 +16,7 @@ public class gui extends JFrame {
 	static String currentDir = System.getProperty("user.dir");
 	static File checkListFile = new File(currentDir + "\\list.TXT");
 	static JFrame frame = new JFrame("Check List");
+	static GridBagConstraints gc = new GridBagConstraints();
 	public static void main(String[] args) {
 		start();
 		checkBoxes();
@@ -44,16 +49,30 @@ public class gui extends JFrame {
 		JPanel buttonPannel = new JPanel();
 		buttonPannel.add(reset);
 		buttonPannel.add(clear);
+
+		frame.setLayout(new BorderLayout());
+        checkListPannel.setLayout(new GridBagLayout());
+
+		input.setBorder(new EmptyBorder(10, 10, 10, 10));
+		checkListPannel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        frame.add(checkListPannel, BorderLayout.WEST);
 		frame.add(input, BorderLayout.NORTH);
 		frame.add(buttonPannel, BorderLayout.SOUTH);
-		frame.add(checkListPannel, BorderLayout.CENTER);
+		//frame.add(checkListPannel, BorderLayout.CENTER);
 		loadCheckBoxes();
 		checkListPannel.setVisible(true);
 		frame.setVisible(true);
 	}
-
+	static int count = 0;
 	public static void add(JCheckBox box) { //Good
-		checkListPannel.add(box);
+		//checkListPannel.add(box);
+        gc.gridx = checkBoxes.size()/8;
+		gc.gridy = checkBoxes.size() - (((checkBoxes.size()/8) * 8)+1);
+		//gc.insets = new Insets(2, 0, 0, 2);
+        gc.anchor = GridBagConstraints.NORTHWEST;
+        //gc.weightx = 1;
+        //gc.weighty = 1;
+        checkListPannel.add(box, gc);
 		saveCheckBoxes();
 		frame.repaint();
 		frame.setVisible(true);
