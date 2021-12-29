@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Launch testing",
+            "request": "launch",
+            "mainClass": "testing",
+            "projectName": "Productivity_5753000c"
+        },
+        {
+            "type": "java",
             "name": "Launch gui",
             "request": "launch",
             "mainClass": "gui",
@@ -21,7 +28,6 @@
             "type": "java",
             "name": "Launch gui",
             "request": "launch",
-            "vmArgs": "--module-path C:/Users/Billy1301/Downloads/openjfx-17.0.1_windows-x64_bin-sdk/javafx-sdk-17.0.1/lib --add-modules javafx.controls,javafx.fxml",
             "mainClass": "gui",
             "projectName": "Productivity_5753000c"
         }
