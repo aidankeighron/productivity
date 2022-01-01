@@ -4,13 +4,13 @@ import java.util.*;
 import javax.swing.*;
 import java.awt.*;
 import java.nio.file.Files;
-
+//TODO make sure everyting saves and loads properly
 public class checkBoxes extends JPanel {
 
     ArrayList<JCheckBox> checkBoxes = new ArrayList<JCheckBox>();
 	JPanel checkListPanel;
 	String currentDir = System.getProperty("user.dir");
-	File checkListFile = new File(currentDir + "\\list.TXT");
+	File checkListFile = new File(currentDir + "\\Saves\\list.TXT"); //old new File(currentDir + "\\list.TXT");
 
     public checkBoxes(int rows, int collums) {
 		checkListPanel = new JPanel(new GridLayout(rows, collums));

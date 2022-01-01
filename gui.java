@@ -25,7 +25,7 @@ public class gui extends JFrame {
 		loadSettings();
 		JTabbedPane tabbedPane = new JTabbedPane();
 		tabbedPane.addTab("Checklist", new checkBoxes(numRows, numCollums));
-
+		tabbedPane.addTab("Timers", new timer());
 		tabbedPane.addTab("Settings", new settings());
 		frame.add(tabbedPane);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

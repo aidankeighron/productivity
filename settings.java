@@ -3,12 +3,12 @@ import java.util.*;
 import javax.swing.*;
 import java.awt.*;
 import java.nio.file.Files;
-
+//TODO add popup for leaving fields blank
 public class settings extends JPanel {
     
     static HashMap<String, String> settings = new HashMap<String, String>();
     static String currentDir = System.getProperty("user.dir");
-	static File settingsFile = new File(currentDir + "\\settings.TXT");
+	static File settingsFile = new File(currentDir + "\\Saves\\settings.TXT"); //old new File(currentDir + "\\settings.TXT");
 
     public settings() {
         super.setLayout(new GridLayout(15, 2));
