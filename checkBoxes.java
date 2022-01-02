@@ -5,20 +5,25 @@ import javax.swing.*;
 import java.awt.*;
 import java.nio.file.Files;
 //TODO make sure everyting saves and loads properly
+//TODO save checked/unchecked state
 public class checkBoxes extends JPanel {
 
     ArrayList<JCheckBox> checkBoxes = new ArrayList<JCheckBox>();
 	JPanel checkListPanel;
 	String currentDir = System.getProperty("user.dir");
-	File checkListFile = new File(currentDir + "\\Saves\\list.TXT"); //old new File(currentDir + "\\list.TXT");
+	File checkListFile; //File checkListFile = new File(currentDir + "\\Saves\\list.TXT"); //old new File(currentDir + "\\list.TXT");
 
-    public checkBoxes(int rows, int collums) {
+    public checkBoxes(int rows, int collums, File file, Boolean isDaily) {
+		checkListFile = file;
 		checkListPanel = new JPanel(new GridLayout(rows, collums));
 		JTextField input = new JTextField();
 		input.addActionListener(e -> {
 			addCheckBox(input.getText());
 			input.setText("");
 			saveCheckBoxes();
+			if (isDaily) {
+				dailyChecklist.resetBoxes();
+			}
 		});
 		JButton reset = new JButton("Reset");
 		reset.addActionListener( e -> removeCheckBoxes());

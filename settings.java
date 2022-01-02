@@ -3,21 +3,133 @@ import java.util.*;
 import javax.swing.*;
 import java.awt.*;
 import java.nio.file.Files;
-//TODO add popup for leaving fields blank
-public class settings extends JPanel {
+import java.util.Timer;
+//TODO add popup for leaving fields blank and make sure settings are saved properly
+//TODO when changing reminder timer length make sure the old timer is closed
+public class settings extends JTabbedPane {
     
     static HashMap<String, String> settings = new HashMap<String, String>();
     static String currentDir = System.getProperty("user.dir");
 	static File settingsFile = new File(currentDir + "\\Saves\\settings.TXT"); //old new File(currentDir + "\\settings.TXT");
+    static File checkListFile = new File(currentDir + "\\Saves\\daily.TXT");
+    static File reminderFile = new File(currentDir + "\\Saves\\reminder.TXT");
+    JPanel configPanel = new JPanel();
+    JPanel reminderPanel = new JPanel();
+    JPanel dailyPanel = new checkBoxes(gui.numRows, gui.numCollums, checkListFile, true);
+    String[] timeOptions = {"Seconds", "Minutes", "Hours"};
+    static int timeMuitplyer = 1;
 
     public settings() {
-        super.setLayout(new GridLayout(15, 2));
+        configPanel.setLayout(new GridLayout(15, 2));
         addSetting("Checklist Rows:", "checkRows");
         addSetting("Checklist Collums:", "checkCollums");
+        configPanel.setVisible(true);
+        super.addTab("Config", configPanel);
+        reminder();
+        super.addTab("Reminder", reminderPanel);
+        super.addTab("Daily Checklist", dailyPanel);
         super.setVisible(true);
     }
 
-    void addSetting(String name, String key) {
+    void reminder() {
+        int[] data = loadTimer();
+        JComboBox<String> timeList = new JComboBox<>(timeOptions);
+        timeList.addActionListener(e -> {
+            switch(timeList.getSelectedIndex()) {
+                case 0:
+                    timeMuitplyer = 1;
+                    break;
+                case 1:
+                    timeMuitplyer = 60;
+                    break;
+                case 2:
+                    timeMuitplyer = 60 * 60;
+                    break;
+                default:
+                    timeMuitplyer = 1;
+                    break;
+            }
+        });
+        timeList.setSelectedIndex(data[0]);
+        JTextField textField = new JTextField();
+        textField.setText(Integer.toString(data[1]));
+        JProgressBar progressBar = new JProgressBar(0, Integer.parseInt(textField.getText()) * timeMuitplyer);
+        textField.addActionListener(e -> {
+            progressBar.setMaximum(Integer.parseInt(textField.getText()) * timeMuitplyer);
+            StartTimer(Integer.parseInt(textField.getText()), progressBar);
+            saveTimer(timeList, textField);
+        });
+        JButton save = new JButton("      Save      ");
+        save.addActionListener(e -> {
+            progressBar.setMaximum(Integer.parseInt(textField.getText()) * timeMuitplyer);
+            StartTimer(Integer.parseInt(textField.getText()), progressBar);
+            saveTimer(timeList, textField);
+        });
+        progressBar.setValue(0);
+        progressBar.setStringPainted(true);
+        Box vertical = Box.createVerticalBox();
+        vertical.add(timeList);
+        vertical.add(textField);
+        vertical.add(save);
+        vertical.add(progressBar);
+        reminderPanel.setLayout(new BorderLayout());
+        reminderPanel.add(BorderLayout.WEST, vertical);
+        StartTimer(Integer.parseInt(textField.getText()), progressBar);
+    }
+
+    public void saveTimer(JComboBox<String> combo, JTextField field) {
+        String[] data = {Integer.toString(combo.getSelectedIndex()), field.getText()};
+        writeData(data, reminderFile);
+    }
+
+    private int[] loadTimer() {
+        String[] data = readData(reminderFile);
+        int[] results = new int[2];
+        switch(Integer.parseInt(data[0])) {
+            case 0:
+                timeMuitplyer = 1;
+                break;
+            case 1:
+                timeMuitplyer = 60;
+                break;
+            case 2:
+                timeMuitplyer = 60 * 60;
+                break;
+            default:
+                timeMuitplyer = 1;
+                break;
+        }
+        results[0] = Integer.parseInt(data[0]);
+        results[1] = Integer.parseInt(data[1]);
+        return results;
+    }
+
+    private void StartTimer(int length, JProgressBar bar) {
+        TimerTask task = new TimerTask()
+        {
+            int seconds = length * timeMuitplyer;
+            int i = 0;
+            @Override
+            public void run()
+            {
+                if(i == seconds && i != 0) {
+                    Toolkit.getDefaultToolkit().beep();
+                    bar.setValue(i);
+                    i++;
+                }
+                else {
+                    bar.setValue(i);
+                }
+                if (i < seconds) {
+                    i++;
+                }
+            }
+        };
+        Timer time = new Timer();
+        time.schedule(task, 0, 1000);
+    }
+
+    private void addSetting(String name, String key) {
         JLabel label = new JLabel(name);
         JTextField textField = new JTextField();
         textField.addActionListener(e -> {
@@ -30,8 +142,8 @@ public class settings extends JPanel {
         catch(Exception e) {
             System.out.println("Setting dosent exist");
         }
-        super.add(label);
-        super.add(textField);
+        configPanel.add(label);
+        configPanel.add(textField);
     }
 
     public static String getSetting(String key) {

@@ -4,13 +4,14 @@ import javax.swing.*;
 import java.nio.file.Files;
 
 public class gui extends JFrame {
-	
+	//TODO fix both checklist deleting last line when ever you re open
 	//settings
 	public static int numRows = 10;
 	public static int numCollums = 3;
 
 	static String currentDir = System.getProperty("user.dir");
 	static JFrame frame = new JFrame("Produtivity");
+	static File checkListFile = new File(currentDir + "\\Saves\\list.TXT");
 	public static void main(String[] args) {
 		start();
 	}
@@ -21,10 +22,13 @@ public class gui extends JFrame {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		frame.setAlwaysOnTop(true);
+		frame.setLocationByPlatform(true);
 		settings.loadSettings();
 		loadSettings();
 		JTabbedPane tabbedPane = new JTabbedPane();
-		tabbedPane.addTab("Checklist", new checkBoxes(numRows, numCollums));
+		tabbedPane.addTab("Checklist", new checkBoxes(numRows, numCollums, checkListFile, false));
+		tabbedPane.addTab("Daily Checklist", new dailyChecklist());
 		tabbedPane.addTab("Timers", new timer());
 		tabbedPane.addTab("Settings", new settings());
 		frame.add(tabbedPane);
