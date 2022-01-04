@@ -1,14 +1,16 @@
 import java.io.*;
 import java.util.*;
 import javax.swing.*;
+
 import java.awt.*;
 import java.nio.file.Files;
 //import java.time.format.DateTimeFormatter; //DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");  
 //import java.time.LocalDateTime;  //LocalDateTime now = LocalDateTime.now(); 
 
 public class dailyChecklist extends JPanel {
-    //TODO fix spacing
+	//TODO work on check reset
     static File checkListFile = new File("Saves\\daily.TXT");
+	static File stateListFile = new File("Saves\\dailyCheck.TXT");
     static JPanel checkListPanel;
 
     public dailyChecklist() {
@@ -21,8 +23,9 @@ public class dailyChecklist extends JPanel {
     public static void resetBoxes() {
         checkListPanel = new JPanel(new GridLayout(gui.numRows, gui.numCollums));
         String[] names = readData(checkListFile);
+		String[] checked = readData(stateListFile);
         for (int i = 0; i < names.length; i++) {
-            addCheckBox(names[i]);
+            addCheckBox(names[i], Boolean.parseBoolean(checked[i]));
         }
     }
 
@@ -31,8 +34,9 @@ public class dailyChecklist extends JPanel {
 		gui.repaintFrame();
 	}
 	
-	public static void addCheckBox(String name) {
+	public static void addCheckBox(String name, Boolean checked) {
 		JCheckBox checkBox = new JCheckBox(name);
+		checkBox.setSelected(checked);
 		add(checkBox);
 	}
 

@@ -11,11 +11,12 @@ public class settings extends JTabbedPane {
     static HashMap<String, String> settings = new HashMap<String, String>();
     static File settingsFile = new File("Saves\\settings.TXT");
     static File checkListFile = new File("Saves\\daily.TXT");
+    static File checkListStateFile = new File("Saves\\dailyCheck.TXT");
     static File reminderFile = new File("Saves\\reminder.TXT");
     JPanel configPanel = new JPanel();
     Box configBox = Box.createVerticalBox();
     JPanel reminderPanel = new JPanel();
-    JPanel dailyPanel = new checkBoxes(gui.numRows, gui.numCollums, checkListFile, true);
+    JPanel dailyPanel = new checkBoxes(gui.numRows, gui.numCollums, checkListFile, checkListStateFile, true);
     String[] timeOptions = {"Seconds", "Minutes", "Hours"};
     static int timeMuitplyer = 1;
     

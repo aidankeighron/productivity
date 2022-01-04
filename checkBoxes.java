@@ -2,6 +2,7 @@ import java.awt.BorderLayout;
 import java.io.*;
 import java.util.*;
 import javax.swing.*;
+
 import java.awt.*;
 import java.nio.file.Files;
 //TODO save checked/unchecked state
@@ -11,9 +12,11 @@ public class checkBoxes extends JPanel {
     ArrayList<JCheckBox> checkBoxes = new ArrayList<JCheckBox>();
 	JPanel checkListPanel;
 	File checkListFile;
+	File stateListFile;
 
-    public checkBoxes(int rows, int collums, File file, Boolean isDaily) {
+    public checkBoxes(int rows, int collums, File file, File checkedFile, Boolean isDaily) {
 		checkListFile = file;
+		stateListFile = checkedFile;
 		checkListPanel = new JPanel(new GridLayout(rows, collums));
 		JTextField input = new JTextField();
 		input.addActionListener(e -> {
@@ -21,7 +24,7 @@ public class checkBoxes extends JPanel {
 			input.setText("");
 			saveCheckBoxes();
 			if (isDaily) {
-				dailyChecklist.resetBoxes();
+				//dailyChecklist.resetBoxes();
 			}
 		});
 		JButton reset = new JButton("Reset");
@@ -73,6 +76,7 @@ public class checkBoxes extends JPanel {
 		checkBoxes = new ArrayList<JCheckBox>();
 		try {
 			clearTheFile(checkListFile);
+			clearTheFile(stateListFile);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -91,23 +95,35 @@ public class checkBoxes extends JPanel {
 	public void saveCheckBoxes() {
 		try {
 			clearTheFile(checkListFile);
+			clearTheFile(stateListFile);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		String[] name = new String[checkBoxes.size()];
+		String[] state = new String[checkBoxes.size()];
 		for (int i = 0; i < checkBoxes.size(); i++) {
 			name[i] = checkBoxes.get(i).getText();
+			state[i] = Boolean.toString(checkBoxes.get(i).isSelected());
 		}
 		writeData(name, checkListFile);
+		writeData(state, stateListFile);
 	}
 	
 	public void loadCheckBoxes() {
 		String[] data = readData(checkListFile);
+		String[] states = readData(stateListFile);
+		for (int i = 0; i < data.length; i++) {
+			JCheckBox checkBox = new JCheckBox(data[i]);
+			checkBox.setSelected(Boolean.parseBoolean(states[i]));
+			add(checkBox);
+			checkBoxes.add(checkBox);
+		}
+		/*
 		for (String s : data) {
 			JCheckBox checkBox = new JCheckBox(s);
 			add(checkBox);
 			checkBoxes.add(checkBox);
-		}
+		}*/
 		saveCheckBoxes();
 	}
 

@@ -11,6 +11,7 @@ public class gui extends JFrame {
 
 	static JFrame frame = new JFrame("Produtivity");
 	static File checkListFile = new File("Saves\\list.TXT");
+	static File checkStateFile = new File("Saves\\listCheck.TXT");
 	public static void main(String[] args) {
 		start();
 	}
@@ -26,7 +27,7 @@ public class gui extends JFrame {
 		frame.setAlwaysOnTop(onTop);
 		frame.setLocationByPlatform(true);
 		JTabbedPane tabbedPane = new JTabbedPane();
-		tabbedPane.addTab("Checklist", new checkBoxes(numRows, numCollums, checkListFile, false));
+		tabbedPane.addTab("Checklist", new checkBoxes(numRows, numCollums, checkListFile, checkStateFile, false));
 		tabbedPane.addTab("Daily Checklist", new dailyChecklist());
 		tabbedPane.addTab("Timers", new timer());
 		tabbedPane.addTab("Settings", new settings());
