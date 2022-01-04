@@ -4,14 +4,13 @@ import java.util.*;
 import javax.swing.*;
 import java.awt.*;
 import java.nio.file.Files;
-//TODO make sure everyting saves and loads properly
 //TODO save checked/unchecked state
 public class checkBoxes extends JPanel {
 
     ArrayList<JCheckBox> checkBoxes = new ArrayList<JCheckBox>();
 	JPanel checkListPanel;
 	String currentDir = System.getProperty("user.dir");
-	File checkListFile; //File checkListFile = new File(currentDir + "\\Saves\\list.TXT"); //old new File(currentDir + "\\list.TXT");
+	File checkListFile; //File checkListFile = new File(currentDir + "\\Saves\\list.TXT");
 
     public checkBoxes(int rows, int collums, File file, Boolean isDaily) {
 		checkListFile = file;
@@ -47,7 +46,6 @@ public class checkBoxes extends JPanel {
 
 	public void add(JCheckBox box) {
 		checkListPanel.add(box);
-		saveCheckBoxes();
 		gui.repaintFrame();
 	}
 	
@@ -110,6 +108,7 @@ public class checkBoxes extends JPanel {
 			add(checkBox);
 			checkBoxes.add(checkBox);
 		}
+		saveCheckBoxes();
 	}
 
 	public String[] readData(File file) {

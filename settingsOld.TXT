@@ -1,5 +1,0 @@
-checkRows
-checkCollums
-*
-10
-3

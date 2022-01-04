@@ -6,9 +6,9 @@
     "configurations": [
         {
             "type": "java",
-            "name": "Launch testing",
+            "name": "Launch gui",
             "request": "launch",
-            "mainClass": "testing",
+            "mainClass": "gui",
             "projectName": "Productivity_5753000c"
         },
         {
@@ -23,13 +23,6 @@
             "name": "Launch Current File",
             "request": "launch",
             "mainClass": "${file}"
-        },
-        {
-            "type": "java",
-            "name": "Launch gui",
-            "request": "launch",
-            "mainClass": "gui",
-            "projectName": "Productivity_5753000c"
         }
     ]
 }

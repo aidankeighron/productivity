@@ -5,7 +5,6 @@ import java.nio.file.Files;
 
 public class gui extends JFrame {
 	//TODO fix both checklist deleting last line when ever you re open
-	//settings
 	public static int numRows = 10;
 	public static int numCollums = 3;
 

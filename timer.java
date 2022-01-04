@@ -5,7 +5,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
-//TODO add popup for no time enterd
+
 public class timer extends JPanel {
     
     public final static int ONE_SECOND = 1000;
@@ -30,28 +30,42 @@ public class timer extends JPanel {
         });
         JButton addBtn = new JButton("           Add           ");
         addBtn.addActionListener(e -> {
-            addProgressBar(nameFeild.getText(), Integer.parseInt(timeField.getText()));
-            timeField.setText("");
-            nameFeild.setText("");
+            boolean notInt = false;
+            try {
+                Integer.parseInt(timeField.getText());
+                if (Integer.parseInt(timeField.getText()) <= 0) {
+                    notInt = true;
+                }
+            } catch (Exception ex) {
+                notInt = true;
+            }
+            if (timeField.getText().equals("") || notInt) {
+                JOptionPane.showMessageDialog(this, "Enter vaild positive time");
+            }
+            else {
+                addProgressBar(nameFeild.getText(), Integer.parseInt(timeField.getText()));
+                timeField.setText("");
+                nameFeild.setText("");
+            }
         });
         JComboBox<String> timeList = new JComboBox<>(timeOptions);
         timeList.addActionListener(e -> {
             switch(timeList.getSelectedIndex()) {
                 case 0:
-                    timeMuitplyer = 1;
-                    break;
+                timeMuitplyer = 1;
+                break;
                 case 1:
-                    timeMuitplyer = 60;
-                    break;
+                timeMuitplyer = 60;
+                break;
                 case 2:
-                    timeMuitplyer = 60 * 60;
-                    break;
+                timeMuitplyer = 60 * 60;
+                break;
                 default:
-                    timeMuitplyer = 1;
-                    break;
+                timeMuitplyer = 1;
+                break;
             }
         });
-
+        
         JPanel config = new JPanel();
         Box vertical = Box.createVerticalBox();
         Box time = Box.createHorizontalBox();
@@ -79,10 +93,10 @@ public class timer extends JPanel {
         addBlank(config, 1);
         config.add(addBtn);
         addBlank(config, 3); */
-
+        
         progresrBarsPanel.add(progresrBars);
         namesPanel.add(names);
-
+        
         super.setLayout(new BorderLayout());
         super.add(BorderLayout.EAST, config);
         super.add(BorderLayout.CENTER, namesPanel);
@@ -97,6 +111,7 @@ public class timer extends JPanel {
         String title = (name.equals("")) ? Integer.toString(length) : name;
         JButton button = new JButton(title);
         
+        Timer time = new Timer();
         TimerTask task = new TimerTask()
         {
             int seconds = length * timeMuitplyer;
@@ -108,6 +123,8 @@ public class timer extends JPanel {
                     progressBar.setValue(i);
                     Toolkit.getDefaultToolkit().beep();
                     i++;
+                    time.cancel();
+                    time.purge();
                 }
                 else {
                     progressBar.setValue(i);
@@ -117,13 +134,12 @@ public class timer extends JPanel {
                 }
             }
         };
-        Timer time = new Timer();
         time.schedule(task, 0, 1000);
-
+        
         button.addActionListener(e -> {
             removeProgressBar(button, progressBar, task, time);
         });
-
+        
         bars.add(progressBar);
         buttons.add(button);
         names.add(button);
@@ -133,7 +149,7 @@ public class timer extends JPanel {
         progresrBars.add(Box.createRigidArea(new Dimension(0, 4)));
         gui.repaintFrame();
     }
-
+    
     public void removeProgressBar(JButton button, JProgressBar progressBar, TimerTask task, Timer time) {
         task.cancel();
         time.cancel();
@@ -144,14 +160,14 @@ public class timer extends JPanel {
         buttons.remove(button);
         gui.repaintFrame();
     }
-
+    
     public void addBlank(JPanel panel, int ammount) {
         for (int i = 0; i < ammount; i++) {
             JLabel blank = new JLabel();
             panel.add(blank);
         }
     }
-
+    
     public void addBlank(Box panel, int ammount) {
         for (int i = 0; i < ammount; i++) {
             JLabel blank = new JLabel();
