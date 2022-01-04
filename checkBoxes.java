@@ -5,12 +5,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.nio.file.Files;
 //TODO save checked/unchecked state
+//TODO change layout to be vertical/horizontal and based off of screen size
 public class checkBoxes extends JPanel {
 
     ArrayList<JCheckBox> checkBoxes = new ArrayList<JCheckBox>();
 	JPanel checkListPanel;
-	String currentDir = System.getProperty("user.dir");
-	File checkListFile; //File checkListFile = new File(currentDir + "\\Saves\\list.TXT");
+	File checkListFile;
 
     public checkBoxes(int rows, int collums, File file, Boolean isDaily) {
 		checkListFile = file;

@@ -1,5 +1,7 @@
 checkRows
+onTop
 checkCollums
 *
 10
+true
 3

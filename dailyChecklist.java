@@ -7,9 +7,8 @@ import java.nio.file.Files;
 //import java.time.LocalDateTime;  //LocalDateTime now = LocalDateTime.now(); 
 
 public class dailyChecklist extends JPanel {
-    
-    static String currentDir = System.getProperty("user.dir");
-    static File checkListFile = new File(currentDir + "\\Saves\\daily.TXT");
+    //TODO fix spacing
+    static File checkListFile = new File("Saves\\daily.TXT");
     static JPanel checkListPanel;
 
     public dailyChecklist() {

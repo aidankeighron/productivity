@@ -7,10 +7,10 @@ public class gui extends JFrame {
 	//TODO fix both checklist deleting last line when ever you re open
 	public static int numRows = 10;
 	public static int numCollums = 3;
+	public static boolean onTop = false;
 
-	static String currentDir = System.getProperty("user.dir");
 	static JFrame frame = new JFrame("Produtivity");
-	static File checkListFile = new File(currentDir + "\\Saves\\list.TXT");
+	static File checkListFile = new File("Saves\\list.TXT");
 	public static void main(String[] args) {
 		start();
 	}
@@ -21,10 +21,10 @@ public class gui extends JFrame {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		frame.setAlwaysOnTop(true);
-		frame.setLocationByPlatform(true);
 		settings.loadSettings();
 		loadSettings();
+		frame.setAlwaysOnTop(onTop);
+		frame.setLocationByPlatform(true);
 		JTabbedPane tabbedPane = new JTabbedPane();
 		tabbedPane.addTab("Checklist", new checkBoxes(numRows, numCollums, checkListFile, false));
 		tabbedPane.addTab("Daily Checklist", new dailyChecklist());
@@ -39,6 +39,7 @@ public class gui extends JFrame {
 	static void loadSettings() {
 		numRows = Integer.parseInt(settings.getSetting("checkRows"));
 		numCollums = Integer.parseInt(settings.getSetting("checkCollums"));
+		onTop = Boolean.parseBoolean(settings.getSetting("onTop"));
 	}
 
 	public static String[] readData(File file) {

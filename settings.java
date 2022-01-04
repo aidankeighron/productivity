@@ -6,12 +6,12 @@ import java.nio.file.Files;
 import java.util.Timer;
 
 public class settings extends JTabbedPane {
-    
+    //TODO add more settings
+    //TODO settings get changed in real time
     static HashMap<String, String> settings = new HashMap<String, String>();
-    static String currentDir = System.getProperty("user.dir");
-    static File settingsFile = new File(currentDir + "\\Saves\\settings.TXT");
-    static File checkListFile = new File(currentDir + "\\Saves\\daily.TXT");
-    static File reminderFile = new File(currentDir + "\\Saves\\reminder.TXT");
+    static File settingsFile = new File("Saves\\settings.TXT");
+    static File checkListFile = new File("Saves\\daily.TXT");
+    static File reminderFile = new File("Saves\\reminder.TXT");
     JPanel configPanel = new JPanel();
     Box configBox = Box.createVerticalBox();
     JPanel reminderPanel = new JPanel();
@@ -19,14 +19,21 @@ public class settings extends JTabbedPane {
     String[] timeOptions = {"Seconds", "Minutes", "Hours"};
     static int timeMuitplyer = 1;
     
+    private enum settingTypes {
+        text,
+        checkbox,
+        number
+    }
+    
     Timer time;
     TimerTask task;
     
     public settings() {
         JLabel label = new JLabel("Press enter to confirm");
         configBox.add(label);
-        addSetting("Checklist Rows:", "checkRows");
-        addSetting("Checklist Collums:", "checkCollums");
+        addSetting("Checklist Rows:", "checkRows", settingTypes.number);
+        addSetting("Checklist Collums:", "checkCollums", settingTypes.number);
+        addSetting("Allways on top", "onTop", settingTypes.checkbox);
         configPanel.add(configBox);
         configPanel.setVisible(true);
         super.addTab("Config", configPanel);
@@ -169,34 +176,81 @@ public class settings extends JTabbedPane {
         time.purge();
     }
     
-    private void addSetting(String name, String key) {
-        JLabel label = new JLabel(name);
-        JTextField textField = new JTextField();
-        textField.addActionListener(e -> {
-            boolean notInt = false;
-            try {
-                Integer.parseInt(textField.getText());
-            } catch (Exception ex) {
-                notInt = true;
-            }
-            if (notInt || Integer.parseInt(textField.getText()) <= 0) {
-                JOptionPane.showMessageDialog(this, "Enter vaild positive number");
-            }
-            else {
-                settings.put(key, textField.getText());
+    private void addSetting(String name, String key, settingTypes type) {
+        switch(type) {
+            case checkbox:
+            JCheckBox checkBox = new JCheckBox(name);
+            checkBox.addActionListener(e -> {
+                settings.put(key, Boolean.toString(checkBox.isSelected()));
                 saveSettings();
+            });
+            try {
+                checkBox.setSelected(Boolean.parseBoolean(settings.get(key)));
             }
-        });
-        try {
-            textField.setText(settings.get(key));
+            catch(Exception e) {
+                System.out.println("Setting dosent exist");
+            }
+            Box horizontal = Box.createHorizontalBox();
+            horizontal.add(checkBox);
+            configBox.add(horizontal);
+            break;
+            case number:
+            JLabel numLabel = new JLabel(name);
+            JTextField numField = new JTextField();
+            numField.addActionListener(e -> {
+                boolean notInt = false;
+                try {
+                    Integer.parseInt(numField.getText());
+                } catch (Exception ex) {
+                    notInt = true;
+                }
+                if (notInt || Integer.parseInt(numField.getText()) <= 0) {
+                    JOptionPane.showMessageDialog(this, "Enter vaild positive number");
+                }
+                else {
+                    settings.put(key, numField.getText());
+                    saveSettings();
+                }
+            });
+            try {
+                numField.setText(settings.get(key));
+            }
+            catch(Exception e) {
+                System.out.println("Setting dosent exist");
+            }
+            Box numHorizontal = Box.createHorizontalBox();
+            numHorizontal.add(numLabel);
+            numHorizontal.add(numField);
+            configBox.add(numHorizontal);
+            break;
+            case text:
+            JLabel txtLabel = new JLabel(name);
+            JTextField txtField = new JTextField();
+            txtField.addActionListener(e -> {
+                if (txtField.getText().equals("")) {
+                    JOptionPane.showMessageDialog(this, "Enter vaild text");
+                }
+                else {
+                    settings.put(key, txtField.getText());
+                    saveSettings();
+                }
+            });
+            try {
+                txtField.setText(settings.get(key));
+            }
+            catch(Exception e) {
+                System.out.println("Setting dosent exist");
+            }
+            Box txtHorizontal = Box.createHorizontalBox();
+            txtHorizontal.add(txtLabel);
+            txtHorizontal.add(txtField);
+            configBox.add(txtHorizontal);
+            break;
+            default:
+            break;
         }
-        catch(Exception e) {
-            System.out.println("Setting dosent exist");
-        }
-        Box horizontal = Box.createHorizontalBox();
-        horizontal.add(label);
-        horizontal.add(textField);
-        configBox.add(horizontal);
+        
+        
     }
     
     public static String getSetting(String key) {
