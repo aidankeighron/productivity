@@ -4,28 +4,43 @@ import javax.swing.*;
 
 import java.awt.*;
 import java.nio.file.Files;
-//import java.time.format.DateTimeFormatter; //DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");  
-//import java.time.LocalDateTime;  //LocalDateTime now = LocalDateTime.now(); 
+import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
 
 public class dailyChecklist extends JPanel {
-	//TODO work on check reset
     static File checkListFile = new File("Saves\\daily.TXT");
 	static File stateListFile = new File("Saves\\dailyCheck.TXT");
+	static File timeFile = new File("Saves\\time.TXT");
     static JPanel checkListPanel;
+	static ArrayList<JCheckBox> checkBoxes = new ArrayList<JCheckBox>();
 
     public dailyChecklist() {
-        resetBoxes();
+		boolean reset = false;
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");  
+		LocalDateTime now = LocalDateTime.now();
+		if (!dtf.format(now).equals(readData(timeFile)[0])) {
+			reset = true;
+			writeData("", checkListFile);
+		}
+		writeData(dtf.format(now), timeFile);
+        resetBoxes(reset);
         super.setLayout(new BorderLayout());
         super.add(BorderLayout.WEST, checkListPanel);
         super.setVisible(true);
     }
 
-    public static void resetBoxes() {
-        checkListPanel = new JPanel(new GridLayout(gui.numRows, gui.numCollums));
+    public static void resetBoxes(boolean reset) {
+        checkListPanel = new JPanel(new GridLayout(gui.height/30, gui.length/200));
         String[] names = readData(checkListFile);
 		String[] checked = readData(stateListFile);
         for (int i = 0; i < names.length; i++) {
-            addCheckBox(names[i], Boolean.parseBoolean(checked[i]));
+			if (!reset) {
+				addCheckBox(names[i], Boolean.parseBoolean(checked[i]));
+			}
+			else {
+				addCheckBox(names[i], false);
+			}
+
         }
     }
 
@@ -36,8 +51,20 @@ public class dailyChecklist extends JPanel {
 	
 	public static void addCheckBox(String name, Boolean checked) {
 		JCheckBox checkBox = new JCheckBox(name);
+		checkBox.addActionListener(e -> {
+			saveCheckBoxes();
+		});
+		checkBoxes.add(checkBox);
 		checkBox.setSelected(checked);
 		add(checkBox);
+	}
+
+	public static void saveCheckBoxes() {
+		String[] state = new String[checkBoxes.size()];
+		for (int i = 0; i < checkBoxes.size(); i++) {
+			state[i] = Boolean.toString(checkBoxes.get(i).isSelected());
+		}
+		writeData(state, stateListFile);
 	}
 
     public static String[] readData(File file) {
@@ -58,7 +85,7 @@ public class dailyChecklist extends JPanel {
 		return result;
 	}
 	
-	public void writeData(String data, File file) {
+	public static void writeData(String data, File file) {
 		try  {
 			FileWriter writer = new FileWriter(file);
 			writer.write(data);
@@ -69,7 +96,7 @@ public class dailyChecklist extends JPanel {
 		}
 	}
 	
-	public void writeData(String[] dataArr, File file) {
+	public static void writeData(String[] dataArr, File file) {
 		String data = "";
 		for (int i = 0; i < dataArr.length; i++) {
 			data += (dataArr[i] + "\n");

@@ -5,8 +5,8 @@ import java.nio.file.Files;
 
 public class gui extends JFrame {
 	//TODO fix both checklist deleting last line when ever you re open
-	public static int numRows = 10;
-	public static int numCollums = 3;
+	public static int length = 400;
+	public static int height = 300;
 	public static boolean onTop = false;
 
 	static JFrame frame = new JFrame("Produtivity");
@@ -27,19 +27,17 @@ public class gui extends JFrame {
 		frame.setAlwaysOnTop(onTop);
 		frame.setLocationByPlatform(true);
 		JTabbedPane tabbedPane = new JTabbedPane();
-		tabbedPane.addTab("Checklist", new checkBoxes(numRows, numCollums, checkListFile, checkStateFile, false));
+		tabbedPane.addTab("Checklist", new checkBoxes(height, length, checkListFile, checkStateFile));
 		tabbedPane.addTab("Daily Checklist", new dailyChecklist());
 		tabbedPane.addTab("Timers", new timer());
 		tabbedPane.addTab("Settings", new settings());
 		frame.add(tabbedPane);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(400, 300);
+		frame.setSize(length, height);
 		frame.setVisible(true);
 	}
 	
 	static void loadSettings() {
-		numRows = Integer.parseInt(settings.getSetting("checkRows"));
-		numCollums = Integer.parseInt(settings.getSetting("checkCollums"));
 		onTop = Boolean.parseBoolean(settings.getSetting("onTop"));
 	}
 

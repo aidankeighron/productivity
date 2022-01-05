@@ -16,7 +16,7 @@ public class settings extends JTabbedPane {
     JPanel configPanel = new JPanel();
     Box configBox = Box.createVerticalBox();
     JPanel reminderPanel = new JPanel();
-    JPanel dailyPanel = new checkBoxes(gui.numRows, gui.numCollums, checkListFile, checkListStateFile, true);
+    JPanel dailyPanel = new checkBoxes(10/*gui.height/30*/, 10/*gui.length/200*/, checkListFile, checkListStateFile);
     String[] timeOptions = {"Seconds", "Minutes", "Hours"};
     static int timeMuitplyer = 1;
     
@@ -32,8 +32,6 @@ public class settings extends JTabbedPane {
     public settings() {
         JLabel label = new JLabel("Press enter to confirm");
         configBox.add(label);
-        addSetting("Checklist Rows:", "checkRows", settingTypes.number);
-        addSetting("Checklist Collums:", "checkCollums", settingTypes.number);
         addSetting("Allways on top", "onTop", settingTypes.checkbox);
         configPanel.add(configBox);
         configPanel.setVisible(true);
