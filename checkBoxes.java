@@ -5,7 +5,6 @@ import javax.swing.*;
 
 import java.awt.*;
 import java.nio.file.Files;
-//TODO change layout to be vertical/horizontal and based off of screen size
 public class checkBoxes extends JPanel {
 
     ArrayList<JCheckBox> checkBoxes = new ArrayList<JCheckBox>();
@@ -13,15 +12,20 @@ public class checkBoxes extends JPanel {
 	File checkListFile;
 	File stateListFile;
 
-    public checkBoxes(int height, int length, File file, File checkedFile) {
+    public checkBoxes(int height, int length, File file, File checkedFile, Boolean daily) {
 		checkListFile = file;
 		stateListFile = checkedFile;
-		checkListPanel = new JPanel(new GridLayout(height/30, length/200));
+		height = (height/30 == 0) ? 0 : height/30;
+		length = (length/200 == 0) ? 1 : length/200;
+		checkListPanel = new JPanel(new GridLayout(height, length));
 		JTextField input = new JTextField();
 		input.addActionListener(e -> {
 			addCheckBox(input.getText());
 			input.setText("");
 			saveCheckBoxes();
+			if (daily) {
+				dailyChecklist.resetBoxes(false);
+			}
 		});
 		JButton reset = new JButton("Reset");
 		reset.addActionListener( e -> removeCheckBoxes());

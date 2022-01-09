@@ -6,8 +6,7 @@ import java.nio.file.Files;
 import java.util.Timer;
 
 public class settings extends JTabbedPane {
-    //TODO add more settings
-    //TODO settings get changed in real time
+    //TODO tooltips
     static HashMap<String, String> settings = new HashMap<String, String>();
     static File settingsFile = new File("Saves\\settings.TXT");
     static File checkListFile = new File("Saves\\daily.TXT");
@@ -16,7 +15,8 @@ public class settings extends JTabbedPane {
     JPanel configPanel = new JPanel();
     Box configBox = Box.createVerticalBox();
     JPanel reminderPanel = new JPanel();
-    JPanel dailyPanel = new checkBoxes(10/*gui.height/30*/, 10/*gui.length/200*/, checkListFile, checkListStateFile);
+    
+    JPanel dailyPanel = new checkBoxes(gui.height, gui.length, checkListFile, checkListStateFile, true);
     String[] timeOptions = {"Seconds", "Minutes", "Hours"};
     static int timeMuitplyer = 1;
     
@@ -32,7 +32,8 @@ public class settings extends JTabbedPane {
     public settings() {
         JLabel label = new JLabel("Press enter to confirm");
         configBox.add(label);
-        addSetting("Allways on top", "onTop", settingTypes.checkbox);
+        runBoolean allOnTop = (a) -> gui.setOnTop(a);
+        addSetting("Always on top", "onTop", "Makes window always on your screen unless you minimize it", settingTypes.checkbox, allOnTop);
         configPanel.add(configBox);
         configPanel.setVisible(true);
         super.addTab("Config", configPanel);
@@ -175,12 +176,13 @@ public class settings extends JTabbedPane {
         time.purge();
     }
     
-    private void addSetting(String name, String key, settingTypes type) {
+    private void addSetting(String name, String key, String tooltip, settingTypes type, runBoolean rt) {
         switch(type) {
             case checkbox:
             JCheckBox checkBox = new JCheckBox(name);
             checkBox.addActionListener(e -> {
                 settings.put(key, Boolean.toString(checkBox.isSelected()));
+                runOperation(checkBox.isSelected(), rt);
                 saveSettings();
             });
             try {
@@ -189,6 +191,7 @@ public class settings extends JTabbedPane {
             catch(Exception e) {
                 System.out.println("Setting dosent exist");
             }
+            checkBox.setToolTipText(tooltip);
             Box horizontal = Box.createHorizontalBox();
             horizontal.add(checkBox);
             configBox.add(horizontal);
@@ -217,6 +220,7 @@ public class settings extends JTabbedPane {
             catch(Exception e) {
                 System.out.println("Setting dosent exist");
             }
+            numField.setToolTipText(tooltip);
             Box numHorizontal = Box.createHorizontalBox();
             numHorizontal.add(numLabel);
             numHorizontal.add(numField);
@@ -240,6 +244,7 @@ public class settings extends JTabbedPane {
             catch(Exception e) {
                 System.out.println("Setting dosent exist");
             }
+            txtField.setToolTipText(tooltip);
             Box txtHorizontal = Box.createHorizontalBox();
             txtHorizontal.add(txtLabel);
             txtHorizontal.add(txtField);
@@ -328,5 +333,29 @@ public class settings extends JTabbedPane {
             data += (dataArr[i] + "\n");
         }
         writeData(data, file);
+    }
+
+    interface runBoolean {
+        void operation(Boolean a);
+    }
+
+    public static void runOperation(Boolean a, runBoolean rt) {
+        rt.operation(a);
+    }
+
+    interface runString {
+        void operation(String a);
+    }
+
+    public static void runOperation(String a, runString rt) {
+        rt.operation(a);
+    }
+
+    interface runInt {
+        void operation(int a);
+    }
+
+    public static void runOperation(int a, runInt rt) {
+        rt.operation(a);
     }
 }

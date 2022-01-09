@@ -42,6 +42,7 @@ public class dailyChecklist extends JPanel {
 			}
 
         }
+		gui.repaintFrame();
     }
 
     public static void add(JCheckBox box) {

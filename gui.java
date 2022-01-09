@@ -27,7 +27,7 @@ public class gui extends JFrame {
 		frame.setAlwaysOnTop(onTop);
 		frame.setLocationByPlatform(true);
 		JTabbedPane tabbedPane = new JTabbedPane();
-		tabbedPane.addTab("Checklist", new checkBoxes(height, length, checkListFile, checkStateFile));
+		tabbedPane.addTab("Checklist", new checkBoxes(height, length, checkListFile, checkStateFile, false));
 		tabbedPane.addTab("Daily Checklist", new dailyChecklist());
 		tabbedPane.addTab("Timers", new timer());
 		tabbedPane.addTab("Settings", new settings());
@@ -76,6 +76,10 @@ public class gui extends JFrame {
 			data += (dataArr[i] + "\n");
 		}
 		writeData(data, file);
+	}
+
+	public static void setOnTop(boolean top) {
+		frame.setAlwaysOnTop(top);
 	}
 
 	public static void repaintFrame() {

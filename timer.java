@@ -28,6 +28,11 @@ public class timer extends JPanel {
             timeField.setText("");
             nameFeild.setText("");
         });
+        timeField.addActionListener(e -> {
+            addProgressBar(nameFeild.getText(), Integer.parseInt(timeField.getText()));
+            timeField.setText("");
+            nameFeild.setText("");
+        });
         JButton addBtn = new JButton("           Add           ");
         addBtn.addActionListener(e -> {
             boolean notInt = false;
