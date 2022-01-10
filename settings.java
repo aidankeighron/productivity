@@ -6,7 +6,6 @@ import java.nio.file.Files;
 import java.util.Timer;
 
 public class settings extends JTabbedPane {
-    //TODO tooltips
     static HashMap<String, String> settings = new HashMap<String, String>();
     static File settingsFile = new File("Saves\\settings.TXT");
     static File checkListFile = new File("Saves\\daily.TXT");
