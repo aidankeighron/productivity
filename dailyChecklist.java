@@ -8,13 +8,13 @@ import java.time.format.DateTimeFormatter;
 import java.time.LocalDateTime;
 
 public class dailyChecklist extends JPanel {
-    static File checkListFile = new File("Saves\\daily.TXT");
+	static File checkListFile = new File("Saves\\daily.TXT");
 	static File stateListFile = new File("Saves\\dailyCheck.TXT");
 	static File timeFile = new File("Saves\\time.TXT");
-    static JPanel checkListPanel;
+	static JPanel checkListPanel = new JPanel(new GridLayout(gui.height/30, gui.length/200));
 	static ArrayList<JCheckBox> checkBoxes = new ArrayList<JCheckBox>();
-
-    public dailyChecklist() {
+	
+	public dailyChecklist() {
 		boolean reset = false;
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");  
 		LocalDateTime now = LocalDateTime.now();
@@ -23,29 +23,30 @@ public class dailyChecklist extends JPanel {
 			writeData("", checkListFile);
 		}
 		writeData(dtf.format(now), timeFile);
-        resetBoxes(reset);
-        super.setLayout(new BorderLayout());
-        super.add(BorderLayout.WEST, checkListPanel);
-        super.setVisible(true);
-    }
-
-    public static void resetBoxes(boolean reset) {
-        checkListPanel = new JPanel(new GridLayout(gui.height/30, gui.length/200));
-        String[] names = readData(checkListFile);
+		resetBoxes(reset);
+		super.setLayout(new BorderLayout());
+		super.add(BorderLayout.WEST, checkListPanel);
+		super.setVisible(true);
+	}
+	
+	public static void resetBoxes(boolean reset) {
+		for (int i = 0; i < checkBoxes.size(); i++) {
+			checkListPanel.remove(checkBoxes.get(i));
+		}
+		String[] names = readData(checkListFile);
 		String[] checked = readData(stateListFile);
-        for (int i = 0; i < names.length; i++) {
+		for (int i = 0; i < names.length; i++) {
 			if (!reset) {
 				addCheckBox(names[i], Boolean.parseBoolean(checked[i]));
 			}
 			else {
 				addCheckBox(names[i], false);
 			}
-
-        }
-		gui.repaintFrame();
-    }
-
-    public static void add(JCheckBox box) {
+			
+		}
+	}
+	
+	public static void add(JCheckBox box) {
 		checkListPanel.add(box);
 		gui.repaintFrame();
 	}
@@ -59,7 +60,7 @@ public class dailyChecklist extends JPanel {
 		checkBox.setSelected(checked);
 		add(checkBox);
 	}
-
+	
 	public static void saveCheckBoxes() {
 		String[] state = new String[checkBoxes.size()];
 		for (int i = 0; i < checkBoxes.size(); i++) {
@@ -67,8 +68,8 @@ public class dailyChecklist extends JPanel {
 		}
 		writeData(state, stateListFile);
 	}
-
-    public static String[] readData(File file) {
+	
+	public static String[] readData(File file) {
 		String[] result = new String[0];
 		try {
 			result = new String[(int)Files.lines(file.toPath()).count()];

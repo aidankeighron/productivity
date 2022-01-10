@@ -6,13 +6,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.nio.file.Files;
 public class checkBoxes extends JPanel {
-
-    ArrayList<JCheckBox> checkBoxes = new ArrayList<JCheckBox>();
+	
+	ArrayList<JCheckBox> checkBoxes = new ArrayList<JCheckBox>();
 	JPanel checkListPanel;
 	File checkListFile;
 	File stateListFile;
-
-    public checkBoxes(int height, int length, File file, File checkedFile, Boolean daily) {
+	
+	public checkBoxes(int height, int length, File file, File checkedFile, Boolean daily) {
 		checkListFile = file;
 		stateListFile = checkedFile;
 		height = (height/30 == 0) ? 0 : height/30;
@@ -28,17 +28,27 @@ public class checkBoxes extends JPanel {
 			}
 		});
 		JButton reset = new JButton("Reset");
-		reset.addActionListener( e -> removeCheckBoxes());
+		reset.addActionListener( e -> {
+			removeCheckBoxes();
+			if (daily) {
+				dailyChecklist.resetBoxes(false);
+			}
+		});
 		
 		JButton clear = new JButton("Clear Selected");
-		clear.addActionListener(e -> clearSelected());
-
+		clear.addActionListener(e -> {
+			clearSelected();
+			if (daily) {
+				dailyChecklist.resetBoxes(false);
+			}
+		});
+		
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.add(reset);
 		buttonPanel.add(clear);
-
+		
 		super.setLayout(new BorderLayout());
-
+		
 		super.add(input, BorderLayout.NORTH);
 		super.add(checkListPanel, BorderLayout.CENTER);
 		super.add(buttonPanel, BorderLayout.SOUTH);
@@ -46,7 +56,7 @@ public class checkBoxes extends JPanel {
 		checkListPanel.setVisible(true);
 		super.setVisible(true);
 	}
-
+	
 	public void add(JCheckBox box) {
 		checkListPanel.add(box);
 		gui.repaintFrame();
@@ -60,7 +70,7 @@ public class checkBoxes extends JPanel {
 		checkBoxes.add(checkBox);
 		add(checkBox);
 	}
-
+	
 	public void clearSelected() {
 		for (int i = checkBoxes.size() - 1; i >= 0; i--) {
 			if (checkBoxes.get(i).isSelected()) {
@@ -78,83 +88,83 @@ public class checkBoxes extends JPanel {
 		}
 		checkBoxes = new ArrayList<JCheckBox>();
 		try { //TODO change to write("", file);
-			clearTheFile(checkListFile);
-			clearTheFile(stateListFile);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		checkListPanel.repaint();
-		gui.repaintFrame();
+		clearTheFile(checkListFile);
+		clearTheFile(stateListFile);
+	} catch (IOException e) {
+		e.printStackTrace();
 	}
-	
-	public void clearTheFile(File file) throws IOException {
-		FileWriter fwOb = new FileWriter(file); 
-		PrintWriter pwOb = new PrintWriter(fwOb, false);
-		pwOb.flush();
-		pwOb.close();
-		fwOb.close();
-	}
-	
-	public void saveCheckBoxes() {
-		String[] name = new String[checkBoxes.size()];
-		String[] state = new String[checkBoxes.size()];
-		for (int i = 0; i < checkBoxes.size(); i++) {
-			name[i] = checkBoxes.get(i).getText();
-			state[i] = Boolean.toString(checkBoxes.get(i).isSelected());
-		}
-		writeData(name, checkListFile);
-		writeData(state, stateListFile);
-	}
-	
-	public void loadCheckBoxes() {
-		String[] data = readData(checkListFile);
-		String[] states = readData(stateListFile);
-		for (int i = 0; i < data.length; i++) {
-			JCheckBox checkBox = new JCheckBox(data[i]);
-			checkBox.addActionListener(e -> {
-				saveCheckBoxes();
-			});
-			checkBox.setSelected(Boolean.parseBoolean(states[i]));
-			add(checkBox);
-			checkBoxes.add(checkBox);
-		}
-		saveCheckBoxes();
-	}
+	checkListPanel.repaint();
+	gui.repaintFrame();
+}
 
-	public String[] readData(File file) {
-		String[] result = new String[0];
-		try {
-			result = new String[(int)Files.lines(file.toPath()).count()];
-			Scanner scanner = new Scanner(file);
-			int index = 0;
-			while (scanner.hasNextLine()) {
-				result[index] = scanner.nextLine();
-				index++;
-			}
-			scanner.close();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		return result;
+public void clearTheFile(File file) throws IOException {
+	FileWriter fwOb = new FileWriter(file); 
+	PrintWriter pwOb = new PrintWriter(fwOb, false);
+	pwOb.flush();
+	pwOb.close();
+	fwOb.close();
+}
+
+public void saveCheckBoxes() {
+	String[] name = new String[checkBoxes.size()];
+	String[] state = new String[checkBoxes.size()];
+	for (int i = 0; i < checkBoxes.size(); i++) {
+		name[i] = checkBoxes.get(i).getText();
+		state[i] = Boolean.toString(checkBoxes.get(i).isSelected());
 	}
-	
-	public void writeData(String data, File file) {
-		try  {
-			FileWriter writer = new FileWriter(file);
-			writer.write(data);
-			writer.close();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
+	writeData(name, checkListFile);
+	writeData(state, stateListFile);
+}
+
+public void loadCheckBoxes() {
+	String[] data = readData(checkListFile);
+	String[] states = readData(stateListFile);
+	for (int i = 0; i < data.length; i++) {
+		JCheckBox checkBox = new JCheckBox(data[i]);
+		checkBox.addActionListener(e -> {
+			saveCheckBoxes();
+		});
+		checkBox.setSelected(Boolean.parseBoolean(states[i]));
+		add(checkBox);
+		checkBoxes.add(checkBox);
 	}
-	
-	public void writeData(String[] dataArr, File file) {
-		String data = "";
-		for (int i = 0; i < dataArr.length; i++) {
-			data += (dataArr[i] + "\n");
+	saveCheckBoxes();
+}
+
+public String[] readData(File file) {
+	String[] result = new String[0];
+	try {
+		result = new String[(int)Files.lines(file.toPath()).count()];
+		Scanner scanner = new Scanner(file);
+		int index = 0;
+		while (scanner.hasNextLine()) {
+			result[index] = scanner.nextLine();
+			index++;
 		}
-		writeData(data, file);
+		scanner.close();
 	}
+	catch (Exception e) {
+		e.printStackTrace();
+	}
+	return result;
+}
+
+public void writeData(String data, File file) {
+	try  {
+		FileWriter writer = new FileWriter(file);
+		writer.write(data);
+		writer.close();
+	}
+	catch (Exception e) {
+		e.printStackTrace();
+	}
+}
+
+public void writeData(String[] dataArr, File file) {
+	String data = "";
+	for (int i = 0; i < dataArr.length; i++) {
+		data += (dataArr[i] + "\n");
+	}
+	writeData(data, file);
+}
 }

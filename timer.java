@@ -88,17 +88,6 @@ public class timer extends JPanel {
         vertical.add(button);
         config.add(vertical);
         
-        /*
-        config.setLayout(new GridLayout(9, 2));
-        addBlank(config, 4);
-        config.add(timeLbl);
-        config.add(timeField);
-        config.add(nameLbl);
-        config.add(nameFeild);
-        addBlank(config, 1);
-        config.add(addBtn);
-        addBlank(config, 3); */
-        
         progresrBarsPanel.add(progresrBars);
         namesPanel.add(names);
         

@@ -334,27 +334,27 @@ public class settings extends JTabbedPane {
         }
         writeData(data, file);
     }
-
+    
     interface runBoolean {
         void operation(Boolean a);
     }
-
+    
     public static void runOperation(Boolean a, runBoolean rt) {
         rt.operation(a);
     }
-
+    
     interface runString {
         void operation(String a);
     }
-
+    
     public static void runOperation(String a, runString rt) {
         rt.operation(a);
     }
-
+    
     interface runInt {
         void operation(int a);
     }
-
+    
     public static void runOperation(int a, runInt rt) {
         rt.operation(a);
     }

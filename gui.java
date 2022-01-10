@@ -8,7 +8,7 @@ public class gui extends JFrame {
 	public static int length = 400;
 	public static int height = 300;
 	public static boolean onTop = false;
-
+	
 	static JFrame frame = new JFrame("Produtivity");
 	static File checkListFile = new File("Saves\\list.TXT");
 	static File checkStateFile = new File("Saves\\listCheck.TXT");
@@ -40,7 +40,7 @@ public class gui extends JFrame {
 	static void loadSettings() {
 		onTop = Boolean.parseBoolean(settings.getSetting("onTop"));
 	}
-
+	
 	public static String[] readData(File file) {
 		String[] result = new String[0];
 		try {
@@ -77,11 +77,11 @@ public class gui extends JFrame {
 		}
 		writeData(data, file);
 	}
-
+	
 	public static void setOnTop(boolean top) {
 		frame.setAlwaysOnTop(top);
 	}
-
+	
 	public static void repaintFrame() {
 		frame.repaint();
 		frame.setVisible(true);
