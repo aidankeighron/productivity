@@ -12,13 +12,22 @@ public class gui extends JFrame {
 	static JFrame frame = new JFrame("Produtivity");
 	static File checkListFile = new File("Saves\\list.TXT");
 	static File checkStateFile = new File("Saves\\listCheck.TXT");
+	static File colorFile = new File("Saves\\listColor.TXT");
 	public static void main(String[] args) {
 		start();
 	}
 	
 	public static void start() {
 		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+			//UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+			//UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+			//UIManager.setLookAndFeel("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
+			//UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
+			//UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+			//UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+			UIManager.setLookAndFeel("com.pagosoft.plaf.PgsLookAndFeel");
+			SwingUtilities.updateComponentTreeUI(frame);
+			frame.pack();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -27,7 +36,7 @@ public class gui extends JFrame {
 		frame.setAlwaysOnTop(onTop);
 		frame.setLocationByPlatform(true);
 		JTabbedPane tabbedPane = new JTabbedPane();
-		tabbedPane.addTab("Checklist", new checkBoxes(height, length, checkListFile, checkStateFile, false));
+		tabbedPane.addTab("Checklist", new checkBoxes(height, length, checkListFile, checkStateFile, colorFile, false));
 		tabbedPane.addTab("Daily Checklist", new dailyChecklist());
 		tabbedPane.addTab("Timers", new timer());
 		tabbedPane.addTab("Settings", new settings());

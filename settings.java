@@ -6,17 +6,19 @@ import java.nio.file.Files;
 import java.util.Timer;
 
 public class settings extends JTabbedPane {
-    //TODO tooltips
+    //TODO open on startup setting
+    //TODO change look and feel
     static HashMap<String, String> settings = new HashMap<String, String>();
     static File settingsFile = new File("Saves\\settings.TXT");
     static File checkListFile = new File("Saves\\daily.TXT");
     static File checkListStateFile = new File("Saves\\dailyCheck.TXT");
+    static File checkColorFile = new File("Saves\\dailyColor.TXT");
     static File reminderFile = new File("Saves\\reminder.TXT");
     JPanel configPanel = new JPanel();
     Box configBox = Box.createVerticalBox();
     JPanel reminderPanel = new JPanel();
     
-    JPanel dailyPanel = new checkBoxes(gui.height, gui.length, checkListFile, checkListStateFile, true);
+    JPanel dailyPanel = new checkBoxes(gui.height, gui.length, checkListFile, checkListStateFile, checkColorFile, true);
     String[] timeOptions = {"Seconds", "Minutes", "Hours"};
     static int timeMuitplyer = 1;
     

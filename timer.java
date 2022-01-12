@@ -7,7 +7,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class timer extends JPanel {
-    
+    //TODO test alarm button
     public final static int ONE_SECOND = 1000;
     JPanel progresrBarsPanel = new JPanel();
     Box progresrBars = Box.createVerticalBox();
@@ -17,6 +17,9 @@ public class timer extends JPanel {
     ArrayList<JButton> buttons = new ArrayList<JButton>();
     String[] timeOptions = {"Seconds", "Minutes", "Hours"};
     static int timeMuitplyer = 1;
+    static int numTimers = 0;
+    static int maxTimers = 20;
+    static boolean alarm;
     
     public timer() {
         JLabel timeLbl = new JLabel("Length:");
@@ -24,15 +27,58 @@ public class timer extends JPanel {
         JLabel nameLbl = new JLabel("Name:");
         JTextField nameFeild = new JTextField();
         nameFeild.addActionListener(e -> {
-            addProgressBar(nameFeild.getText(), Integer.parseInt(timeField.getText()));
-            timeField.setText("");
-            nameFeild.setText("");
+            boolean notInt = false;
+            try {
+                Integer.parseInt(timeField.getText());
+                if (Integer.parseInt(timeField.getText()) <= 0) {
+                    notInt = true;
+                }
+            } catch (Exception ex) {
+                notInt = true;
+            }
+            if (timeField.getText().equals("") || notInt) {
+                JOptionPane.showMessageDialog(this, "Enter vaild positive time");
+            }
+            else {
+                if (numTimers < maxTimers) {
+                    addProgressBar(nameFeild.getText(), Integer.parseInt(timeField.getText()));
+                    timeField.setText("");
+                    nameFeild.setText("");
+                }
+                else {
+                    JOptionPane.showMessageDialog(this, "Max number of timers reached");
+                }
+            }
         });
         timeField.addActionListener(e -> {
-            addProgressBar(nameFeild.getText(), Integer.parseInt(timeField.getText()));
-            timeField.setText("");
-            nameFeild.setText("");
+            boolean notInt = false;
+            try {
+                Integer.parseInt(timeField.getText());
+                if (Integer.parseInt(timeField.getText()) <= 0) {
+                    notInt = true;
+                }
+            } catch (Exception ex) {
+                notInt = true;
+            }
+            if (timeField.getText().equals("") || notInt) {
+                JOptionPane.showMessageDialog(this, "Enter vaild positive time");
+            }
+            else {
+                if (numTimers < maxTimers) {
+                    addProgressBar(nameFeild.getText(), Integer.parseInt(timeField.getText()));
+                    timeField.setText("");
+                    nameFeild.setText("");
+                }
+                else {
+                    JOptionPane.showMessageDialog(this, "Max number of timers reached");
+                }
+            }
         });
+        JCheckBox alarmBox = new JCheckBox();
+        alarmBox.addActionListener(e -> {
+            alarm = alarmBox.isSelected();
+        });
+        JLabel alarmLbl = new JLabel("Alarm: ");
         JButton addBtn = new JButton("           Add           ");
         addBtn.addActionListener(e -> {
             boolean notInt = false;
@@ -48,9 +94,14 @@ public class timer extends JPanel {
                 JOptionPane.showMessageDialog(this, "Enter vaild positive time");
             }
             else {
-                addProgressBar(nameFeild.getText(), Integer.parseInt(timeField.getText()));
-                timeField.setText("");
-                nameFeild.setText("");
+                if (numTimers < maxTimers) {
+                    addProgressBar(nameFeild.getText(), Integer.parseInt(timeField.getText()));
+                    timeField.setText("");
+                    nameFeild.setText("");
+                }
+                else {
+                    JOptionPane.showMessageDialog(this, "Max number of timers reached");
+                }
             }
         });
         JComboBox<String> timeList = new JComboBox<>(timeOptions);
@@ -79,26 +130,38 @@ public class timer extends JPanel {
         Box name = Box.createHorizontalBox();
         name.add(nameLbl);
         name.add(nameFeild);
+        Box check = Box.createHorizontalBox();
+        check.add(alarmLbl);
+        check.add(alarmBox);
         Box button = Box.createHorizontalBox();
         button.add(addBtn);
         addBlank(vertical, 2);
         vertical.add(timeList);
         vertical.add(time);
         vertical.add(name);
+        vertical.add(check);
         vertical.add(button);
         config.add(vertical);
         
         progresrBarsPanel.add(progresrBars);
         namesPanel.add(names);
+
+        JPanel scrollPanel = new JPanel();
+        scrollPanel.setLayout(new BorderLayout());
+        scrollPanel.add(BorderLayout.WEST, progresrBarsPanel);
+        scrollPanel.add(BorderLayout.EAST, namesPanel);
+        JScrollPane scroll = new JScrollPane(scrollPanel);
         
         super.setLayout(new BorderLayout());
         super.add(BorderLayout.EAST, config);
-        super.add(BorderLayout.CENTER, namesPanel);
-        super.add(BorderLayout.WEST, progresrBarsPanel);
+        //super.add(BorderLayout.CENTER, namesPanel);
+        super.add(BorderLayout.WEST, scroll);
+        //super.add(BorderLayout.WEST, progresrBarsPanel);
         super.setVisible(true);
     }
     
     public void addProgressBar(String name, int length) {
+        numTimers++;
         JProgressBar progressBar = new JProgressBar(0, length * timeMuitplyer);
         progressBar.setValue(0);
         progressBar.setStringPainted(true);
@@ -110,15 +173,26 @@ public class timer extends JPanel {
         {
             int seconds = length * timeMuitplyer;
             int i = 0;
+            int alarmNum = 3;
             @Override
             public void run()
             {
-                if(i == seconds && i != 0) {
+                if(i == seconds && i != 0 && !alarm) {
                     progressBar.setValue(i);
                     Toolkit.getDefaultToolkit().beep();
                     i++;
                     time.cancel();
                     time.purge();
+                }
+                else if (i >= seconds && i % 3 == 0 && alarm) {
+                    progressBar.setValue(i);
+                    Toolkit.getDefaultToolkit().beep();
+                    i++;
+                    if (alarmNum <= 0) {
+                        time.cancel();
+                        time.purge();
+                    }
+                    alarmNum--;
                 }
                 else {
                     progressBar.setValue(i);
@@ -132,15 +206,19 @@ public class timer extends JPanel {
         
         button.addActionListener(e -> {
             removeProgressBar(button, progressBar, task, time);
+            numTimers--;
         });
         
         bars.add(progressBar);
         buttons.add(button);
-        names.add(button);
-        Border border = BorderFactory.createEmptyBorder(4, 0, 0, 0);
-        progresrBars.setBorder(border);
+        Border barBorder = BorderFactory.createEmptyBorder(4, 0, 0, 0);
+        progresrBars.setBorder(barBorder);
         progresrBars.add(progressBar);
-        progresrBars.add(Box.createRigidArea(new Dimension(0, 4)));
+        progresrBars.add(Box.createRigidArea(new Dimension(0, 8)));
+        Border nameBorder = BorderFactory.createEmptyBorder(2, 0, 0, 0);
+        names.setBorder(nameBorder);
+        names.add(button);
+        names.add(Box.createRigidArea(new Dimension(0, 2)));
         gui.repaintFrame();
     }
     
