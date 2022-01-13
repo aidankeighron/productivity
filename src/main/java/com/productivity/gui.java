@@ -1,3 +1,5 @@
+package src.main.java.com.productivity;
+
 import java.io.*;
 import java.util.*;
 import javax.swing.*;
@@ -19,13 +21,12 @@ public class gui extends JFrame {
 	
 	public static void start() {
 		try {
-			//UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 			//UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
 			//UIManager.setLookAndFeel("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
 			//UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
 			//UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 			//UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-			UIManager.setLookAndFeel("com.pagosoft.plaf.PgsLookAndFeel");
 			SwingUtilities.updateComponentTreeUI(frame);
 			frame.pack();
 		} catch (Exception e) {

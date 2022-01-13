@@ -1,3 +1,5 @@
+package src.main.java.com.productivity;
+
 import java.awt.event.*;
 import javax.swing.JPopupMenu;
 import javax.swing.JMenuItem;
