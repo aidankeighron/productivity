@@ -8,6 +8,13 @@
             "type": "java",
             "name": "Launch gui",
             "request": "launch",
+            "mainClass": "com.productivity.gui",
+            "projectName": "Productivity"
+        },
+        {
+            "type": "java",
+            "name": "Launch gui",
+            "request": "launch",
             "mainClass": "src.main.java.com.productivity.gui",
             "projectName": "Productivity_dfe8dd2c"
         },

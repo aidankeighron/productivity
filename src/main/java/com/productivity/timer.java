@@ -1,4 +1,4 @@
-package src.main.java.com.productivity;
+package com.productivity;
 
 import javax.swing.*;
 import javax.swing.border.Border;

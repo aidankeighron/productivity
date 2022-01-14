@@ -1,4 +1,4 @@
-package src.main.java.com.productivity;
+package com.productivity;
 
 import java.io.*;
 import java.util.*;
@@ -11,11 +11,20 @@ public class gui extends JFrame {
 	public static int height = 300;
 	public static boolean onTop = false;
 	
-	static JFrame frame = new JFrame("Produtivity");
+	public static Boolean debug = true;
+	public static String debugPath = "src\\main\\java\\com\\productivity\\Saves\\";
+	static JFrame frame = new JFrame("Produtivity");/*
 	static File checkListFile = new File("Saves\\list.TXT");
 	static File checkStateFile = new File("Saves\\listCheck.TXT");
 	static File colorFile = new File("Saves\\listColor.TXT");
-	public static void main(String[] args) {
+	static File checkListFile = new File("classes\\list.TXT");
+	static File checkStateFile = new File("classes\\listCheck.TXT");
+	static File colorFile = new File("classes\\listColor.TXT");*/
+
+	static File checkListFile = new File((!debug)?"classes\\list.TXT":debugPath+"list.TXT");
+	static File checkStateFile = new File((!debug)?"classes\\listCheck.TXT":debugPath+"listCheck.TXT");
+	static File colorFile = new File((!debug)?"classes\\listColor.TXT":debugPath+"listColor.TXT");
+	public static void main(String[] args) {;
 		start();
 	}
 	

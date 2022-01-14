@@ -1,4 +1,4 @@
-package src.main.java.com.productivity;
+package com.productivity;
 
 import java.awt.BorderLayout;
 import java.io.*;
