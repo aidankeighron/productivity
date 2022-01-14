@@ -6,7 +6,6 @@ import javax.swing.*;
 import java.nio.file.Files;
 
 public class gui extends JFrame {
-	//TODO fix both checklist deleting last line when ever you re open
 	public static int length = 400;
 	public static int height = 300;
 	public static boolean onTop = false;
