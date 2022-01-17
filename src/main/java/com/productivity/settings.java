@@ -10,6 +10,7 @@ import java.util.Timer;
 public class settings extends JTabbedPane {
     //TODO open on startup setting
     //TODO change look and feel
+    //TODO end timer when remove reminder
     static HashMap<String, String> settings = new HashMap<String, String>();
     /*static File settingsFile = new File("Saves\\settings.TXT");
     static File checkListFile = new File("Saves\\daily.TXT");
@@ -49,11 +50,36 @@ public class settings extends JTabbedPane {
         configBox.add(label);
         runBoolean allOnTop = (a) -> gui.setOnTop(a);
         addSetting("Always on top", "onTop", "Makes window always on your screen unless you minimize it", settingTypes.checkbox, allOnTop);
+        runBoolean reminderActive = (a) -> {
+            boolean exists = false;
+            Component[] comp = super.getComponents();
+            for (Component c : comp) {
+                if (c.equals(reminderPanel)) {
+                    exists = true;
+                    break;
+                }
+            }
+            if (a) {
+                if (!exists) {
+                    super.addTab("Reminder", reminderPanel);
+                }
+            }
+            else {
+                if (exists) {
+                    super.remove(reminderPanel);
+                }
+            }
+        };
+        addSetting("Reminder", "reminderActive", "Activates reminder tab", settingTypes.checkbox, reminderActive);
+        runBoolean runOnStartup = (a) -> gui.runOnStartup(a);
+        addSetting("Run on startup", "runOnStartup", "Runs program when your computer starts", settingTypes.checkbox, runOnStartup);
         configPanel.add(configBox);
         configPanel.setVisible(true);
         super.addTab("Config", configPanel);
         reminder();
-        super.addTab("Reminder", reminderPanel);
+        if (Boolean.parseBoolean(getSetting("reminderActive"))) {
+            super.addTab("Reminder", reminderPanel);
+        }
         super.addTab("Daily Checklist", dailyPanel);
         super.setVisible(true);
     }
@@ -197,7 +223,10 @@ public class settings extends JTabbedPane {
             JCheckBox checkBox = new JCheckBox(name);
             checkBox.addActionListener(e -> {
                 settings.put(key, Boolean.toString(checkBox.isSelected()));
-                runOperation(checkBox.isSelected(), rt);
+                if (rt != null) {
+                    runOperation(checkBox.isSelected(), rt);
+                }
+                
                 saveSettings();
             });
             try {

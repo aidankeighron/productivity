@@ -5,6 +5,9 @@ import java.util.*;
 import javax.swing.*;
 import java.nio.file.Files;
 
+//Runtime.getRuntime().exec("powershell.exe Start-Process notepad.exe -verb RunAs");
+//Runtime.getRuntime().exec("powershell.exe Start-Process -FilePath java.exe -Argument '-jar runasadmin.jar' -verb RunAs");
+
 public class gui extends JFrame {
 	public static int length = 400;
 	public static int height = 300;
@@ -23,7 +26,10 @@ public class gui extends JFrame {
 	static File checkListFile = new File((!debug)?"classes\\list.TXT":debugPath+"list.TXT");
 	static File checkStateFile = new File((!debug)?"classes\\listCheck.TXT":debugPath+"listCheck.TXT");
 	static File colorFile = new File((!debug)?"classes\\listColor.TXT":debugPath+"listColor.TXT");
-	public static void main(String[] args) {;
+
+	static String[] lookAndFeel = {"Motif", "Metal"};
+	static String[] lookAndFeelValues = {"com.sun.java.swing.plaf.motif.MotifLookAndFeel", "javax.swing.plaf.metal.MetalLookAndFeel"};
+	public static void main(String[] args) throws IOException {
 		start();
 	}
 	
@@ -48,6 +54,7 @@ public class gui extends JFrame {
 		tabbedPane.addTab("Checklist", new checkBoxes(height, length, checkListFile, checkStateFile, colorFile, false));
 		tabbedPane.addTab("Daily Checklist", new dailyChecklist());
 		tabbedPane.addTab("Timers", new timer());
+		tabbedPane.addTab("Block Sites", new blockSites());
 		tabbedPane.addTab("Settings", new settings());
 		frame.add(tabbedPane);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -103,5 +110,51 @@ public class gui extends JFrame {
 	public static void repaintFrame() {
 		frame.repaint();
 		frame.setVisible(true);
+	}
+
+	public static void runEvalated(String[] d, File f) {
+		String file = f.getAbsolutePath();
+		String data = "";
+		if (d.length > 1) {
+			for (int i = 0; i < d.length; i++) {
+				if (i != d.length - 1) {
+					data += d[i] + "*";
+				}
+				else {
+					data += d[i];
+				}
+			}
+		}
+		else {
+			data = d[0];
+		}
+		if (data.contains("'#'")) {
+			int index = data.indexOf("'#'");
+			data = data.substring(0, index) + "''#''" + data.substring(index + 4);
+		}
+		try {
+			//Runtime.getRuntime().exec("powershell.exe Start-Process -FilePath java.exe '-jar runasadmin.jar \"" + file + "@" + data + "\"' -verb RunAs");
+			Runtime.getRuntime().exec("powershell.exe Start-Process -FilePath java.exe '-jar runasadmin.jar \"C:\\Users\\Billy1301\\Music\\Test.TXT@# Copyright (c) 1993-2009 Microsoft Corp.*#*# This is a sample HOSTS file used by Microsoft TCP/IP for Windows.*#*# This file contains the mappings of IP addresses to host names. Each*# entry should be kept on an individual line. The IP address should*# be placed in the first column followed by the corresponding host name.*# The IP address and the host name should be separated by at least one*# space.*#*# Additionally, comments (such as these) may be inserted on individual*# lines or following the machine name denoted by a # symbol.*#*# For			example:*#*#      102.54.94.97     rhino.acme.com          # source server*#       38.25.63.10     x.acme.com              # x client host**# localhost name resolution is handled within DNS itself.*# 127.0.0.1       localhost*#       ::1             localhost*127.0.0.1    www.youtube.com\"' -verb RunAs");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void runOnStartup(Boolean value) {
+
+	}
+
+	public static void setLookAndFeel(int index) {
+		try {
+			UIManager.setLookAndFeel(lookAndFeelValues[index]);
+			SwingUtilities.updateComponentTreeUI(frame);
+			frame.pack();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static String[] getLookAndFeels() {
+		return lookAndFeel;
 	}
 }

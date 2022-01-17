@@ -9,7 +9,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class timer extends JPanel {
-    //TODO test alarm button
     public final static int ONE_SECOND = 1000;
     JPanel progresrBarsPanel = new JPanel();
     Box progresrBars = Box.createVerticalBox();
@@ -22,6 +21,10 @@ public class timer extends JPanel {
     static int numTimers = 0;
     static int maxTimers = 20;
     static boolean alarm;
+    static boolean isBlocked = false;
+    static boolean wantSitesBlocked = false;
+    static boolean blockedTimerActive = false;
+    JCheckBox blockBox = new JCheckBox();
     
     public timer() {
         JLabel timeLbl = new JLabel("Length:");
@@ -80,6 +83,15 @@ public class timer extends JPanel {
         alarmBox.addActionListener(e -> {
             alarm = alarmBox.isSelected();
         });
+        JLabel blockLbl = new JLabel("Block: ");
+        blockBox.addActionListener(e -> {
+            if (!blockedTimerActive) {
+                wantSitesBlocked = blockBox.isSelected();
+            }
+            else {
+                blockBox.setSelected(false);
+            }
+        });
         JLabel alarmLbl = new JLabel("Alarm: ");
         JButton addBtn = new JButton("           Add           ");
         addBtn.addActionListener(e -> {
@@ -135,6 +147,9 @@ public class timer extends JPanel {
         Box check = Box.createHorizontalBox();
         check.add(alarmLbl);
         check.add(alarmBox);
+        Box block = Box.createHorizontalBox();
+        block.add(blockLbl);
+        block.add(blockBox);
         Box button = Box.createHorizontalBox();
         button.add(addBtn);
         addBlank(vertical, 2);
@@ -142,6 +157,7 @@ public class timer extends JPanel {
         vertical.add(time);
         vertical.add(name);
         vertical.add(check);
+        vertical.add(block);
         vertical.add(button);
         config.add(vertical);
         
@@ -163,6 +179,8 @@ public class timer extends JPanel {
     }
     
     public void addProgressBar(String name, int length) {
+        boolean isBlockedTimer = !blockedTimerActive && wantSitesBlocked && !isBlocked;
+        blockedTimerActive = isBlockedTimer;
         numTimers++;
         JProgressBar progressBar = new JProgressBar(0, length * timeMuitplyer);
         progressBar.setValue(0);
@@ -185,16 +203,24 @@ public class timer extends JPanel {
                     i++;
                     time.cancel();
                     time.purge();
+                    if (isBlocked && isBlockedTimer) {
+                        blockSites.unBlockSites();
+                        isBlocked = false;
+                    }
                 }
-                else if (i >= seconds && i % 3 == 0 && alarm) {
+                else if (i >= seconds && i != 0 && alarm) {
+                    alarmNum--;
                     progressBar.setValue(i);
                     Toolkit.getDefaultToolkit().beep();
                     i++;
                     if (alarmNum <= 0) {
                         time.cancel();
                         time.purge();
+                        if (isBlocked && isBlockedTimer) {
+                            blockSites.unBlockSites();
+                            isBlocked = false;
+                        }
                     }
-                    alarmNum--;
                 }
                 else {
                     progressBar.setValue(i);
@@ -205,9 +231,13 @@ public class timer extends JPanel {
             }
         };
         time.schedule(task, 0, 1000);
+        if (wantSitesBlocked && !isBlocked && isBlockedTimer) {
+            blockSites.reBlockSites();
+            isBlocked = true;
+        }
         
         button.addActionListener(e -> {
-            removeProgressBar(button, progressBar, task, time);
+            removeProgressBar(button, progressBar, task, time, isBlockedTimer);
             numTimers--;
         });
         
@@ -221,10 +251,18 @@ public class timer extends JPanel {
         names.setBorder(nameBorder);
         names.add(button);
         names.add(Box.createRigidArea(new Dimension(0, 2)));
+        if (isBlockedTimer) {
+            blockBox.setSelected(false);
+        }
         gui.repaintFrame();
     }
     
-    public void removeProgressBar(JButton button, JProgressBar progressBar, TimerTask task, Timer time) {
+    public void removeProgressBar(JButton button, JProgressBar progressBar, TimerTask task, Timer time, Boolean isBlockedTimer) {
+        if (isBlocked && blockedTimerActive && isBlockedTimer) {
+            blockSites.unBlockSites();
+            blockedTimerActive = false;
+            isBlocked = false;
+        }
         task.cancel();
         time.cancel();
         time.purge();

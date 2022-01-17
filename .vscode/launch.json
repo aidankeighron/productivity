@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Launch runasadmin",
+            "request": "launch",
+            "mainClass": "com.productivity.runasadmin",
+            "projectName": "Productivity"
+        },
+        {
+            "type": "java",
             "name": "Launch gui",
             "request": "launch",
             "mainClass": "com.productivity.gui",
