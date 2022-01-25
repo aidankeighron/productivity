@@ -9,8 +9,9 @@ import java.awt.BorderLayout;
 
 public class blockSites extends JPanel {
     //TODO test
-    //private static File hostsFile = new File("C:\\Windows\\System32\\drivers\\etc\\hosts");
-    private static File hostsFile = new File("C:\\Users\\Billy1301\\Music\\Test.TXT");
+    private static File hostsFile = new File("C:\\Windows\\System32\\drivers\\etc\\hosts");
+    static boolean admin = true;
+    //private static File hostsFile = new File("C:\\Users\\aidan\\Music\\Test.TXT");
     private static File newHosts = new File((!gui.debug)?"classes\\Newhosts":gui.debugPath+"Newhosts");
     private static File backupFile = new File((!gui.debug)?"classes\\hosts":gui.debugPath+"hosts");
     private static File blockedSites = new File((!gui.debug)?"classes\\blockedSites.TXT":gui.debugPath+"blockedSites.TXT");
@@ -38,12 +39,22 @@ public class blockSites extends JPanel {
 
     public static void reBlockSites() {
         String[] data = readData(newHosts);
-        gui.runEvalated(data, hostsFile);
+        if (!admin) {
+            gui.runEvalated(data, hostsFile);
+        }
+        else {
+            writeData(data, hostsFile);
+        }
     }
 
     public static void unBlockSites() {
         String[] data = readData(backupFile);
-        gui.runEvalated(data, hostsFile);
+        if (!admin) {
+            gui.runEvalated(data, hostsFile);
+        }
+        else {
+            writeData(data, hostsFile);
+        }
     }
 
     private String load() {
@@ -81,7 +92,12 @@ public class blockSites extends JPanel {
 
     private void reset(JTextArea area) {
         String[] data = readData(backupFile);
-        gui.runEvalated(data, hostsFile);
+        if (!admin) {
+            gui.runEvalated(data, hostsFile);
+        }
+        else {
+            writeData(data, hostsFile);
+        }
         writeData(data, newHosts);
         writeData("", blockedSites);
         area.setText("");

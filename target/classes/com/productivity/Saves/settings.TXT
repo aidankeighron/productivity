@@ -1,7 +1,0 @@
-runOnStartup
-onTop
-reminderActive
-*
-false
-true
-true
