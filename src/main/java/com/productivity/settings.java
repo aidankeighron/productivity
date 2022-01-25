@@ -8,7 +8,6 @@ import java.nio.file.Files;
 import java.util.Timer;
 
 public class settings extends JTabbedPane {
-    //TODO open on startup setting
     //TODO change look and feel
     //TODO end timer when remove reminder
     static HashMap<String, String> settings = new HashMap<String, String>();
@@ -31,6 +30,7 @@ public class settings extends JTabbedPane {
     JPanel configPanel = new JPanel();
     Box configBox = Box.createVerticalBox();
     JPanel reminderPanel = new JPanel();
+    blockSites BlockSites = new blockSites();
     
     JPanel dailyPanel = new checkBoxes(gui.height, gui.length, checkListFile, checkListStateFile, checkColorFile, true);
     String[] timeOptions = {"Seconds", "Minutes", "Hours"};
@@ -73,9 +73,34 @@ public class settings extends JTabbedPane {
         addSetting("Reminder", "reminderActive", "Activates reminder tab", settingTypes.checkbox, reminderActive);
         runBoolean runOnStartup = (a) -> gui.runOnStartup(a);
         addSetting("Run on startup", "runOnStartup", "Runs program when your computer starts", settingTypes.checkbox, runOnStartup);
+        runBoolean blockSitesActive = (a) -> {
+            boolean exists = false;
+            Component[] comp = super.getComponents();
+            for (Component c : comp) {
+                if (c.equals(BlockSites)) {
+                    exists = true;
+                    break;
+                }
+            }
+            if (a) {
+                if (!exists) {
+                    super.addTab("Block Sites", BlockSites);
+                }
+            }
+            else {
+                if (exists) {
+                    super.remove(BlockSites);
+                }
+            }
+            gui.blockVisibility(a);
+        };
+        addSetting("Block Sites", "blockSites", "Allows you to block sites", settingTypes.checkbox, blockSitesActive);
         configPanel.add(configBox);
         configPanel.setVisible(true);
         super.addTab("Config", configPanel);
+        if (Boolean.parseBoolean(getSetting("blockSites"))) {
+            super.addTab("Block Sites", BlockSites);
+        }
         reminder();
         if (Boolean.parseBoolean(getSetting("reminderActive"))) {
             super.addTab("Reminder", reminderPanel);

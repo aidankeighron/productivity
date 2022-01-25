@@ -8,10 +8,8 @@ import java.nio.file.Files;
 import java.awt.BorderLayout;
 
 public class blockSites extends JPanel {
-    //TODO test
+    //TODO fix label spacing
     private static File hostsFile = new File("C:\\Windows\\System32\\drivers\\etc\\hosts");
-    static boolean admin = true;
-    //private static File hostsFile = new File("C:\\Users\\aidan\\Music\\Test.TXT");
     private static File newHosts = new File((!gui.debug)?"classes\\Newhosts":gui.debugPath+"Newhosts");
     private static File backupFile = new File((!gui.debug)?"classes\\hosts":gui.debugPath+"hosts");
     private static File blockedSites = new File((!gui.debug)?"classes\\blockedSites.TXT":gui.debugPath+"blockedSites.TXT");
@@ -26,9 +24,12 @@ public class blockSites extends JPanel {
         JButton reset = new JButton("Reset");
         reset.addActionListener(e -> reset(site));
 
+        JLabel label = new JLabel("You will need to run program as admin for this feature to work");
+
         Box buttons = Box.createHorizontalBox();
         buttons.add(apply);
         buttons.add(reset);
+        buttons.add(label);
 
         super.setLayout(new BorderLayout());
         super.add(BorderLayout.CENTER, site);
@@ -39,22 +40,12 @@ public class blockSites extends JPanel {
 
     public static void reBlockSites() {
         String[] data = readData(newHosts);
-        if (!admin) {
-            gui.runEvalated(data, hostsFile);
-        }
-        else {
-            writeData(data, hostsFile);
-        }
+        writeData(data, hostsFile);
     }
 
     public static void unBlockSites() {
         String[] data = readData(backupFile);
-        if (!admin) {
-            gui.runEvalated(data, hostsFile);
-        }
-        else {
-            writeData(data, hostsFile);
-        }
+        writeData(data, hostsFile);
     }
 
     private String load() {
@@ -92,12 +83,7 @@ public class blockSites extends JPanel {
 
     private void reset(JTextArea area) {
         String[] data = readData(backupFile);
-        if (!admin) {
-            gui.runEvalated(data, hostsFile);
-        }
-        else {
-            writeData(data, hostsFile);
-        }
+        writeData(data, hostsFile);
         writeData(data, newHosts);
         writeData("", blockedSites);
         area.setText("");

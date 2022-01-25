@@ -9,6 +9,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class timer extends JPanel {
+    //TODO remove block sites button when it is inactive
     public final static int ONE_SECOND = 1000;
     JPanel progresrBarsPanel = new JPanel();
     Box progresrBars = Box.createVerticalBox();
@@ -24,7 +25,9 @@ public class timer extends JPanel {
     static boolean isBlocked = false;
     static boolean wantSitesBlocked = false;
     static boolean blockedTimerActive = false;
+    Box block;
     JCheckBox blockBox = new JCheckBox();
+    Box vertical = Box.createVerticalBox();
     
     public timer() {
         JLabel timeLbl = new JLabel("Length:");
@@ -137,7 +140,6 @@ public class timer extends JPanel {
         });
         
         JPanel config = new JPanel();
-        Box vertical = Box.createVerticalBox();
         Box time = Box.createHorizontalBox();
         time.add(timeLbl);
         time.add(timeField);
@@ -147,7 +149,7 @@ public class timer extends JPanel {
         Box check = Box.createHorizontalBox();
         check.add(alarmLbl);
         check.add(alarmBox);
-        Box block = Box.createHorizontalBox();
+        block = Box.createHorizontalBox();
         block.add(blockLbl);
         block.add(blockBox);
         Box button = Box.createHorizontalBox();
@@ -157,7 +159,9 @@ public class timer extends JPanel {
         vertical.add(time);
         vertical.add(name);
         vertical.add(check);
-        vertical.add(block);
+        if (Boolean.parseBoolean(settings.getSetting("blockSites"))) {
+            vertical.add(block);
+        }
         vertical.add(button);
         config.add(vertical);
         
@@ -176,6 +180,15 @@ public class timer extends JPanel {
         super.add(BorderLayout.WEST, scroll);
         //super.add(BorderLayout.WEST, progresrBarsPanel);
         super.setVisible(true);
+    }
+
+    public void setAllowBlock(boolean value) {
+        if (value) {
+            vertical.add(block);
+        }
+        else {
+            vertical.remove(block);
+        }
     }
     
     public void addProgressBar(String name, int length) {
