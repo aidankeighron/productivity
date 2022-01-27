@@ -6,17 +6,17 @@
     "configurations": [
         {
             "type": "java",
-            "name": "Launch gui",
+            "name": "Launch runasadmin",
             "request": "launch",
-            "mainClass": "gui",
-            "projectName": "Productivity_5753000c"
+            "mainClass": "com.productivity.runasadmin",
+            "projectName": "Productivity"
         },
         {
             "type": "java",
             "name": "Launch gui",
             "request": "launch",
-            "mainClass": "gui",
-            "projectName": "Productivity_dfe8dd2c"
+            "mainClass": "com.productivity.gui",
+            "projectName": "Productivity"
         },
         {
             "type": "java",

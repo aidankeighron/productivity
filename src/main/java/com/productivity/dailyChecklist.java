@@ -1,3 +1,5 @@
+package com.productivity;
+
 import java.io.*;
 import java.util.*;
 import javax.swing.*;
@@ -8,9 +10,19 @@ import java.time.format.DateTimeFormatter;
 import java.time.LocalDateTime;
 
 public class dailyChecklist extends JPanel {
-	static File checkListFile = new File("Saves\\daily.TXT");
+	/*static File checkListFile = new File("Saves\\daily.TXT");
 	static File stateListFile = new File("Saves\\dailyCheck.TXT");
+	static File checkColorFile = new File("Saves\\dailyColor.TXT");
 	static File timeFile = new File("Saves\\time.TXT");
+	static File checkListFile = new File("classes\\daily.TXT");
+	static File stateListFile = new File("classes\\dailyCheck.TXT");
+	static File checkColorFile = new File("classes\\dailyColor.TXT");
+	static File timeFile = new File("classes\\time.TXT");*/
+
+	static File checkListFile = new File((!gui.debug)?"classes\\daily.TXT":gui.debugPath+"daily.TXT");
+	static File stateListFile = new File((!gui.debug)?"classes\\dailyCheck.TXT":gui.debugPath+"dailyCheck.TXT");
+	static File checkColorFile = new File((!gui.debug)?"classes\\dailyColor.TXT":gui.debugPath+"dailyColor.TXT");
+	static File timeFile = new File((!gui.debug)?"classes\\time.TXT":gui.debugPath+"time.TXT");
 	static JPanel checkListPanel = new JPanel(new GridLayout(gui.height/30, gui.length/200));
 	static ArrayList<JCheckBox> checkBoxes = new ArrayList<JCheckBox>();
 	
@@ -35,12 +47,13 @@ public class dailyChecklist extends JPanel {
 		}
 		String[] names = readData(checkListFile);
 		String[] checked = readData(stateListFile);
+		String[] color = readData(checkColorFile);
 		for (int i = 0; i < names.length; i++) {
 			if (!reset) {
-				addCheckBox(names[i], Boolean.parseBoolean(checked[i]));
+				addCheckBox(names[i], new Color(Integer.parseInt(color[i])), Boolean.parseBoolean(checked[i]));
 			}
 			else {
-				addCheckBox(names[i], false);
+				addCheckBox(names[i], new Color(Integer.parseInt(color[i])), false);
 			}
 			
 		}
@@ -51,11 +64,12 @@ public class dailyChecklist extends JPanel {
 		gui.repaintFrame();
 	}
 	
-	public static void addCheckBox(String name, Boolean checked) {
+	public static void addCheckBox(String name, Color color,Boolean checked) {
 		JCheckBox checkBox = new JCheckBox(name);
 		checkBox.addActionListener(e -> {
 			saveCheckBoxes();
 		});
+		checkBox.setForeground(color);
 		checkBoxes.add(checkBox);
 		checkBox.setSelected(checked);
 		add(checkBox);

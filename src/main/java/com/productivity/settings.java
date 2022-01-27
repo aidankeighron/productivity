@@ -1,3 +1,5 @@
+package com.productivity;
+
 import java.io.*;
 import java.util.*;
 import javax.swing.*;
@@ -6,16 +8,30 @@ import java.nio.file.Files;
 import java.util.Timer;
 
 public class settings extends JTabbedPane {
+    //TODO change look and feel
     static HashMap<String, String> settings = new HashMap<String, String>();
-    static File settingsFile = new File("Saves\\settings.TXT");
+    /*static File settingsFile = new File("Saves\\settings.TXT");
     static File checkListFile = new File("Saves\\daily.TXT");
     static File checkListStateFile = new File("Saves\\dailyCheck.TXT");
+    static File checkColorFile = new File("Saves\\dailyColor.TXT");
     static File reminderFile = new File("Saves\\reminder.TXT");
+    static File settingsFile = new File("classes\\settings.TXT");
+    static File checkListFile = new File("classes\\daily.TXT");
+    static File checkListStateFile = new File("classes\\dailyCheck.TXT");
+    static File checkColorFile = new File("classes\\dailyColor.TXT");
+    static File reminderFile = new File("classes\\reminder.TXT");*/
+
+    static File settingsFile = new File((!gui.debug)?"classes\\settings.TXT":gui.debugPath+"settings.TXT");
+    static File checkListFile = new File((!gui.debug)?"classes\\daily.TXT":gui.debugPath+"daily.TXT");
+    static File checkListStateFile = new File((!gui.debug)?"classes\\dailyCheck.TXT":gui.debugPath+"dailyCheck.TXT");
+    static File checkColorFile = new File((!gui.debug)?"classes\\dailyColor.TXT":gui.debugPath+"dailyColor.TXT");
+    static File reminderFile = new File((!gui.debug)?"classes\\reminder.TXT":gui.debugPath+"reminder.TXT");
     JPanel configPanel = new JPanel();
     Box configBox = Box.createVerticalBox();
     JPanel reminderPanel = new JPanel();
+    blockSites BlockSites = new blockSites();
     
-    JPanel dailyPanel = new checkBoxes(gui.height, gui.length, checkListFile, checkListStateFile, true);
+    JPanel dailyPanel = new checkBoxes(gui.height, gui.length, checkListFile, checkListStateFile, checkColorFile, true);
     String[] timeOptions = {"Seconds", "Minutes", "Hours"};
     static int timeMuitplyer = 1;
     
@@ -33,11 +49,63 @@ public class settings extends JTabbedPane {
         configBox.add(label);
         runBoolean allOnTop = (a) -> gui.setOnTop(a);
         addSetting("Always on top", "onTop", "Makes window always on your screen unless you minimize it", settingTypes.checkbox, allOnTop);
+        runBoolean reminderActive = (a) -> {
+            boolean exists = false;
+            Component[] comp = super.getComponents();
+            for (Component c : comp) {
+                if (c.equals(reminderPanel)) {
+                    exists = true;
+                    break;
+                }
+            }
+            if (a) {
+                if (!exists) {
+                    super.addTab("Reminder", reminderPanel);
+                    reminder();
+                }
+            }
+            else {
+                if (exists) {
+                    super.remove(reminderPanel);
+                    StopTimer();
+                }
+            }
+        };
+        addSetting("Reminder", "reminderActive", "Activates reminder tab", settingTypes.checkbox, reminderActive);
+        runBoolean runOnStartup = (a) -> gui.runOnStartup(a);
+        addSetting("Run on startup", "runOnStartup", "Runs program when your computer starts", settingTypes.checkbox, runOnStartup);
+        runBoolean blockSitesActive = (a) -> {
+            boolean exists = false;
+            Component[] comp = super.getComponents();
+            for (Component c : comp) {
+                if (c.equals(BlockSites)) {
+                    exists = true;
+                    break;
+                }
+            }
+            if (a) {
+                if (!exists) {
+                    super.addTab("Block Sites", BlockSites);
+                }
+            }
+            else {
+                if (exists) {
+                    super.remove(BlockSites);
+                }
+            }
+            gui.blockVisibility(a);
+        };
+        addSetting("Block Sites", "blockSites", "Allows you to block sites", settingTypes.checkbox, blockSitesActive);
         configPanel.add(configBox);
         configPanel.setVisible(true);
         super.addTab("Config", configPanel);
-        reminder();
-        super.addTab("Reminder", reminderPanel);
+        if (Boolean.parseBoolean(getSetting("blockSites"))) {
+            super.addTab("Block Sites", BlockSites);
+        }
+        if (Boolean.parseBoolean(getSetting("reminderActive"))) {
+            super.addTab("Reminder", reminderPanel);
+            reminder();
+        }
         super.addTab("Daily Checklist", dailyPanel);
         super.setVisible(true);
     }
@@ -181,7 +249,10 @@ public class settings extends JTabbedPane {
             JCheckBox checkBox = new JCheckBox(name);
             checkBox.addActionListener(e -> {
                 settings.put(key, Boolean.toString(checkBox.isSelected()));
-                runOperation(checkBox.isSelected(), rt);
+                if (rt != null) {
+                    runOperation(checkBox.isSelected(), rt);
+                }
+                
                 saveSettings();
             });
             try {
