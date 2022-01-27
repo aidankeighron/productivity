@@ -9,7 +9,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class timer extends JPanel {
-    //TODO remove block sites button when it is inactive
     public final static int ONE_SECOND = 1000;
     JPanel progresrBarsPanel = new JPanel();
     Box progresrBars = Box.createVerticalBox();
@@ -161,6 +160,7 @@ public class timer extends JPanel {
         vertical.add(check);
         if (Boolean.parseBoolean(settings.getSetting("blockSites"))) {
             vertical.add(block);
+            System.out.println("I happen");
         }
         vertical.add(button);
         config.add(vertical);

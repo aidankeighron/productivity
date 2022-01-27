@@ -8,7 +8,7 @@ import java.nio.file.Files;
 import java.awt.BorderLayout;
 
 public class blockSites extends JPanel {
-    //TODO fix label spacing
+
     private static File hostsFile = new File("C:\\Windows\\System32\\drivers\\etc\\hosts");
     private static File newHosts = new File((!gui.debug)?"classes\\Newhosts":gui.debugPath+"Newhosts");
     private static File backupFile = new File((!gui.debug)?"classes\\hosts":gui.debugPath+"hosts");
@@ -29,11 +29,13 @@ public class blockSites extends JPanel {
         Box buttons = Box.createHorizontalBox();
         buttons.add(apply);
         buttons.add(reset);
-        buttons.add(label);
+        Box vertical = Box.createVerticalBox();
+        vertical.add(label);
+        vertical.add(buttons);
 
         super.setLayout(new BorderLayout());
         super.add(BorderLayout.CENTER, site);
-        super.add(BorderLayout.SOUTH, buttons);
+        super.add(BorderLayout.SOUTH, vertical);
         super.setVisible(true);
         gui.repaintFrame();
     }

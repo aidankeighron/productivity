@@ -9,7 +9,6 @@ import java.util.Timer;
 
 public class settings extends JTabbedPane {
     //TODO change look and feel
-    //TODO end timer when remove reminder
     static HashMap<String, String> settings = new HashMap<String, String>();
     /*static File settingsFile = new File("Saves\\settings.TXT");
     static File checkListFile = new File("Saves\\daily.TXT");
@@ -62,11 +61,13 @@ public class settings extends JTabbedPane {
             if (a) {
                 if (!exists) {
                     super.addTab("Reminder", reminderPanel);
+                    reminder();
                 }
             }
             else {
                 if (exists) {
                     super.remove(reminderPanel);
+                    StopTimer();
                 }
             }
         };
@@ -101,9 +102,9 @@ public class settings extends JTabbedPane {
         if (Boolean.parseBoolean(getSetting("blockSites"))) {
             super.addTab("Block Sites", BlockSites);
         }
-        reminder();
         if (Boolean.parseBoolean(getSetting("reminderActive"))) {
             super.addTab("Reminder", reminderPanel);
+            reminder();
         }
         super.addTab("Daily Checklist", dailyPanel);
         super.setVisible(true);

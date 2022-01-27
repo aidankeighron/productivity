@@ -8,14 +8,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.nio.file.Files;
 public class checkBoxes extends JPanel {
-	//TODO fix colors
+
 	ArrayList<JCheckBox> checkBoxes = new ArrayList<JCheckBox>();
 	JPanel checkListPanel;
 	File checkListFile;
 	File stateListFile;
 	File colorListFile;
-	static String[] colorNames = {"Black", "Red", "Yellow", "Green"};
-	static Color[] colors = {Color.BLACK, Color.RED, Color.YELLOW, Color.GREEN};
+	static String[] colorNames = {"Black", "Red", "Blue", "Green"};
+	static Color[] colors = {Color.BLACK, new Color(250, 0, 0), new Color(0, 0, 230), new Color(0, 220, 0)};
 	Color selectedColor = Color.BLACK;
 	
 	public checkBoxes(int height, int length, File file, File checkedFile, File colorFile, Boolean daily) {
@@ -85,17 +85,10 @@ public class checkBoxes extends JPanel {
 		JMenuItem[] items = new JMenuItem[3];
 		items[0] = new JMenuItem("Edit");
 		items[0].addActionListener(e -> {
-			checkBox.setText(JOptionPane.showInputDialog(this, "new name"));
+			checkBox.setText(JOptionPane.showInputDialog(this, "new name", checkBox.getText()));
 		});
-		items[1] = new JMenuItem("Remove");
+		items[1] = new JMenuItem("Change color");
 		items[1].addActionListener(e -> {
-			checkBoxes.remove(checkBox);
-			checkListPanel.remove(checkBox);
-			saveCheckBoxes();
-			gui.repaintFrame();
-		});
-		items[2] = new JMenuItem("Change color");
-		items[2].addActionListener(e -> {
 			int index = 0;
 			for (int k = 0; k < colors.length; k++) {
 				if (colors[k].getRGB() == checkBox.getForeground().getRGB()) {
@@ -113,6 +106,13 @@ public class checkBoxes extends JPanel {
 			}
 			checkBox.setForeground(newColor);
 			saveCheckBoxes();
+		});
+		items[2] = new JMenuItem("Remove");
+		items[2].addActionListener(e -> {
+			checkBoxes.remove(checkBox);
+			checkListPanel.remove(checkBox);
+			saveCheckBoxes();
+			gui.repaintFrame();
 		});
 		popup pop = new popup(items);
 		checkBox.addMouseListener(pop.new PopClickListener());
@@ -181,17 +181,13 @@ public void loadCheckBoxes() {
 		JMenuItem[] items = new JMenuItem[3];
 		items[0] = new JMenuItem("Edit");
 		items[0].addActionListener(e -> {
-			checkBox.setText(JOptionPane.showInputDialog(this, "New name"));
+			String input = JOptionPane.showInputDialog(this, "new name", checkBox.getText());
+			if (input != null) {
+				checkBox.setText(input);
+			}
 		});
-		items[1] = new JMenuItem("Remove");
+		items[1] = new JMenuItem("Change color");
 		items[1].addActionListener(e -> {
-			checkBoxes.remove(checkBox);
-			checkListPanel.remove(checkBox);
-			saveCheckBoxes();
-			gui.repaintFrame();
-		});
-		items[2] = new JMenuItem("Change color");
-		items[2].addActionListener(e -> {
 			int index = 0;
 			for (int k = 0; k < colors.length; k++) {
 				if (colors[k].getRGB() == checkBox.getForeground().getRGB()) {
@@ -209,6 +205,13 @@ public void loadCheckBoxes() {
 			}
 			checkBox.setForeground(newColor);
 			saveCheckBoxes();
+		});
+		items[2] = new JMenuItem("Remove");
+		items[2].addActionListener(e -> {
+			checkBoxes.remove(checkBox);
+			checkListPanel.remove(checkBox);
+			saveCheckBoxes();
+			gui.repaintFrame();
 		});
 		popup pop = new popup(items);
 		checkBox.addMouseListener(pop.new PopClickListener());

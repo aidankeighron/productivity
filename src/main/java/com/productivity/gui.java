@@ -12,7 +12,8 @@ public class gui extends JFrame {
 	
 	public static Boolean debug = true;
 	public static String debugPath = "src\\main\\java\\com\\productivity\\Saves\\";
-	static JFrame frame = new JFrame("Produtivity");/*
+	static JFrame frame = new JFrame("Produtivity");
+	/*
 	static File checkListFile = new File("Saves\\list.TXT");
 	static File checkStateFile = new File("Saves\\listCheck.TXT");
 	static File colorFile = new File("Saves\\listColor.TXT");
@@ -27,9 +28,14 @@ public class gui extends JFrame {
 	static String[] lookAndFeel = {"Motif", "Metal"};
 	static String[] lookAndFeelValues = {"com.sun.java.swing.plaf.motif.MotifLookAndFeel", "javax.swing.plaf.metal.MetalLookAndFeel"};
 
-	static timer Timer = new timer();
+	static timer Timer;
 	public static void main(String[] args) throws IOException {
 		start();
+		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+			public void run() {
+				blockSites.unBlockSites();
+			}
+		}, "Shutdown-thread"));
 	}
 	
 	public static void start() {
@@ -51,6 +57,7 @@ public class gui extends JFrame {
 		JTabbedPane tabbedPane = new JTabbedPane();
 		tabbedPane.addTab("Checklist", new checkBoxes(height, length, checkListFile, checkStateFile, colorFile, false));
 		tabbedPane.addTab("Daily Checklist", new dailyChecklist());
+		Timer = new timer();
 		tabbedPane.addTab("Timers", Timer);
 		tabbedPane.addTab("Settings", new settings());
 		frame.add(tabbedPane);
