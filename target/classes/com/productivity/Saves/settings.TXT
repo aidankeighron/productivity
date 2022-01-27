@@ -1,0 +1,9 @@
+runOnStartup
+onTop
+reminderActive
+blockSites
+*
+false
+false
+true
+false

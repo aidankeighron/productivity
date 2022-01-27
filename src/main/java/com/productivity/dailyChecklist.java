@@ -18,7 +18,7 @@ public class dailyChecklist extends JPanel {
 	static File stateListFile = new File("classes\\dailyCheck.TXT");
 	static File checkColorFile = new File("classes\\dailyColor.TXT");
 	static File timeFile = new File("classes\\time.TXT");*/
-
+	
 	static File checkListFile = new File((!gui.debug)?"classes\\daily.TXT":gui.debugPath+"daily.TXT");
 	static File stateListFile = new File((!gui.debug)?"classes\\dailyCheck.TXT":gui.debugPath+"dailyCheck.TXT");
 	static File checkColorFile = new File((!gui.debug)?"classes\\dailyColor.TXT":gui.debugPath+"dailyColor.TXT");

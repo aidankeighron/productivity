@@ -3,6 +3,9 @@ package com.productivity;
 import java.io.*;
 import java.util.*;
 import javax.swing.*;
+
+import com.productivity.Custom.customCheckList;
+
 import java.nio.file.Files;
 
 public class gui extends JFrame {
@@ -20,20 +23,20 @@ public class gui extends JFrame {
 	static File checkListFile = new File("classes\\list.TXT");
 	static File checkStateFile = new File("classes\\listCheck.TXT");
 	static File colorFile = new File("classes\\listColor.TXT");*/
-
+	
 	static File checkListFile = new File((!debug)?"classes\\list.TXT":debugPath+"list.TXT");
 	static File checkStateFile = new File((!debug)?"classes\\listCheck.TXT":debugPath+"listCheck.TXT");
 	static File colorFile = new File((!debug)?"classes\\listColor.TXT":debugPath+"listColor.TXT");
-
+	
 	static String[] lookAndFeel = {"Motif", "Metal"};
 	static String[] lookAndFeelValues = {"com.sun.java.swing.plaf.motif.MotifLookAndFeel", "javax.swing.plaf.metal.MetalLookAndFeel"};
-
+	
 	static timer Timer;
 	public static void main(String[] args) throws IOException {
 		start();
 		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
 			public void run() {
-					blockSites.unBlockSites();
+				blockSites.unBlockSites();
 			}
 		}, "Shutdown-thread"));
 	}
@@ -57,6 +60,7 @@ public class gui extends JFrame {
 		JTabbedPane tabbedPane = new JTabbedPane();
 		tabbedPane.addTab("Checklist", new checkBoxes(height, length, checkListFile, checkStateFile, colorFile, false));
 		tabbedPane.addTab("Daily Checklist", new dailyChecklist());
+		tabbedPane.addTab("Custom Checklist", new customCheckList());
 		Timer = new timer();
 		tabbedPane.addTab("Timers", Timer);
 		tabbedPane.addTab("Settings", new settings());
@@ -65,7 +69,7 @@ public class gui extends JFrame {
 		frame.setSize(length, height);
 		frame.setVisible(true);
 	}
-
+	
 	static void blockVisibility(boolean value) {
 		Timer.setAllowBlock(value);
 	}
@@ -119,10 +123,10 @@ public class gui extends JFrame {
 		frame.repaint();
 		frame.setVisible(true);
 	}
-
+	
 	public static void runOnStartup(Boolean value) {
 		String path = System.getenv("APPDATA") + "\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\productivity.bat";
-
+		
 		if (value) {
 			File startupFile = new File(path);
 			try {
@@ -147,7 +151,7 @@ public class gui extends JFrame {
 			}
 		}
 	}
-
+	
 	public static void setLookAndFeel(int index) {
 		try {
 			UIManager.setLookAndFeel(lookAndFeelValues[index]);
@@ -157,7 +161,7 @@ public class gui extends JFrame {
 			e.printStackTrace();
 		}
 	}
-
+	
 	public static String[] getLookAndFeels() {
 		return lookAndFeel;
 	}

@@ -166,7 +166,7 @@ public class timer extends JPanel {
         
         progresrBarsPanel.add(progresrBars);
         namesPanel.add(names);
-
+        
         JPanel scrollPanel = new JPanel();
         scrollPanel.setLayout(new BorderLayout());
         scrollPanel.add(BorderLayout.WEST, progresrBarsPanel);
@@ -180,7 +180,7 @@ public class timer extends JPanel {
         //super.add(BorderLayout.WEST, progresrBarsPanel);
         super.setVisible(true);
     }
-
+    
     public void setAllowBlock(boolean value) {
         if (value) {
             vertical.add(block);

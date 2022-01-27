@@ -20,7 +20,7 @@ public class settings extends JTabbedPane {
     static File checkListStateFile = new File("classes\\dailyCheck.TXT");
     static File checkColorFile = new File("classes\\dailyColor.TXT");
     static File reminderFile = new File("classes\\reminder.TXT");*/
-
+    
     static File settingsFile = new File((!gui.debug)?"classes\\settings.TXT":gui.debugPath+"settings.TXT");
     static File checkListFile = new File((!gui.debug)?"classes\\daily.TXT":gui.debugPath+"daily.TXT");
     static File checkListStateFile = new File((!gui.debug)?"classes\\dailyCheck.TXT":gui.debugPath+"dailyCheck.TXT");

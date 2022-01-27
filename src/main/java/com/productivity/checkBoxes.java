@@ -8,7 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.nio.file.Files;
 public class checkBoxes extends JPanel {
-
+	
 	ArrayList<JCheckBox> checkBoxes = new ArrayList<JCheckBox>();
 	JPanel checkListPanel;
 	File checkListFile;
@@ -135,126 +135,122 @@ public class checkBoxes extends JPanel {
 			checkListPanel.remove(checkBox);
 		}
 		checkBoxes = new ArrayList<JCheckBox>();
-		try { //TODO change to write("", file);
-		clearTheFile(checkListFile);
-		clearTheFile(stateListFile);
-	} catch (IOException e) {
-		e.printStackTrace();
+		writeData("", checkListFile);
+		writeData("", stateListFile);
+		checkListPanel.repaint();
+		gui.repaintFrame();
 	}
-	checkListPanel.repaint();
-	gui.repaintFrame();
-}
-
-public void clearTheFile(File file) throws IOException {
-	FileWriter fwOb = new FileWriter(file); 
-	PrintWriter pwOb = new PrintWriter(fwOb, false);
-	pwOb.flush();
-	pwOb.close();
-	fwOb.close();
-}
-
-public void saveCheckBoxes() {
-	String[] name = new String[checkBoxes.size()];
-	String[] state = new String[checkBoxes.size()];
-	String[] color = new String[checkBoxes.size()];
-	for (int i = 0; i < checkBoxes.size(); i++) {
-		name[i] = checkBoxes.get(i).getText();
-		state[i] = Boolean.toString(checkBoxes.get(i).isSelected());
-		color[i] = Integer.toString(checkBoxes.get(i).getForeground().getRGB());
+	
+	public void clearTheFile(File file) throws IOException {
+		FileWriter fwOb = new FileWriter(file); 
+		PrintWriter pwOb = new PrintWriter(fwOb, false);
+		pwOb.flush();
+		pwOb.close();
+		fwOb.close();
 	}
-	writeData(name, checkListFile);
-	writeData(state, stateListFile);
-	writeData(color, colorListFile);
-}
-
-public void loadCheckBoxes() {
-	String[] data = readData(checkListFile);
-	String[] states = readData(stateListFile);
-	String[] color = readData(colorListFile);
-	for (int i = 0; i < data.length; i++) {
-		JCheckBox checkBox = new JCheckBox(data[i]);
-		checkBox.addActionListener(e -> {
-			saveCheckBoxes();
-		});
-		checkBox.setSelected(Boolean.parseBoolean(states[i]));
-		checkBox.setForeground(new Color(Integer.parseInt(color[i])));
-		JMenuItem[] items = new JMenuItem[3];
-		items[0] = new JMenuItem("Edit");
-		items[0].addActionListener(e -> {
-			String input = JOptionPane.showInputDialog(this, "new name", checkBox.getText());
-			if (input != null) {
-				checkBox.setText(input);
-			}
-		});
-		items[1] = new JMenuItem("Change color");
-		items[1].addActionListener(e -> {
-			int index = 0;
-			for (int k = 0; k < colors.length; k++) {
-				if (colors[k].getRGB() == checkBox.getForeground().getRGB()) {
-					index = k;
-					break;
-				}
-			}
-			String input = (String)JOptionPane.showInputDialog(null, "Choose new Color", "", JOptionPane.QUESTION_MESSAGE, null, colorNames, colorNames[index]);
-			Color newColor = checkBox.getForeground();
-			for (int j = 0; j < colorNames.length; j++) {
-				if (colorNames[j].equals(input)) {
-					newColor = colors[j];
-					break;
-				}
-			}
-			checkBox.setForeground(newColor);
-			saveCheckBoxes();
-		});
-		items[2] = new JMenuItem("Remove");
-		items[2].addActionListener(e -> {
-			checkBoxes.remove(checkBox);
-			checkListPanel.remove(checkBox);
-			saveCheckBoxes();
-			gui.repaintFrame();
-		});
-		popup pop = new popup(items);
-		checkBox.addMouseListener(pop.new PopClickListener());
-		add(checkBox);
-		checkBoxes.add(checkBox);
-	}
-	saveCheckBoxes();
-}
-
-public String[] readData(File file) {
-	String[] result = new String[0];
-	try {
-		result = new String[(int)Files.lines(file.toPath()).count()];
-		Scanner scanner = new Scanner(file);
-		int index = 0;
-		while (scanner.hasNextLine()) {
-			result[index] = scanner.nextLine();
-			index++;
+	
+	public void saveCheckBoxes() {
+		String[] name = new String[checkBoxes.size()];
+		String[] state = new String[checkBoxes.size()];
+		String[] color = new String[checkBoxes.size()];
+		for (int i = 0; i < checkBoxes.size(); i++) {
+			name[i] = checkBoxes.get(i).getText();
+			state[i] = Boolean.toString(checkBoxes.get(i).isSelected());
+			color[i] = Integer.toString(checkBoxes.get(i).getForeground().getRGB());
 		}
-		scanner.close();
+		writeData(name, checkListFile);
+		writeData(state, stateListFile);
+		writeData(color, colorListFile);
 	}
-	catch (Exception e) {
-		e.printStackTrace();
+	
+	public void loadCheckBoxes() {
+		String[] data = readData(checkListFile);
+		String[] states = readData(stateListFile);
+		String[] color = readData(colorListFile);
+		for (int i = 0; i < data.length; i++) {
+			JCheckBox checkBox = new JCheckBox(data[i]);
+			checkBox.addActionListener(e -> {
+				saveCheckBoxes();
+			});
+			checkBox.setSelected(Boolean.parseBoolean(states[i]));
+			checkBox.setForeground(new Color(Integer.parseInt(color[i])));
+			JMenuItem[] items = new JMenuItem[3];
+			items[0] = new JMenuItem("Edit");
+			items[0].addActionListener(e -> {
+				String input = JOptionPane.showInputDialog(this, "new name", checkBox.getText());
+				if (input != null) {
+					checkBox.setText(input);
+				}
+			});
+			items[1] = new JMenuItem("Change color");
+			items[1].addActionListener(e -> {
+				int index = 0;
+				for (int k = 0; k < colors.length; k++) {
+					if (colors[k].getRGB() == checkBox.getForeground().getRGB()) {
+						index = k;
+						break;
+					}
+				}
+				String input = (String)JOptionPane.showInputDialog(null, "Choose new Color", "", JOptionPane.QUESTION_MESSAGE, null, colorNames, colorNames[index]);
+				Color newColor = checkBox.getForeground();
+				for (int j = 0; j < colorNames.length; j++) {
+					if (colorNames[j].equals(input)) {
+						newColor = colors[j];
+						break;
+					}
+				}
+				checkBox.setForeground(newColor);
+				saveCheckBoxes();
+			});
+			items[2] = new JMenuItem("Remove");
+			items[2].addActionListener(e -> {
+				checkBoxes.remove(checkBox);
+				checkListPanel.remove(checkBox);
+				saveCheckBoxes();
+				gui.repaintFrame();
+			});
+			popup pop = new popup(items);
+			checkBox.addMouseListener(pop.new PopClickListener());
+			add(checkBox);
+			checkBoxes.add(checkBox);
+		}
+		saveCheckBoxes();
 	}
-	return result;
-}
-
-public void writeData(String data, File file) {
-	try  {
-		FileWriter writer = new FileWriter(file);
-		writer.write(data);
-		writer.close();
+	
+	public String[] readData(File file) {
+		String[] result = new String[0];
+		try {
+			result = new String[(int)Files.lines(file.toPath()).count()];
+			Scanner scanner = new Scanner(file);
+			int index = 0;
+			while (scanner.hasNextLine()) {
+				result[index] = scanner.nextLine();
+				index++;
+			}
+			scanner.close();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
-	catch (Exception e) {
-		e.printStackTrace();
+	
+	public void writeData(String data, File file) {
+		try  {
+			FileWriter writer = new FileWriter(file);
+			writer.write(data);
+			writer.close();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
-}
-
-public void writeData(String[] dataArr, File file) {
-	String data = "";
-	for (int i = 0; i < dataArr.length; i++) {
-		data += (dataArr[i] + "\n");
+	
+	public void writeData(String[] dataArr, File file) {
+		String data = "";
+		for (int i = 0; i < dataArr.length; i++) {
+			data += (dataArr[i] + "\n");
+		}
+		writeData(data, file);
 	}
-	writeData(data, file);
-}
 }
