@@ -3,7 +3,7 @@ onTop
 reminderActive
 blockSites
 *
+false
+false
 true
-true
-true
-true
+false

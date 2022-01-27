@@ -32,7 +32,6 @@ public class dailyChecklist extends JPanel {
 		LocalDateTime now = LocalDateTime.now();
 		if (!dtf.format(now).equals(readData(timeFile)[0])) {
 			reset = true;
-			writeData("", checkListFile);
 		}
 		writeData(dtf.format(now), timeFile);
 		resetBoxes(reset);
@@ -64,7 +63,7 @@ public class dailyChecklist extends JPanel {
 		gui.repaintFrame();
 	}
 	
-	public static void addCheckBox(String name, Color color,Boolean checked) {
+	public static void addCheckBox(String name, Color color, Boolean checked) {
 		JCheckBox checkBox = new JCheckBox(name);
 		checkBox.addActionListener(e -> {
 			saveCheckBoxes();

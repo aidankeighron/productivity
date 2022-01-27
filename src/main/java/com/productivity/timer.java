@@ -159,8 +159,7 @@ public class timer extends JPanel {
         vertical.add(name);
         vertical.add(check);
         if (Boolean.parseBoolean(settings.getSetting("blockSites"))) {
-            vertical.add(block);
-            System.out.println("I happen");
+            vertical.add(block);         
         }
         vertical.add(button);
         config.add(vertical);
