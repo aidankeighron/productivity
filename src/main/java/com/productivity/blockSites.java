@@ -5,6 +5,8 @@ import java.io.*;
 import java.util.*;
 import javax.swing.*;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.awt.BorderLayout;
 
 public class blockSites extends JPanel {
@@ -41,13 +43,17 @@ public class blockSites extends JPanel {
     }
 
     public static void reBlockSites() {
-        String[] data = readData(newHosts);
-        writeData(data, hostsFile);
+        if (Files.isWritable(Paths.get(hostsFile.getAbsolutePath()))) {
+            String[] data = readData(newHosts);
+            writeData(data, hostsFile);
+        }
     }
 
     public static void unBlockSites() {
-        String[] data = readData(backupFile);
-        writeData(data, hostsFile);
+        if (Files.isWritable(Paths.get(hostsFile.getAbsolutePath()))) {
+            String[] data = readData(backupFile);
+            writeData(data, hostsFile);
+        }
     }
 
     private String load() {
@@ -85,7 +91,9 @@ public class blockSites extends JPanel {
 
     private void reset(JTextArea area) {
         String[] data = readData(backupFile);
-        writeData(data, hostsFile);
+        if (Files.isWritable(Paths.get(hostsFile.getAbsolutePath()))) {
+            writeData(data, hostsFile);
+        }
         writeData(data, newHosts);
         writeData("", blockedSites);
         area.setText("");
