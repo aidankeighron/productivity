@@ -9,36 +9,50 @@ import com.productivity.checkBoxes;
 import com.productivity.gui;
 
 public class addCustomCheckList extends JPanel {
-    
     static ArrayList<String> names = new ArrayList<String>();
     public static String customPath = "src\\main\\java\\com\\productivity\\Custom\\Saves\\";
     public static File customNames = new File(customPath + "customNames.TXT");
+    static Box vertical = Box.createVerticalBox();
     
     public addCustomCheckList() {
         JTextField name = new JTextField();
         name.addActionListener(e -> {
-            addCheckList(name.getText(), true);
+            if (!names.contains(name.getText()) && !name.getText().equals("")) {
+                addCheckList(name.getText());
+                if (getNumberOfChecklists() == 1) {
+                    gui.addCustomCheckList();
+                    gui.repaintFrame();
+                }
+                name.setText("");
+            }
         });
-
+        JLabel nameLbl = new JLabel("Name Of Custom Checklist:");
+        
+        Box nameBox = Box.createVerticalBox();
+        nameBox.add(nameLbl);
+        nameBox.add(name);
         super.setLayout(new BorderLayout());
-        super.add(BorderLayout.NORTH, name);
+        super.add(BorderLayout.NORTH, nameBox);
+        super.add(BorderLayout.CENTER, vertical);
     }
     
-    public static JTabbedPane loadCheckLists() {
+    public static int getNumberOfChecklists() {
+        return readData(customNames).length;
+    }
+    
+    public static void loadCheckLists() {
         String[] data = readData(customNames);
-        JTabbedPane pane = new JTabbedPane();
         names = new ArrayList<String>(Arrays.asList(data));
         for (int i = 0; i < names.size(); i++) {
-            pane.addTab(names.get(i), addCheckList(names.get(i), false));
+            addCheckList(names.get(i));
         }
-        return pane;
     }
     
-    public static checkBoxes addCheckList(String n, Boolean refresh) {
+    public static void addCheckList(String n) {
         File name = new File(customPath + n + "Name.TXT");
         File color = new File(customPath + n + "Color.TXT");
         File check = new File(customPath + n + "Check.TXT");
-        if (name.exists() || color.exists() || check.exists()) {        
+        if (!name.exists() && !color.exists() && !check.exists()) {        
             try {
                 name.createNewFile();
                 color.createNewFile();
@@ -47,11 +61,38 @@ public class addCustomCheckList extends JPanel {
                 e.printStackTrace();
             }
         }
-        names.add(n);
-        if (refresh) {
-            customCheckList.addCheckList(new checkBoxes(gui.height, gui.length, name, check, color, false), n);
+        if (!names.contains(n)) {
+            names.add(n);
         }
-        return new checkBoxes(gui.height, gui.length, name, check, color, false);
+        saveChecklists();
+        JButton button = new JButton(n);
+        button.addActionListener(e -> {
+            vertical.remove(button);
+            gui.repaintFrame();
+            deleteChecklist(n);
+        });
+        vertical.add(button);
+        gui.customCheckList.addCheckList(new checkBoxes(gui.height, gui.length, name, check, color, false), n);
+    }
+    
+    public static void deleteChecklist(String n) {
+        File name = new File(customPath + n + "Name.TXT");
+        File color = new File(customPath + n + "Color.TXT");
+        File check = new File(customPath + n + "Check.TXT");
+        name.delete();
+        color.delete();
+        check.delete();
+        names.remove(n);
+        gui.customCheckList.removeChecklist(n);
+        if (names.size() <= 0) {
+            gui.removeCustomCheckList();
+        }
+    }
+    
+    public static void saveChecklists() {
+        String[] data = new String[names.size()];
+        data = names.toArray(data);
+        writeData(data, customNames);
     }
     
     public static String[] readData(File file) {

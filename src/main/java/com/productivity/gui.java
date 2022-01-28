@@ -4,11 +4,14 @@ import java.io.*;
 import java.util.*;
 import javax.swing.*;
 
+import com.productivity.Custom.addCustomCheckList;
 import com.productivity.Custom.customCheckList;
 
 import java.nio.file.Files;
 
 public class gui extends JFrame {
+	//TODO fix repaint
+
 	public static int length = 400;
 	public static int height = 300;
 	public static boolean onTop = false;
@@ -16,6 +19,8 @@ public class gui extends JFrame {
 	public static Boolean debug = true;
 	public static String debugPath = "src\\main\\java\\com\\productivity\\Saves\\";
 	static JFrame frame = new JFrame("Produtivity");
+	static JTabbedPane tabbedPane;
+	public static customCheckList customCheckList = new customCheckList();
 	/*
 	static File checkListFile = new File("Saves\\list.TXT");
 	static File checkStateFile = new File("Saves\\listCheck.TXT");
@@ -55,19 +60,31 @@ public class gui extends JFrame {
 		}
 		settings.loadSettings();
 		loadSettings();
-		frame.setAlwaysOnTop(onTop);
-		frame.setLocationByPlatform(true);
-		JTabbedPane tabbedPane = new JTabbedPane();
+		addCustomCheckList.loadCheckLists();
+		tabbedPane = new JTabbedPane();
 		tabbedPane.addTab("Checklist", new checkBoxes(height, length, checkListFile, checkStateFile, colorFile, false));
 		tabbedPane.addTab("Daily Checklist", new dailyChecklist());
-		tabbedPane.addTab("Custom Checklist", new customCheckList());
 		Timer = new timer();
 		tabbedPane.addTab("Timers", Timer);
 		tabbedPane.addTab("Settings", new settings());
+		if (addCustomCheckList.getNumberOfChecklists() > 0) {
+			tabbedPane.addTab("Custom Checklist", customCheckList);
+		}
 		frame.add(tabbedPane);
+		frame.setAlwaysOnTop(onTop);
+		//frame.setLocationByPlatform(true); TODO fix
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(length, height);
 		frame.setVisible(true);
+	}
+
+	public static void addCustomCheckList() {
+		tabbedPane.addTab("Custom Checklist", customCheckList);
+	}
+
+	public static void removeCustomCheckList() {
+		tabbedPane.remove(customCheckList);
+		repaintFrame();
 	}
 	
 	static void blockVisibility(boolean value) {
@@ -121,7 +138,6 @@ public class gui extends JFrame {
 	
 	public static void repaintFrame() {
 		frame.repaint();
-		frame.setVisible(true);
 	}
 	
 	public static void runOnStartup(Boolean value) {

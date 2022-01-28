@@ -175,10 +175,7 @@ public class timer extends JPanel {
         
         super.setLayout(new BorderLayout());
         super.add(BorderLayout.EAST, config);
-        //super.add(BorderLayout.CENTER, namesPanel);
         super.add(BorderLayout.WEST, scroll);
-        //super.add(BorderLayout.WEST, progresrBarsPanel);
-        super.setVisible(true);
     }
     
     public void setAllowBlock(boolean value) {

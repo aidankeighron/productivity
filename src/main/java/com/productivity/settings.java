@@ -3,6 +3,8 @@ package com.productivity;
 import java.io.*;
 import java.util.*;
 import javax.swing.*;
+import com.productivity.Custom.addCustomCheckList;
+
 import java.awt.*;
 import java.nio.file.Files;
 import java.util.Timer;
@@ -97,7 +99,6 @@ public class settings extends JTabbedPane {
         };
         addSetting("Block Sites", "blockSites", "Allows you to block sites", settingTypes.checkbox, blockSitesActive);
         configPanel.add(configBox);
-        configPanel.setVisible(true);
         super.addTab("Config", configPanel);
         if (Boolean.parseBoolean(getSetting("blockSites"))) {
             super.addTab("Block Sites", BlockSites);
@@ -106,8 +107,8 @@ public class settings extends JTabbedPane {
             super.addTab("Reminder", reminderPanel);
             reminder();
         }
+        super.addTab("Custom Checklsits", new addCustomCheckList());
         super.addTab("Daily Checklist", dailyPanel);
-        super.setVisible(true);
     }
     
     void reminder() {

@@ -66,8 +66,6 @@ public class checkBoxes extends JPanel {
 		super.add(checkListPanel, BorderLayout.CENTER);
 		super.add(buttonPanel, BorderLayout.SOUTH);
 		loadCheckBoxes();
-		checkListPanel.setVisible(true);
-		super.setVisible(true);
 	}
 	
 	public void add(JCheckBox box) {

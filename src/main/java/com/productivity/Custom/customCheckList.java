@@ -1,23 +1,27 @@
 package com.productivity.Custom;
 
-import java.io.*;
 import java.util.*;
 import javax.swing.*;
-
 import com.productivity.checkBoxes;
+import com.productivity.gui;
 
-import java.nio.file.Files;
+public class customCheckList extends JTabbedPane {
 
-public class customCheckList extends JPanel {
-
-    static JTabbedPane pane = new JTabbedPane();
+    static HashMap<String, checkBoxes> boxes = new HashMap<String, checkBoxes>();
 
     public customCheckList() {
-        pane = addCustomCheckList.loadCheckLists();
-        super.add(pane);
+
     }
 
-    public static void addCheckList(checkBoxes checkBoxes, String name) {
-        pane.addTab(name, checkBoxes);
+    public void addCheckList(checkBoxes checkBoxes, String name) {
+        super.addTab(name, checkBoxes);
+        boxes.put(name, checkBoxes);
+        gui.repaintFrame();
+    }
+
+    public void removeChecklist(String name) {
+        super.remove(boxes.get(name));
+        boxes.remove(name);
+        gui.repaintFrame();
     }
 }

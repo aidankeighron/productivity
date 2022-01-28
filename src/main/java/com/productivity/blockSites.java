@@ -37,8 +37,6 @@ public class blockSites extends JPanel {
         super.setLayout(new BorderLayout());
         super.add(BorderLayout.CENTER, site);
         super.add(BorderLayout.SOUTH, vertical);
-        super.setVisible(true);
-        gui.repaintFrame();
     }
     
     public static void reBlockSites() {

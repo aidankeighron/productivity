@@ -37,7 +37,6 @@ public class dailyChecklist extends JPanel {
 		resetBoxes(reset);
 		super.setLayout(new BorderLayout());
 		super.add(BorderLayout.WEST, checkListPanel);
-		super.setVisible(true);
 	}
 	
 	public static void resetBoxes(boolean reset) {
