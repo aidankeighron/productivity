@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Launch Cards",
+            "request": "launch",
+            "mainClass": "Cards",
+            "projectName": ""
+        },
+        {
+            "type": "java",
             "name": "Launch runasadmin",
             "request": "launch",
             "mainClass": "com.productivity.runasadmin",
