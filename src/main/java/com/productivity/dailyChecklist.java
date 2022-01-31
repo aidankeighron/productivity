@@ -10,18 +10,19 @@ import java.time.LocalDateTime;
 
 public class DailyChecklist extends JPanel {
 	
-	//private static File nameFile = new File(gui.debugPath+"daily.TXT");
-	//private static File stateFile = new File(gui.debugPath+"dailyCheck.TXT");
-	//private static File colorFile = new File(gui.debugPath+"dailyColor.TXT");
-	//private static File timeFile = new File(gui.debugPath+"time.TXT");
-	private static File nameFile = new File((!gui.debug)?"classes\\daily.TXT":gui.debugPath+"daily.TXT");
-	private static File stateFile = new File((!gui.debug)?"classes\\dailyCheck.TXT":gui.debugPath+"dailyCheck.TXT");
-	private static File colorFile = new File((!gui.debug)?"classes\\dailyColor.TXT":gui.debugPath+"dailyColor.TXT");
-	private static File timeFile = new File((!gui.debug)?"classes\\time.TXT":gui.debugPath+"time.TXT");
+	private static File nameFile;
+	private static File stateFile;
+	private static File colorFile;
+	private static File timeFile;
+	//private static File nameFile = new File((!gui.debug)?"classes\\daily.TXT":gui.debugPath+"daily.TXT");
+	//private static File stateFile = new File((!gui.debug)?"classes\\dailyCheck.TXT":gui.debugPath+"dailyCheck.TXT");
+	//private static File colorFile = new File((!gui.debug)?"classes\\dailyColor.TXT":gui.debugPath+"dailyColor.TXT");
+	//private static File timeFile = new File((!gui.debug)?"classes\\time.TXT":gui.debugPath+"time.TXT");
 	private static JPanel checkListPanel = new JPanel(new GridLayout(gui.height/30, gui.length/200));
 	private static ArrayList<JCheckBox> checkBoxes = new ArrayList<JCheckBox>();
 	
 	public DailyChecklist() {
+		loadFiles();
 		boolean reset = false;
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");  
 		LocalDateTime now = LocalDateTime.now();
@@ -32,6 +33,13 @@ public class DailyChecklist extends JPanel {
 		resetBoxes(reset);
 		super.setLayout(new BorderLayout());
 		super.add(BorderLayout.WEST, checkListPanel);
+	}
+
+	private void loadFiles() {
+		nameFile = new File(gui.currentPath+"daily.TXT");
+		stateFile = new File(gui.currentPath+"dailyCheck.TXT");
+		colorFile = new File(gui.currentPath+"dailyColor.TXT");
+		timeFile = new File(gui.currentPath+"time.TXT");
 	}
 	
 	public static void resetBoxes(boolean reset) {

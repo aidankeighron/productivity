@@ -13,22 +13,22 @@ public class SettingsPanel extends JTabbedPane {
     
     //TODO change look and feel
     private static HashMap<String, String> settings = new HashMap<String, String>();
-    //private static File settingsFile = new File(gui.debugPath+"settings.TXT");
-    //private static File nameFile = new File(gui.debugPath+"daily.TXT");
-    //private static File stateFile = new File(gui.debugPath+"dailyCheck.TXT");
-    //private static File colorFile = new File(gui.debugPath+"dailyColor.TXT");
-    //private static File reminderFile = new File(gui.debugPath+"reminder.TXT");
-    private static File settingsFile = new File((!gui.debug)?"classes\\settings.TXT":gui.debugPath+"settings.TXT");
-    private static File nameFile = new File((!gui.debug)?"classes\\daily.TXT":gui.debugPath+"daily.TXT");
-    private static File stateFile = new File((!gui.debug)?"classes\\dailyCheck.TXT":gui.debugPath+"dailyCheck.TXT");
-    private static File colorFile = new File((!gui.debug)?"classes\\dailyColor.TXT":gui.debugPath+"dailyColor.TXT");
-    private static File reminderFile = new File((!gui.debug)?"classes\\reminder.TXT":gui.debugPath+"reminder.TXT");
+    private static File settingsFile;
+    private static File nameFile;
+    private static File stateFile;
+    private static File colorFile;
+    private static File reminderFile;
+    //private static File settingsFile = new File((!gui.debug)?"classes\\settings.TXT":gui.debugPath+"settings.TXT");
+    //private static File nameFile = new File((!gui.debug)?"classes\\daily.TXT":gui.debugPath+"daily.TXT");
+    //private static File stateFile = new File((!gui.debug)?"classes\\dailyCheck.TXT":gui.debugPath+"dailyCheck.TXT");
+    //private static File colorFile = new File((!gui.debug)?"classes\\dailyColor.TXT":gui.debugPath+"dailyColor.TXT");
+    //private static File reminderFile = new File((!gui.debug)?"classes\\reminder.TXT":gui.debugPath+"reminder.TXT");
     private JPanel configPanel = new JPanel();
     private Box configBox = Box.createVerticalBox();
     private JPanel reminderPanel = new JPanel();
     private BlockSites BlockSites = new BlockSites();
     
-    private JPanel dailyPanel = new CheckBoxes(gui.height, gui.length, nameFile, stateFile, colorFile, true);
+    private JPanel dailyPanel;
     private static String[] timeOptions = {"Seconds", "Minutes", "Hours"};
     private static int timeMuitplyer = 1;
     
@@ -42,6 +42,7 @@ public class SettingsPanel extends JTabbedPane {
     TimerTask task;
     
     public SettingsPanel() {
+        dailyPanel = new CheckBoxes(gui.height, gui.length, nameFile, stateFile, colorFile, true);
         JLabel label = new JLabel("Press enter to confirm");
         configBox.add(label);
         runBoolean allOnTop = (a) -> gui.setOnTop(a);
@@ -189,6 +190,14 @@ public class SettingsPanel extends JTabbedPane {
         
     }
     
+    private static void loadFiles() {
+        settingsFile = new File(gui.currentPath+"settings.TXT");
+        nameFile = new File(gui.currentPath+"daily.TXT");
+        stateFile = new File(gui.currentPath+"dailyCheck.TXT");
+        colorFile = new File(gui.currentPath+"dailyColor.TXT");
+        reminderFile = new File(gui.currentPath+"reminder.TXT");
+    }
+    
     private void reminder() {
         int[] data = loadTimer();
         JComboBox<String> timeList = new JComboBox<>(timeOptions);
@@ -327,6 +336,7 @@ public class SettingsPanel extends JTabbedPane {
     }
     
     public static void loadSettings() {
+        loadFiles();
         String[] data = readData(settingsFile);
         String[] keys = new String[(data.length - 1)/2];
         String[] values = new String[(data.length - 1)/2];
@@ -413,14 +423,15 @@ public class SettingsPanel extends JTabbedPane {
     }
     
     // private static void runOperation(String a, runString rt) {
-    //     rt.operation(a);
-    // }
-    
-    interface runInt {
-        void operation(int a);
-    }
-    
-    // private static void runOperation(int a, runInt rt) {
-    //     rt.operation(a);
-    // }
-}
+        //     rt.operation(a);
+        // }
+        
+        interface runInt {
+            void operation(int a);
+        }
+        
+        // private static void runOperation(int a, runInt rt) {
+            //     rt.operation(a);
+            // }
+        }
+        

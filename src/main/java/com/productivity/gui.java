@@ -9,31 +9,47 @@ public class gui extends JFrame {
 	
 	public static int length = 400;
 	public static int height = 300;
-	public static String debugPath = "src\\main\\java\\com\\productivity\\Saves\\";
 	public static Boolean debug = false;
+	public static String debugPath = "src\\main\\java\\com\\productivity\\Saves\\";
+	public static String jarPath = "classes\\com\\productivity\\Saves\\";
+	public static String exePath = "target\\classes\\com\\productivity\\Saves\\";
+	public static String customDebugPath = "src\\main\\java\\com\\productivity\\Custom\\Saves\\";
+	public static String customJarPath = "classes\\com\\productivity\\Custom\\Saves\\";
+	public static String customExePath = "target\\classes\\com\\productivity\\Custom\\Saves\\";
+	public static String currentPath;
+	public static String currentCustomPath;
 	
 	private static boolean onTop = false;
 	private static JFrame frame = new JFrame("Produtivity");
 	private static JTabbedPane tabbedPane;
 	public static customCheckList customCheckList = new customCheckList();
 	
-	//privare static File nameFile = new File(debugPath+"list.TXT");
-	//private static File stateFile = new File(debugPath+"listCheck.TXT");
-	//private static File colorFile = new File(debugPath+"listColor.TXT");
-	private static File nameFile = new File((!debug)?"classes\\list.TXT":debugPath+"list.TXT");
-	private static File stateFile = new File((!debug)?"classes\\listCheck.TXT":debugPath+"listCheck.TXT");
-	private static File colorFile = new File((!debug)?"classes\\listColor.TXT":debugPath+"listColor.TXT");
+	private static File nameFile;
+	private static File stateFile;
+	private static File colorFile;
+	//private static File nameFile = new File((!debug)?"classes\\list.TXT":debugPath+"list.TXT");
+	//private static File stateFile = new File((!debug)?"classes\\listCheck.TXT":debugPath+"listCheck.TXT");
+	//private static File colorFile = new File((!debug)?"classes\\listColor.TXT":debugPath+"listColor.TXT");
 	
 	static String[] lookAndFeel = {"Motif", "Metal"};
 	static String[] lookAndFeelValues = {"com.sun.java.swing.plaf.motif.MotifLookAndFeel", "javax.swing.plaf.metal.MetalLookAndFeel"};
 	
 	public static void main(String[] args) throws IOException {
+		currentPath = (debug)?debugPath: (args.length>0)?exePath:jarPath;
+		currentCustomPath = (debug)?customDebugPath: (args.length>0)?customExePath:customJarPath;
+		loadFiles();
 		start();
 		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
 			public void run() {
 				BlockSites.unBlockSites();
 			}
 		}, "Shutdown-thread"));
+	}
+	
+	private static void loadFiles() {
+		nameFile = new File(currentPath+"list.TXT");
+		stateFile = new File(currentPath+"listCheck.TXT");
+		colorFile = new File(currentPath+"listColor.TXT");
 	}
 	
 	private static void start() {
@@ -52,7 +68,6 @@ public class gui extends JFrame {
 		tabbedPane = new JTabbedPane();
 		tabbedPane.addTab("Checklist", new CheckBoxes(height, length, nameFile, stateFile, colorFile, false));
 		tabbedPane.addTab("Daily Checklist", new DailyChecklist());
-		
 		tabbedPane.addTab("Timers", new TimerPanel());
 		tabbedPane.addTab("Settings", new SettingsPanel());
 		if (addCustomCheckList.getNumberOfChecklists() > 0) {
@@ -60,7 +75,7 @@ public class gui extends JFrame {
 		}
 		frame.add(tabbedPane);
 		frame.setAlwaysOnTop(onTop);
-		//frame.setLocationByPlatform(true); TODO fix
+		frame.setLocationByPlatform(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(length, height);
 		frame.setVisible(true);

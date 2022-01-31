@@ -11,14 +11,15 @@ import java.awt.BorderLayout;
 public class BlockSites extends JPanel {
     
     private static File hostsFile = new File("C:\\Windows\\System32\\drivers\\etc\\hosts");
-    //private static File newHosts = new File(gui.debugPath+"Newhosts");
-    //private static File backupFile = new File(gui.debugPath+"hosts");
-    //private static File blockedSites = new File(gui.debugPath+"blockedSites.TXT");
-    private static File newHosts = new File((!gui.debug)?"classes\\com\\productivity\\Saves\\Newhosts":gui.debugPath+"Newhosts");
-    private static File backupFile = new File((!gui.debug)?"classes\\com\\productivity\\Saves\\hosts":gui.debugPath+"hosts");
-    private static File blockedSites = new File((!gui.debug)?"classes\\com\\productivity\\Saves\\blockedSites.TXT":gui.debugPath+"blockedSites.TXT");
+    private static File newHosts;
+    private static File backupFile;
+    private static File blockedSites;
+    //private static File newHosts = new File((!gui.debug)?"classes\\com\\productivity\\Saves\\Newhosts":gui.debugPath+"Newhosts");
+    //private static File backupFile = new File((!gui.debug)?"classes\\com\\productivity\\Saves\\hosts":gui.debugPath+"hosts");
+    //private static File blockedSites = new File((!gui.debug)?"classes\\com\\productivity\\Saves\\blockedSites.TXT":gui.debugPath+"blockedSites.TXT");
     
     public BlockSites() {
+        loadFiles();
         JTextArea site = new JTextArea();
         site.setText(load());
         
@@ -40,6 +41,12 @@ public class BlockSites extends JPanel {
         super.setLayout(new BorderLayout());
         super.add(BorderLayout.CENTER, site);
         super.add(BorderLayout.SOUTH, vertical);
+    }
+
+    private void loadFiles() {
+            newHosts = new File(gui.currentPath+"Newhosts");
+            backupFile = new File(gui.currentPath+"hosts");
+            blockedSites = new File(gui.currentPath+"blockedSites.TXT");
     }
     
     public static void reBlockSites() {

@@ -11,8 +11,9 @@ import com.productivity.gui;
 public class addCustomCheckList extends JPanel {
 
     private static ArrayList<String> names = new ArrayList<String>();
-    private static String customPath = (!gui.debug)?"classes\\com\\productivity\\Custom\\Saves\\":"src\\main\\java\\com\\productivity\\Custom\\Saves\\";
-    private static File customNames = new File(customPath + "customNames.TXT");
+    //private static String customPath = (!gui.debug)?"classes\\com\\productivity\\Custom\\Saves\\":"src\\main\\java\\com\\productivity\\Custom\\Saves\\";
+    private static String customPath = gui.currentCustomPath;
+    private static File customNames = new File(gui.currentCustomPath + "customNames.TXT");
     private static Box vertical = Box.createVerticalBox();
     
     public addCustomCheckList() {
