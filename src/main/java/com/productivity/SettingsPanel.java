@@ -9,33 +9,28 @@ import java.awt.*;
 import java.nio.file.Files;
 import java.util.Timer;
 
-public class settings extends JTabbedPane {
+public class SettingsPanel extends JTabbedPane {
+    
     //TODO change look and feel
-    static HashMap<String, String> settings = new HashMap<String, String>();
-    /*static File settingsFile = new File("Saves\\settings.TXT");
-    static File checkListFile = new File("Saves\\daily.TXT");
-    static File checkListStateFile = new File("Saves\\dailyCheck.TXT");
-    static File checkColorFile = new File("Saves\\dailyColor.TXT");
-    static File reminderFile = new File("Saves\\reminder.TXT");
-    static File settingsFile = new File("classes\\settings.TXT");
-    static File checkListFile = new File("classes\\daily.TXT");
-    static File checkListStateFile = new File("classes\\dailyCheck.TXT");
-    static File checkColorFile = new File("classes\\dailyColor.TXT");
-    static File reminderFile = new File("classes\\reminder.TXT");*/
+    private static HashMap<String, String> settings = new HashMap<String, String>();
+    //private static File settingsFile = new File(gui.debugPath+"settings.TXT");
+    //private static File nameFile = new File(gui.debugPath+"daily.TXT");
+    //private static File stateFile = new File(gui.debugPath+"dailyCheck.TXT");
+    //private static File colorFile = new File(gui.debugPath+"dailyColor.TXT");
+    //private static File reminderFile = new File(gui.debugPath+"reminder.TXT");
+    private static File settingsFile = new File((!gui.debug)?"classes\\settings.TXT":gui.debugPath+"settings.TXT");
+    private static File nameFile = new File((!gui.debug)?"classes\\daily.TXT":gui.debugPath+"daily.TXT");
+    private static File stateFile = new File((!gui.debug)?"classes\\dailyCheck.TXT":gui.debugPath+"dailyCheck.TXT");
+    private static File colorFile = new File((!gui.debug)?"classes\\dailyColor.TXT":gui.debugPath+"dailyColor.TXT");
+    private static File reminderFile = new File((!gui.debug)?"classes\\reminder.TXT":gui.debugPath+"reminder.TXT");
+    private JPanel configPanel = new JPanel();
+    private Box configBox = Box.createVerticalBox();
+    private JPanel reminderPanel = new JPanel();
+    private BlockSites BlockSites = new BlockSites();
     
-    static File settingsFile = new File((!gui.debug)?"classes\\settings.TXT":gui.debugPath+"settings.TXT");
-    static File checkListFile = new File((!gui.debug)?"classes\\daily.TXT":gui.debugPath+"daily.TXT");
-    static File checkListStateFile = new File((!gui.debug)?"classes\\dailyCheck.TXT":gui.debugPath+"dailyCheck.TXT");
-    static File checkColorFile = new File((!gui.debug)?"classes\\dailyColor.TXT":gui.debugPath+"dailyColor.TXT");
-    static File reminderFile = new File((!gui.debug)?"classes\\reminder.TXT":gui.debugPath+"reminder.TXT");
-    JPanel configPanel = new JPanel();
-    Box configBox = Box.createVerticalBox();
-    JPanel reminderPanel = new JPanel();
-    blockSites BlockSites = new blockSites();
-    
-    JPanel dailyPanel = new checkBoxes(gui.height, gui.length, checkListFile, checkListStateFile, checkColorFile, true);
-    String[] timeOptions = {"Seconds", "Minutes", "Hours"};
-    static int timeMuitplyer = 1;
+    private JPanel dailyPanel = new CheckBoxes(gui.height, gui.length, nameFile, stateFile, colorFile, true);
+    private static String[] timeOptions = {"Seconds", "Minutes", "Hours"};
+    private static int timeMuitplyer = 1;
     
     private enum settingTypes {
         text,
@@ -46,7 +41,7 @@ public class settings extends JTabbedPane {
     Timer time;
     TimerTask task;
     
-    public settings() {
+    public SettingsPanel() {
         JLabel label = new JLabel("Press enter to confirm");
         configBox.add(label);
         runBoolean allOnTop = (a) -> gui.setOnTop(a);
@@ -69,7 +64,7 @@ public class settings extends JTabbedPane {
             else {
                 if (exists) {
                     super.remove(reminderPanel);
-                    StopTimer();
+                    stopTimer();
                 }
             }
         };
@@ -95,7 +90,7 @@ public class settings extends JTabbedPane {
                     super.remove(BlockSites);
                 }
             }
-            gui.blockVisibility(a);
+            TimerPanel.setAllowBlock(a);
         };
         addSetting("Block Sites", "blockSites", "Allows you to block sites", settingTypes.checkbox, blockSitesActive);
         configPanel.add(configBox);
@@ -111,139 +106,6 @@ public class settings extends JTabbedPane {
         super.addTab("Daily Checklist", dailyPanel);
     }
     
-    void reminder() {
-        int[] data = loadTimer();
-        JComboBox<String> timeList = new JComboBox<>(timeOptions);
-        timeList.addActionListener(e -> {
-            switch(timeList.getSelectedIndex()) {
-                case 0:
-                timeMuitplyer = 1;
-                break;
-                case 1:
-                timeMuitplyer = 60;
-                break;
-                case 2:
-                timeMuitplyer = 60 * 60;
-                break;
-                default:
-                timeMuitplyer = 1;
-                break;
-            }
-        });
-        timeList.setSelectedIndex(data[0]);
-        JTextField textField = new JTextField();
-        textField.setText(Integer.toString(data[1]));
-        JProgressBar progressBar = new JProgressBar(0, Integer.parseInt(textField.getText()) * timeMuitplyer);
-        textField.addActionListener(e -> {
-            boolean notInt = false;
-            try {
-                Integer.parseInt(textField.getText());
-                if (Integer.parseInt(textField.getText()) <= 0) {
-                    notInt = true;
-                }
-            } catch (Exception ex) {
-                notInt = true;
-            }
-            if (textField.getText().equals("") || notInt) {
-                JOptionPane.showMessageDialog(this, "Enter vaild positive time");
-            }
-            else {
-                progressBar.setMaximum(Integer.parseInt(textField.getText()) * timeMuitplyer);
-                StopTimer();
-                StartTimer(Integer.parseInt(textField.getText()), progressBar);
-                saveTimer(timeList, textField);
-            }
-        });
-        JButton save = new JButton("      Save      ");
-        save.addActionListener(e -> {
-            boolean notInt = false;
-            try {
-                Integer.parseInt(textField.getText());
-                if (Integer.parseInt(textField.getText()) <= 0) {
-                    notInt = true;
-                }
-            } catch (Exception ex) {
-                notInt = true;
-            }
-            if (textField.getText().equals("") || notInt) {
-                JOptionPane.showMessageDialog(this, "Enter vaild positive time");
-            }
-            else {
-                progressBar.setMaximum(Integer.parseInt(textField.getText()) * timeMuitplyer);
-                StopTimer();
-                StartTimer(Integer.parseInt(textField.getText()), progressBar);
-                saveTimer(timeList, textField);
-            }
-        });
-        progressBar.setValue(0);
-        progressBar.setStringPainted(true);
-        Box vertical = Box.createVerticalBox();
-        vertical.add(timeList);
-        vertical.add(textField);
-        vertical.add(save);
-        vertical.add(progressBar);
-        reminderPanel.add(vertical);
-        StartTimer(Integer.parseInt(textField.getText()), progressBar);
-    }
-    
-    public void saveTimer(JComboBox<String> combo, JTextField field) {
-        String[] data = {Integer.toString(combo.getSelectedIndex()), field.getText()};
-        writeData(data, reminderFile);
-    }
-    
-    private int[] loadTimer() {
-        String[] data = readData(reminderFile);
-        int[] results = new int[2];
-        switch(Integer.parseInt(data[0])) {
-            case 0:
-            timeMuitplyer = 1;
-            break;
-            case 1:
-            timeMuitplyer = 60;
-            break;
-            case 2:
-            timeMuitplyer = 60 * 60;
-            break;
-            default:
-            timeMuitplyer = 1;
-            break;
-        }
-        results[0] = Integer.parseInt(data[0]);
-        results[1] = Integer.parseInt(data[1]);
-        return results;
-    }
-    
-    private void StartTimer(int length, JProgressBar bar) {
-        task = new TimerTask()
-        {
-            int seconds = length * timeMuitplyer;
-            int i = 0;
-            @Override
-            public void run()
-            {
-                if(i == seconds && i != 0) {
-                    Toolkit.getDefaultToolkit().beep();
-                    bar.setValue(i);
-                    i = -1;
-                }
-                else {
-                    bar.setValue(i);
-                }
-                if (i < seconds) {
-                    i++;
-                }
-            }
-        };
-        time = new Timer();
-        time.schedule(task, 0, 1000);
-    }
-    
-    private void StopTimer() {
-        task.cancel();
-        time.cancel();
-        time.purge();
-    }
-    
     private void addSetting(String name, String key, String tooltip, settingTypes type, runBoolean rt) {
         switch(type) {
             case checkbox:
@@ -253,7 +115,6 @@ public class settings extends JTabbedPane {
                 if (rt != null) {
                     runOperation(checkBox.isSelected(), rt);
                 }
-                
                 saveSettings();
             });
             try {
@@ -328,6 +189,139 @@ public class settings extends JTabbedPane {
         
     }
     
+    private void reminder() {
+        int[] data = loadTimer();
+        JComboBox<String> timeList = new JComboBox<>(timeOptions);
+        timeList.addActionListener(e -> {
+            switch(timeList.getSelectedIndex()) {
+                case 0:
+                timeMuitplyer = 1;
+                break;
+                case 1:
+                timeMuitplyer = 60;
+                break;
+                case 2:
+                timeMuitplyer = 60 * 60;
+                break;
+                default:
+                timeMuitplyer = 1;
+                break;
+            }
+        });
+        timeList.setSelectedIndex(data[0]);
+        JTextField textField = new JTextField();
+        textField.setText(Integer.toString(data[1]));
+        JProgressBar progressBar = new JProgressBar(0, Integer.parseInt(textField.getText()) * timeMuitplyer);
+        textField.addActionListener(e -> {
+            boolean notInt = false;
+            try {
+                Integer.parseInt(textField.getText());
+                if (Integer.parseInt(textField.getText()) <= 0) {
+                    notInt = true;
+                }
+            } catch (Exception ex) {
+                notInt = true;
+            }
+            if (textField.getText().equals("") || notInt) {
+                JOptionPane.showMessageDialog(this, "Enter vaild positive time");
+            }
+            else {
+                progressBar.setMaximum(Integer.parseInt(textField.getText()) * timeMuitplyer);
+                stopTimer();
+                startTimer(Integer.parseInt(textField.getText()), progressBar);
+                saveTimer(timeList, textField);
+            }
+        });
+        JButton save = new JButton("      Save      ");
+        save.addActionListener(e -> {
+            boolean notInt = false;
+            try {
+                Integer.parseInt(textField.getText());
+                if (Integer.parseInt(textField.getText()) <= 0) {
+                    notInt = true;
+                }
+            } catch (Exception ex) {
+                notInt = true;
+            }
+            if (textField.getText().equals("") || notInt) {
+                JOptionPane.showMessageDialog(this, "Enter vaild positive time");
+            }
+            else {
+                progressBar.setMaximum(Integer.parseInt(textField.getText()) * timeMuitplyer);
+                stopTimer();
+                startTimer(Integer.parseInt(textField.getText()), progressBar);
+                saveTimer(timeList, textField);
+            }
+        });
+        progressBar.setValue(0);
+        progressBar.setStringPainted(true);
+        Box vertical = Box.createVerticalBox();
+        vertical.add(timeList);
+        vertical.add(textField);
+        vertical.add(save);
+        vertical.add(progressBar);
+        reminderPanel.add(vertical);
+        startTimer(Integer.parseInt(textField.getText()), progressBar);
+    }
+    
+    private void saveTimer(JComboBox<String> combo, JTextField field) {
+        String[] data = {Integer.toString(combo.getSelectedIndex()), field.getText()};
+        writeData(data, reminderFile);
+    }
+    
+    private void startTimer(int length, JProgressBar bar) {
+        task = new TimerTask()
+        {
+            int seconds = length * timeMuitplyer;
+            int i = 0;
+            @Override
+            public void run()
+            {
+                if(i == seconds && i != 0) {
+                    Toolkit.getDefaultToolkit().beep();
+                    bar.setValue(i);
+                    i = -1;
+                }
+                else {
+                    bar.setValue(i);
+                }
+                if (i < seconds) {
+                    i++;
+                }
+            }
+        };
+        time = new Timer();
+        time.schedule(task, 0, 1000);
+    }
+    
+    private int[] loadTimer() {
+        String[] data = readData(reminderFile);
+        int[] results = new int[2];
+        switch(Integer.parseInt(data[0])) {
+            case 0:
+            timeMuitplyer = 1;
+            break;
+            case 1:
+            timeMuitplyer = 60;
+            break;
+            case 2:
+            timeMuitplyer = 60 * 60;
+            break;
+            default:
+            timeMuitplyer = 1;
+            break;
+        }
+        results[0] = Integer.parseInt(data[0]);
+        results[1] = Integer.parseInt(data[1]);
+        return results;
+    }
+    
+    private void stopTimer() {
+        task.cancel();
+        time.cancel();
+        time.purge();
+    }
+    
     public static String getSetting(String key) {
         return settings.get(key);
     }
@@ -353,7 +347,7 @@ public class settings extends JTabbedPane {
         }
     }
     
-    public void saveSettings() {
+    private void saveSettings() {
         String[] data = new String[(settings.size() * 2) + 1];
         int index = 0;
         for (String setting : settings.keySet()) {
@@ -369,7 +363,7 @@ public class settings extends JTabbedPane {
         writeData(data, settingsFile);
     }
     
-    public static String[] readData(File file) {
+    private static String[] readData(File file) {
         String[] result = new String[0];
         try {
             result = new String[(int)Files.lines(file.toPath()).count()];
@@ -387,7 +381,7 @@ public class settings extends JTabbedPane {
         return result;
     }
     
-    public static void writeData(String data, File file) {
+    private static void writeData(String data, File file) {
         try  {
             FileWriter writer = new FileWriter(file);
             writer.write(data);
@@ -398,7 +392,7 @@ public class settings extends JTabbedPane {
         }
     }
     
-    public static void writeData(String[] dataArr, File file) {
+    private static void writeData(String[] dataArr, File file) {
         String data = "";
         for (int i = 0; i < dataArr.length; i++) {
             data += (dataArr[i] + "\n");
@@ -410,7 +404,7 @@ public class settings extends JTabbedPane {
         void operation(Boolean a);
     }
     
-    public static void runOperation(Boolean a, runBoolean rt) {
+    private static void runOperation(Boolean a, runBoolean rt) {
         rt.operation(a);
     }
     
@@ -418,15 +412,15 @@ public class settings extends JTabbedPane {
         void operation(String a);
     }
     
-    public static void runOperation(String a, runString rt) {
-        rt.operation(a);
-    }
+    // private static void runOperation(String a, runString rt) {
+    //     rt.operation(a);
+    // }
     
     interface runInt {
         void operation(int a);
     }
     
-    public static void runOperation(int a, runInt rt) {
-        rt.operation(a);
-    }
+    // private static void runOperation(int a, runInt rt) {
+    //     rt.operation(a);
+    // }
 }

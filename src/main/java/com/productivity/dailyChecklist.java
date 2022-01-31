@@ -3,30 +3,25 @@ package com.productivity;
 import java.io.*;
 import java.util.*;
 import javax.swing.*;
-
 import java.awt.*;
 import java.nio.file.Files;
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDateTime;
 
-public class dailyChecklist extends JPanel {
-	/*static File checkListFile = new File("Saves\\daily.TXT");
-	static File stateListFile = new File("Saves\\dailyCheck.TXT");
-	static File checkColorFile = new File("Saves\\dailyColor.TXT");
-	static File timeFile = new File("Saves\\time.TXT");
-	static File checkListFile = new File("classes\\daily.TXT");
-	static File stateListFile = new File("classes\\dailyCheck.TXT");
-	static File checkColorFile = new File("classes\\dailyColor.TXT");
-	static File timeFile = new File("classes\\time.TXT");*/
+public class DailyChecklist extends JPanel {
 	
-	static File checkListFile = new File((!gui.debug)?"classes\\daily.TXT":gui.debugPath+"daily.TXT");
-	static File stateListFile = new File((!gui.debug)?"classes\\dailyCheck.TXT":gui.debugPath+"dailyCheck.TXT");
-	static File checkColorFile = new File((!gui.debug)?"classes\\dailyColor.TXT":gui.debugPath+"dailyColor.TXT");
-	static File timeFile = new File((!gui.debug)?"classes\\time.TXT":gui.debugPath+"time.TXT");
-	static JPanel checkListPanel = new JPanel(new GridLayout(gui.height/30, gui.length/200));
-	static ArrayList<JCheckBox> checkBoxes = new ArrayList<JCheckBox>();
+	//private static File nameFile = new File(gui.debugPath+"daily.TXT");
+	//private static File stateFile = new File(gui.debugPath+"dailyCheck.TXT");
+	//private static File colorFile = new File(gui.debugPath+"dailyColor.TXT");
+	//private static File timeFile = new File(gui.debugPath+"time.TXT");
+	private static File nameFile = new File((!gui.debug)?"classes\\daily.TXT":gui.debugPath+"daily.TXT");
+	private static File stateFile = new File((!gui.debug)?"classes\\dailyCheck.TXT":gui.debugPath+"dailyCheck.TXT");
+	private static File colorFile = new File((!gui.debug)?"classes\\dailyColor.TXT":gui.debugPath+"dailyColor.TXT");
+	private static File timeFile = new File((!gui.debug)?"classes\\time.TXT":gui.debugPath+"time.TXT");
+	private static JPanel checkListPanel = new JPanel(new GridLayout(gui.height/30, gui.length/200));
+	private static ArrayList<JCheckBox> checkBoxes = new ArrayList<JCheckBox>();
 	
-	public dailyChecklist() {
+	public DailyChecklist() {
 		boolean reset = false;
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");  
 		LocalDateTime now = LocalDateTime.now();
@@ -43,9 +38,9 @@ public class dailyChecklist extends JPanel {
 		for (int i = 0; i < checkBoxes.size(); i++) {
 			checkListPanel.remove(checkBoxes.get(i));
 		}
-		String[] names = readData(checkListFile);
-		String[] checked = readData(stateListFile);
-		String[] color = readData(checkColorFile);
+		String[] names = readData(nameFile);
+		String[] checked = readData(stateFile);
+		String[] color = readData(colorFile);
 		for (int i = 0; i < names.length; i++) {
 			if (!reset) {
 				addCheckBox(names[i], new Color(Integer.parseInt(color[i])), Boolean.parseBoolean(checked[i]));
@@ -53,35 +48,30 @@ public class dailyChecklist extends JPanel {
 			else {
 				addCheckBox(names[i], new Color(Integer.parseInt(color[i])), false);
 			}
-			
 		}
 	}
 	
-	public static void add(JCheckBox box) {
-		checkListPanel.add(box);
-		gui.repaintFrame();
-	}
-	
-	public static void addCheckBox(String name, Color color, Boolean checked) {
+	private static void addCheckBox(String name, Color color, Boolean checked) {
 		JCheckBox checkBox = new JCheckBox(name);
 		checkBox.addActionListener(e -> {
 			saveCheckBoxes();
 		});
 		checkBox.setForeground(color);
-		checkBoxes.add(checkBox);
 		checkBox.setSelected(checked);
-		add(checkBox);
+		checkBoxes.add(checkBox);
+		checkListPanel.add(checkBox);
+		gui.repaintFrame();
 	}
 	
-	public static void saveCheckBoxes() {
+	private static void saveCheckBoxes() {
 		String[] state = new String[checkBoxes.size()];
 		for (int i = 0; i < checkBoxes.size(); i++) {
 			state[i] = Boolean.toString(checkBoxes.get(i).isSelected());
 		}
-		writeData(state, stateListFile);
+		writeData(state, stateFile);
 	}
 	
-	public static String[] readData(File file) {
+	private static String[] readData(File file) {
 		String[] result = new String[0];
 		try {
 			result = new String[(int)Files.lines(file.toPath()).count()];
@@ -99,7 +89,7 @@ public class dailyChecklist extends JPanel {
 		return result;
 	}
 	
-	public static void writeData(String data, File file) {
+	private static void writeData(String data, File file) {
 		try  {
 			FileWriter writer = new FileWriter(file);
 			writer.write(data);
@@ -110,7 +100,7 @@ public class dailyChecklist extends JPanel {
 		}
 	}
 	
-	public static void writeData(String[] dataArr, File file) {
+	private static void writeData(String[] dataArr, File file) {
 		String data = "";
 		for (int i = 0; i < dataArr.length; i++) {
 			data += (dataArr[i] + "\n");

@@ -4,34 +4,33 @@ import java.awt.BorderLayout;
 import java.io.*;
 import java.util.*;
 import javax.swing.*;
-
 import java.awt.*;
 import java.nio.file.Files;
-public class checkBoxes extends JPanel {
+
+public class CheckBoxes extends JPanel {
 	
-	ArrayList<JCheckBox> checkBoxes = new ArrayList<JCheckBox>();
-	JPanel checkListPanel;
-	File checkListFile;
-	File stateListFile;
-	File colorListFile;
-	static String[] colorNames = {"Black", "Red", "Blue", "Green"};
-	static Color[] colors = {Color.BLACK, new Color(250, 0, 0), new Color(0, 0, 230), new Color(0, 220, 0)};
-	Color selectedColor = Color.BLACK;
+	private ArrayList<JCheckBox> checkBoxes = new ArrayList<JCheckBox>();
+	private JPanel checklistPanel;
+	private File nameFile;
+	private File checkFile;
+	private File colorFile;
+	private static String[] colorNames = {"Black", "Red", "Blue", "Green"};
+	private static Color[] colors = {Color.BLACK, new Color(250, 0, 0), new Color(0, 0, 230), new Color(0, 220, 0)};
+	private Color selectedColor = Color.BLACK;
 	
-	public checkBoxes(int height, int length, File file, File checkedFile, File colorFile, Boolean daily) {
-		checkListFile = file;
-		stateListFile = checkedFile;
-		colorListFile = colorFile;
+	public CheckBoxes(int height, int length, File name, File check, File color, Boolean daily) {
+		nameFile = name;
+		checkFile = check;
+		colorFile = color;
 		height = (height/30 == 0) ? 0 : height/30;
 		length = (length/200 == 0) ? 1 : length/200;
-		checkListPanel = new JPanel(new GridLayout(height, length));
+		checklistPanel = new JPanel(new GridLayout(height, length));
 		JTextField input = new JTextField();
 		input.addActionListener(e -> {
-			addCheckBox(input.getText(), selectedColor);
+			addCheckBox(input.getText(), selectedColor, false);
 			input.setText("");
-			saveCheckBoxes();
 			if (daily) {
-				dailyChecklist.resetBoxes(false);
+				DailyChecklist.resetBoxes(false);
 			}
 		});
 		JComboBox<String> colorChooser = new JComboBox<>(colorNames);
@@ -42,48 +41,47 @@ public class checkBoxes extends JPanel {
 		reset.addActionListener( e -> {
 			removeCheckBoxes();
 			if (daily) {
-				dailyChecklist.resetBoxes(false);
+				DailyChecklist.resetBoxes(false);
 			}
 		});
-		
 		JButton clear = new JButton("Clear Selected");
 		clear.addActionListener(e -> {
 			clearSelected();
 			if (daily) {
-				dailyChecklist.resetBoxes(false);
+				DailyChecklist.resetBoxes(false);
 			}
 		});
 		
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.add(reset);
 		buttonPanel.add(clear);
+		loadCheckBoxes();
 		
 		super.setLayout(new BorderLayout());
 		Box inputBox = Box.createHorizontalBox();
 		inputBox.add(input);
 		inputBox.add(colorChooser);
 		super.add(inputBox, BorderLayout.NORTH);
-		super.add(checkListPanel, BorderLayout.CENTER);
+		super.add(checklistPanel, BorderLayout.CENTER);
 		super.add(buttonPanel, BorderLayout.SOUTH);
-		loadCheckBoxes();
 	}
 	
-	public void add(JCheckBox box) {
-		checkListPanel.add(box);
-		gui.repaintFrame();
-	}
-	
-	public void addCheckBox(String name, Color color) {
+	public void addCheckBox(String name, Color color, Boolean state) {
 		JCheckBox checkBox = new JCheckBox(name);
 		checkBox.addActionListener(e -> {
 			saveCheckBoxes();
 		});
 		checkBox.setForeground(color);
+		checkBox.setSelected(state);
 		checkBoxes.add(checkBox);
 		JMenuItem[] items = new JMenuItem[3];
 		items[0] = new JMenuItem("Edit");
 		items[0].addActionListener(e -> {
-			checkBox.setText(JOptionPane.showInputDialog(this, "new name", checkBox.getText()));
+			String input = JOptionPane.showInputDialog(this, "new name", checkBox.getText());
+			if (input != null) {
+				checkBox.setText(input);
+			}
+			saveCheckBoxes();
 		});
 		items[1] = new JMenuItem("Change color");
 		items[1].addActionListener(e -> {
@@ -108,19 +106,21 @@ public class checkBoxes extends JPanel {
 		items[2] = new JMenuItem("Remove");
 		items[2].addActionListener(e -> {
 			checkBoxes.remove(checkBox);
-			checkListPanel.remove(checkBox);
+			checklistPanel.remove(checkBox);
 			saveCheckBoxes();
 			gui.repaintFrame();
 		});
-		popup pop = new popup(items);
+		Popup pop = new Popup(items);
 		checkBox.addMouseListener(pop.new PopClickListener());
-		add(checkBox);
+		checklistPanel.add(checkBox);
+		saveCheckBoxes();
+		gui.repaintFrame();
 	}
 	
 	public void clearSelected() {
 		for (int i = checkBoxes.size() - 1; i >= 0; i--) {
 			if (checkBoxes.get(i).isSelected()) {
-				checkListPanel.remove(checkBoxes.get(i));
+				checklistPanel.remove(checkBoxes.get(i));
 				checkBoxes.remove(checkBoxes.get(i));
 			}
 		}
@@ -130,21 +130,21 @@ public class checkBoxes extends JPanel {
 	
 	public void removeCheckBoxes() {
 		for (JCheckBox checkBox : checkBoxes) {
-			checkListPanel.remove(checkBox);
+			checklistPanel.remove(checkBox);
 		}
 		checkBoxes = new ArrayList<JCheckBox>();
-		writeData("", checkListFile);
-		writeData("", stateListFile);
-		checkListPanel.repaint();
+		writeData("", nameFile);
+		writeData("", checkFile);
 		gui.repaintFrame();
 	}
 	
-	public void clearTheFile(File file) throws IOException {
-		FileWriter fwOb = new FileWriter(file); 
-		PrintWriter pwOb = new PrintWriter(fwOb, false);
-		pwOb.flush();
-		pwOb.close();
-		fwOb.close();
+	public void loadCheckBoxes() {
+		String[] name = readData(nameFile);
+		String[] states = readData(checkFile);
+		String[] color = readData(colorFile);
+		for (int i = 0; i < name.length; i++) {
+			addCheckBox(name[i], new Color(Integer.parseInt(color[i])), Boolean.parseBoolean(states[i]));
+		}
 	}
 	
 	public void saveCheckBoxes() {
@@ -156,63 +156,9 @@ public class checkBoxes extends JPanel {
 			state[i] = Boolean.toString(checkBoxes.get(i).isSelected());
 			color[i] = Integer.toString(checkBoxes.get(i).getForeground().getRGB());
 		}
-		writeData(name, checkListFile);
-		writeData(state, stateListFile);
-		writeData(color, colorListFile);
-	}
-	
-	public void loadCheckBoxes() {
-		String[] data = readData(checkListFile);
-		String[] states = readData(stateListFile);
-		String[] color = readData(colorListFile);
-		for (int i = 0; i < data.length; i++) {
-			JCheckBox checkBox = new JCheckBox(data[i]);
-			checkBox.addActionListener(e -> {
-				saveCheckBoxes();
-			});
-			checkBox.setSelected(Boolean.parseBoolean(states[i]));
-			checkBox.setForeground(new Color(Integer.parseInt(color[i])));
-			JMenuItem[] items = new JMenuItem[3];
-			items[0] = new JMenuItem("Edit");
-			items[0].addActionListener(e -> {
-				String input = JOptionPane.showInputDialog(this, "new name", checkBox.getText());
-				if (input != null) {
-					checkBox.setText(input);
-				}
-			});
-			items[1] = new JMenuItem("Change color");
-			items[1].addActionListener(e -> {
-				int index = 0;
-				for (int k = 0; k < colors.length; k++) {
-					if (colors[k].getRGB() == checkBox.getForeground().getRGB()) {
-						index = k;
-						break;
-					}
-				}
-				String input = (String)JOptionPane.showInputDialog(null, "Choose new Color", "", JOptionPane.QUESTION_MESSAGE, null, colorNames, colorNames[index]);
-				Color newColor = checkBox.getForeground();
-				for (int j = 0; j < colorNames.length; j++) {
-					if (colorNames[j].equals(input)) {
-						newColor = colors[j];
-						break;
-					}
-				}
-				checkBox.setForeground(newColor);
-				saveCheckBoxes();
-			});
-			items[2] = new JMenuItem("Remove");
-			items[2].addActionListener(e -> {
-				checkBoxes.remove(checkBox);
-				checkListPanel.remove(checkBox);
-				saveCheckBoxes();
-				gui.repaintFrame();
-			});
-			popup pop = new popup(items);
-			checkBox.addMouseListener(pop.new PopClickListener());
-			add(checkBox);
-			checkBoxes.add(checkBox);
-		}
-		saveCheckBoxes();
+		writeData(name, nameFile);
+		writeData(state, checkFile);
+		writeData(color, colorFile);
 	}
 	
 	public String[] readData(File file) {

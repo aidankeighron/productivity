@@ -4,11 +4,11 @@ import java.awt.event.*;
 import javax.swing.JPopupMenu;
 import javax.swing.JMenuItem;
 
-public class popup {
+public class Popup {
 
     JMenuItem[] items;
 
-    public popup(JMenuItem[] items) {
+    public Popup(JMenuItem[] items) {
         this.items = items;
     }
     
