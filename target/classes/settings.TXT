@@ -1,9 +1,3 @@
-runOnStartup
 onTop
-reminderActive
-blockSites
 *
-true
-true
-true
 true
