@@ -74,10 +74,8 @@ public class gui extends JFrame {
 		if (addCustomCheckList.getNumberOfChecklists() > 0) {
 			tabbedPane.addTab("Custom Checklist", customCheckList);
 		}
-		ImageIcon img = new ImageIcon("\\icon.png");//TODO add icon
-		Image icon = Toolkit.getDefaultToolkit().getImage("icon.ico");  
-		frame.setIconImage(icon);	  
-		//frame.setIconImage(img.getImage());
+		ImageIcon img = new ImageIcon("src\\main\\java\\com\\productivity\\icon.png");
+		frame.setIconImage(img.getImage());
 		frame.add(tabbedPane);
 		frame.setAlwaysOnTop(onTop);
 		frame.setLocationByPlatform(true);
