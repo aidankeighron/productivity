@@ -3,6 +3,7 @@ package com.productivity;
 import java.io.*;
 import java.util.*;
 import javax.swing.*;
+
 import java.awt.*;
 import java.nio.file.Files;
 import java.time.format.DateTimeFormatter;
@@ -36,10 +37,10 @@ public class DailyChecklist extends JPanel {
 	}
 
 	private void loadFiles() {
-		nameFile = new File(gui.currentPath+"daily.TXT");
-		stateFile = new File(gui.currentPath+"dailyCheck.TXT");
-		colorFile = new File(gui.currentPath+"dailyColor.TXT");
-		timeFile = new File(gui.currentPath+"time.TXT");
+		nameFile = new File(gui.currentPath+"Saves\\daily.TXT");
+		stateFile = new File(gui.currentPath+"Saves\\dailyCheck.TXT");
+		colorFile = new File(gui.currentPath+"Saves\\dailyColor.TXT");
+		timeFile = new File(gui.currentPath+"Saves\\time.TXT");
 	}
 	
 	public static void resetBoxes(boolean reset) {

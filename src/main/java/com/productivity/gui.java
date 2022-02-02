@@ -4,16 +4,15 @@ import java.io.*;
 import javax.swing.*;
 import com.productivity.Custom.addCustomCheckList;
 import com.productivity.Custom.customCheckList;
-import java.awt.*; 
 
 public class gui extends JFrame {
 	
 	public static int length = 400;
 	public static int height = 300;
 	public static Boolean debug = true;
-	public static String debugPath = "src\\main\\java\\com\\productivity\\Saves\\";
-	public static String jarPath = "classes\\com\\productivity\\Saves\\";
-	public static String exePath = "target\\classes\\com\\productivity\\Saves\\";
+	public static String debugPath = "src\\main\\java\\com\\productivity\\";
+	public static String jarPath = "classes\\com\\productivity\\";
+	public static String exePath = "target\\classes\\com\\productivity\\";
 	public static String customDebugPath = "src\\main\\java\\com\\productivity\\Custom\\Saves\\";
 	public static String customJarPath = "classes\\com\\productivity\\Custom\\Saves\\";
 	public static String customExePath = "target\\classes\\com\\productivity\\Custom\\Saves\\";
@@ -48,9 +47,9 @@ public class gui extends JFrame {
 	}
 	
 	private static void loadFiles() {
-		nameFile = new File(currentPath+"list.TXT");
-		stateFile = new File(currentPath+"listCheck.TXT");
-		colorFile = new File(currentPath+"listColor.TXT");
+		nameFile = new File(currentPath+"Saves\\list.TXT");
+		stateFile = new File(currentPath+"Saves\\listCheck.TXT");
+		colorFile = new File(currentPath+"Saves\\listColor.TXT");
 	}
 	
 	private static void start() {
@@ -70,6 +69,7 @@ public class gui extends JFrame {
 		tabbedPane.addTab("Checklist", new CheckBoxes(height, length, nameFile, stateFile, colorFile, false));
 		tabbedPane.addTab("Daily Checklist", new DailyChecklist());
 		tabbedPane.addTab("Timers", new TimerPanel());
+		tabbedPane.addTab("Notes", new NotesPanel());
 		tabbedPane.addTab("Settings", new SettingsPanel());
 		if (addCustomCheckList.getNumberOfChecklists() > 0) {
 			tabbedPane.addTab("Custom Checklist", customCheckList);

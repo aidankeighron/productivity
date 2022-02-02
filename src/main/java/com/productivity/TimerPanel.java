@@ -243,9 +243,10 @@ public class TimerPanel extends JPanel {
             BlockSites.reBlockSites();
             isBlocked = true;
         }
-        
+        Component progressBox = Box.createRigidArea(new Dimension(0, 8));
+        Component nameBox = Box.createRigidArea(new Dimension(0, 2));
         button.addActionListener(e -> {
-            removeProgressBar(button, progressBar, task, time, isBlockedTimer);
+            removeProgressBar(button, progressBar, task, time, isBlockedTimer, progressBox, nameBox);
             numTimers--;
         });
         
@@ -253,19 +254,19 @@ public class TimerPanel extends JPanel {
         buttons.add(button);
         Border barBorder = BorderFactory.createEmptyBorder(4, 0, 0, 0);
         progresrBars.setBorder(barBorder);
-        progresrBars.add(progressBar);
-        progresrBars.add(Box.createRigidArea(new Dimension(0, 8)));
+        progresrBars.add(progressBar);//TODO fix borders
+        progresrBars.add(progressBox);
         Border nameBorder = BorderFactory.createEmptyBorder(2, 0, 0, 0);
         names.setBorder(nameBorder);
         names.add(button);
-        names.add(Box.createRigidArea(new Dimension(0, 2)));
+        names.add(nameBox);
         if (isBlockedTimer) {
             blockBox.setSelected(false);
         }
         gui.repaintFrame();
     }
     
-    private void removeProgressBar(JButton button, JProgressBar progressBar, TimerTask task, Timer time, Boolean isBlockedTimer) {
+    private void removeProgressBar(JButton button, JProgressBar progressBar, TimerTask task, Timer time, Boolean isBlockedTimer, Component progBox, Component nameBox) {
         if (isBlocked && blockedTimerActive && isBlockedTimer) {
             BlockSites.unBlockSites();
             blockedTimerActive = false;
@@ -275,7 +276,9 @@ public class TimerPanel extends JPanel {
         time.cancel();
         time.purge();
         progresrBars.remove(progressBar);
+        progresrBars.remove(progBox);
         names.remove(button);
+        names.remove(nameBox);
         bars.remove(progressBar);
         buttons.remove(button);
         gui.repaintFrame();

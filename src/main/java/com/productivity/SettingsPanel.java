@@ -191,11 +191,11 @@ public class SettingsPanel extends JTabbedPane {
     }
     
     private static void loadFiles() {
-        settingsFile = new File(gui.currentPath+"settings.TXT");
-        nameFile = new File(gui.currentPath+"daily.TXT");
-        stateFile = new File(gui.currentPath+"dailyCheck.TXT");
-        colorFile = new File(gui.currentPath+"dailyColor.TXT");
-        reminderFile = new File(gui.currentPath+"reminder.TXT");
+        settingsFile = new File(gui.currentPath+"Saves\\settings.TXT");
+        nameFile = new File(gui.currentPath+"Saves\\daily.TXT");
+        stateFile = new File(gui.currentPath+"Saves\\dailyCheck.TXT");
+        colorFile = new File(gui.currentPath+"Saves\\dailyColor.TXT");
+        reminderFile = new File(gui.currentPath+"Saves\\reminder.TXT");
     }
     
     private void reminder() {

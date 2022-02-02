@@ -44,9 +44,9 @@ public class BlockSites extends JPanel {
     }
 
     private void loadFiles() {
-            newHosts = new File(gui.currentPath+"Newhosts");
-            backupFile = new File(gui.currentPath+"hosts");
-            blockedSites = new File(gui.currentPath+"blockedSites.TXT");
+            newHosts = new File(gui.currentPath+"Saves\\Newhosts");
+            backupFile = new File(gui.currentPath+"Saves\\hosts");
+            blockedSites = new File(gui.currentPath+"Saves\\blockedSites.TXT");
     }
     
     public static void reBlockSites() {

@@ -5,5 +5,5 @@ blockSites
 *
 false
 true
-false
+true
 false
