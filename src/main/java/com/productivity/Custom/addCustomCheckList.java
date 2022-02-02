@@ -15,6 +15,7 @@ public class addCustomCheckList extends JPanel {
     private static String customPath = gui.currentCustomPath;
     private static File customNames = new File(gui.currentCustomPath + "customNames.TXT");
     private static Box vertical = Box.createVerticalBox();
+    private static HashMap<String, CheckBoxes> checkBoxes = new HashMap<String, CheckBoxes>();
     
     public addCustomCheckList() {
         JTextField name = new JTextField();
@@ -48,6 +49,15 @@ public class addCustomCheckList extends JPanel {
             addCheckList(names.get(i));
         }
     }
+
+    public static JCheckBox[] getRandomCheckBoxes() {
+        if (names.size() <= 0) {
+            return null;
+        }
+        int index = (int)(Math.random() * names.size());
+        CheckBoxes checkBox = checkBoxes.get(names.get(index));
+        return checkBox.getBoxes();
+    }
     
     private static void addCheckList(String n) {
         File name = new File(customPath + n + "Name.TXT");
@@ -74,7 +84,9 @@ public class addCustomCheckList extends JPanel {
             saveChecklists();
         });
         vertical.add(button);
-        gui.customCheckList.addCheckList(new CheckBoxes(gui.height, gui.length, name, check, color, false), n);
+        CheckBoxes checkBox = new CheckBoxes(gui.height, gui.length, name, check, color, false);
+        checkBoxes.put(n, checkBox);
+        gui.customCheckList.addCheckList(checkBox, n);
     }
     
     private static void deleteChecklist(String n) {
@@ -85,6 +97,7 @@ public class addCustomCheckList extends JPanel {
         color.delete();
         check.delete();
         names.remove(n);
+        checkBoxes.remove(n);
         gui.customCheckList.removeChecklist(n);
         if (names.size() <= 0) {
             gui.customCheckListVisibility(false);

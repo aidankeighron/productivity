@@ -65,6 +65,12 @@ public class CheckBoxes extends JPanel {
 		super.add(checklistPanel, BorderLayout.CENTER);
 		super.add(buttonPanel, BorderLayout.SOUTH);
 	}
+
+	public JCheckBox[] getBoxes() {
+		JCheckBox[] data = new JCheckBox[checkBoxes.size()];
+        data = checkBoxes.toArray(data);
+		return data;
+	}
 	
 	public void addCheckBox(String name, Color color, Boolean state) {
 		JCheckBox checkBox = new JCheckBox(name);
@@ -159,6 +165,7 @@ public class CheckBoxes extends JPanel {
 		writeData(name, nameFile);
 		writeData(state, checkFile);
 		writeData(color, colorFile);
+		HomePanel.reset();
 	}
 	
 	public String[] readData(File file) {

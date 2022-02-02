@@ -36,6 +36,12 @@ public class DailyChecklist extends JPanel {
 		super.add(BorderLayout.WEST, checkListPanel);
 	}
 
+	public static JCheckBox[] getCheckBoxes() {
+		JCheckBox[] data = new JCheckBox[checkBoxes.size()];
+        data = checkBoxes.toArray(data);
+		return data;
+	}
+
 	private void loadFiles() {
 		nameFile = new File(gui.currentPath+"Saves\\daily.TXT");
 		stateFile = new File(gui.currentPath+"Saves\\dailyCheck.TXT");
@@ -58,6 +64,7 @@ public class DailyChecklist extends JPanel {
 				addCheckBox(names[i], new Color(Integer.parseInt(color[i])), false);
 			}
 		}
+		HomePanel.reset();
 	}
 	
 	private static void addCheckBox(String name, Color color, Boolean checked) {

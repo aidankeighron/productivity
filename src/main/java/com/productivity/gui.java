@@ -23,6 +23,7 @@ public class gui extends JFrame {
 	private static JFrame frame = new JFrame("Produtivity");
 	private static JTabbedPane tabbedPane;
 	public static customCheckList customCheckList = new customCheckList();
+	private static CheckBoxes checkBoxPanel;
 	
 	private static File nameFile;
 	private static File stateFile;
@@ -65,14 +66,16 @@ public class gui extends JFrame {
 			e.printStackTrace();
 		}
 		load();
+		checkBoxPanel = new CheckBoxes(height, length, nameFile, stateFile, colorFile, false);
 		tabbedPane = new JTabbedPane();
-		tabbedPane.addTab("Checklist", new CheckBoxes(height, length, nameFile, stateFile, colorFile, false));
-		tabbedPane.addTab("Daily Checklist", new DailyChecklist());
+		tabbedPane.addTab("Home", new HomePanel());
+		tabbedPane.addTab("Checklist", checkBoxPanel);
+		tabbedPane.addTab("Daily", new DailyChecklist());
 		tabbedPane.addTab("Timers", new TimerPanel());
 		tabbedPane.addTab("Notes", new NotesPanel());
 		tabbedPane.addTab("Settings", new SettingsPanel());
 		if (addCustomCheckList.getNumberOfChecklists() > 0) {
-			tabbedPane.addTab("Custom Checklist", customCheckList);
+			tabbedPane.addTab("Custom", customCheckList);
 		}
 		ImageIcon img = new ImageIcon("src\\main\\java\\com\\productivity\\icon.png");
 		frame.setIconImage(img.getImage());
@@ -84,6 +87,10 @@ public class gui extends JFrame {
 		frame.setVisible(true);
 	}
 	
+	public static JCheckBox[] getCheckBoxes() {
+		return checkBoxPanel.getBoxes();
+	}
+
 	private static void load() {
 		SettingsPanel.loadSettings();
 		addCustomCheckList.loadCheckLists();
@@ -92,7 +99,7 @@ public class gui extends JFrame {
 	
 	public static void customCheckListVisibility(boolean value) {
 		if (value && tabbedPane.indexOfComponent(customCheckList) == -1) {
-			tabbedPane.addTab("Custom Checklist", customCheckList);
+			tabbedPane.addTab("Custom", customCheckList);
 			repaintFrame();
 		}
 		else if (tabbedPane.indexOfComponent(customCheckList) != -1) {
