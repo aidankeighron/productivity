@@ -195,7 +195,10 @@ public class TimerPanel extends JPanel {
         progressBar.setStringPainted(true);
         String title = (name.equals("")) ? Integer.toString(length) : name;
         JButton button = new JButton(title);
-        
+        if (isBlockedTimer) {
+            button.setBackground(Color.RED);
+        }
+
         Timer time = new Timer();
         TimerTask task = new TimerTask()
         {

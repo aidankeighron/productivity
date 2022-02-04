@@ -20,17 +20,12 @@ public class NotesPanel extends JDesktopPane {
 		nameField.addActionListener(e -> {
 			File file = new File(filePath + (String)noteChoose.getSelectedItem() + ".txt");
 			File newFile = new File(filePath + nameField.getText() + ".txt");
-			//DefaultComboBoxModel<String> newModel = new DefaultComboBoxModel<>(names);
-			//noteChoose.setModel(newModel);
-			int index = noteChoose.getSelectedIndex();
-			noteChoose.removeAllItems();
-			for (String s : names) {
-				noteChoose.insertItemAt(s, noteChoose.getItemCount());
-			}
-			noteChoose.setSelectedIndex(index);
 			file.renameTo(newFile);
+			int index = noteChoose.getSelectedIndex();
 			names[index] = nameField.getText();
 			writeData(names, namesFile);
+			noteChoose.setSelectedIndex(index);
+			noteChoose.setModel(new JComboBox<>(names).getModel());
 		});
 		
 		JTextArea textArea = new JTextArea();
@@ -44,9 +39,9 @@ public class NotesPanel extends JDesktopPane {
 			File file = new File(filePath + (String)noteChoose.getSelectedItem() + ".txt");
 			String[] data = readData(file);
 			if (data.length > 0) {
-				textArea.setText(data[0]);
+				textArea.setText(data[0] + "\n");
 				for (int i = 1; i < data.length; i++) {
-					textArea.append(data[i]);
+					textArea.append(data[i] + "\n");
 				}
 			}
 			else {

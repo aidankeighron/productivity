@@ -24,6 +24,7 @@ public class gui extends JFrame {
 	private static JTabbedPane tabbedPane;
 	public static customCheckList customCheckList = new customCheckList();
 	private static CheckBoxes checkBoxPanel;
+	private static HomePanel homePanel;
 	
 	private static File nameFile;
 	private static File stateFile;
@@ -67,8 +68,9 @@ public class gui extends JFrame {
 		}
 		load();
 		checkBoxPanel = new CheckBoxes(height, length, nameFile, stateFile, colorFile, false);
+		//homePanel = new HomePanel();
 		tabbedPane = new JTabbedPane();
-		tabbedPane.addTab("Home", new HomePanel());
+		//tabbedPane.addTab("Home", homePanel);
 		tabbedPane.addTab("Checklist", checkBoxPanel);
 		tabbedPane.addTab("Daily", new DailyChecklist());
 		tabbedPane.addTab("Timers", new TimerPanel());
@@ -87,6 +89,10 @@ public class gui extends JFrame {
 		frame.setVisible(true);
 	}
 	
+	public static void homeReset() {
+		homePanel.reset();
+	}
+
 	public static JCheckBox[] getCheckBoxes() {
 		return checkBoxPanel.getBoxes();
 	}
