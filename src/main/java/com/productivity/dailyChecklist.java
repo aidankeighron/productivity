@@ -64,7 +64,7 @@ public class DailyChecklist extends JPanel {
 				addCheckBox(names[i], new Color(Integer.parseInt(color[i])), false);
 			}
 		}
-		//gui.homeReset();
+		gui.homeReset();
 	}
 	
 	private static void addCheckBox(String name, Color color, Boolean checked) {

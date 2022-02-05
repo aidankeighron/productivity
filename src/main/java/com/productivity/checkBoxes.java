@@ -17,8 +17,6 @@ public class CheckBoxes extends JPanel {
 	private static String[] colorNames = {"Black", "Red", "Blue", "Green"};
 	private static Color[] colors = {Color.BLACK, new Color(250, 0, 0), new Color(0, 0, 230), new Color(0, 220, 0)};
 	private Color selectedColor = Color.BLACK;
-	public static JFrame testFrame = new JFrame();
-	public static JPanel testPanel = new JPanel();
 	
 	public CheckBoxes(int height, int length, File name, File check, File color, Boolean daily) {
 		nameFile = name;
@@ -66,9 +64,6 @@ public class CheckBoxes extends JPanel {
 		super.add(inputBox, BorderLayout.NORTH);
 		super.add(checklistPanel, BorderLayout.CENTER);
 		super.add(buttonPanel, BorderLayout.SOUTH);
-
-		testFrame.add(testPanel);
-		testFrame.setSize(400, 300);
 	}
 
 	public JCheckBox[] getBoxes() {
@@ -103,7 +98,7 @@ public class CheckBoxes extends JPanel {
 					break;
 				}
 			}
-			String input = (String)JOptionPane.showInputDialog(null, "Choose new Color", "", JOptionPane.QUESTION_MESSAGE, null, colorNames, colorNames[index]);
+			String input = (String)JOptionPane.showInputDialog(this, "Choose new Color", "", JOptionPane.QUESTION_MESSAGE, null, colorNames, colorNames[index]);
 			Color newColor = checkBox.getForeground();
 			for (int j = 0; j < colorNames.length; j++) {
 				if (colorNames[j].equals(input)) {
@@ -170,7 +165,7 @@ public class CheckBoxes extends JPanel {
 		writeData(name, nameFile);
 		writeData(state, checkFile);
 		writeData(color, colorFile);
-		//gui.homeReset(); TODO
+		gui.homeReset();
 	}
 	
 	public String[] readData(File file) {

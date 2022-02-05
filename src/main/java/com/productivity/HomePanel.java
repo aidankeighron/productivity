@@ -1,48 +1,86 @@
 package com.productivity;
 
-import java.io.*;
-import java.nio.file.Files;
-import java.util.Scanner;
 import javax.swing.*;
 import com.productivity.Custom.addCustomCheckList;
 import java.awt.BorderLayout;
-import java.awt.BorderLayout;
-import java.io.*;
-import java.util.*;
-import javax.swing.*;
 import java.awt.*;
-import java.nio.file.Files;
 
 public class HomePanel extends JPanel {
 
-    static JPanel checkPanel = new JPanel(new GridLayout(7, 2));
-    static JPanel dailyPanel = new JPanel(new GridLayout(3, 2));
-    static JPanel customPanel = new JPanel(new GridLayout(4, 2));
+    JPanel checkPanel;
+    JPanel dailyPanel;
+    JPanel customPanel;
 
     public HomePanel() {
         reset();
     }
 
     public void reset() {
-        JCheckBox[] checkBoxes = gui.getCheckBoxes();
-        JCheckBox[] dailyBoxes = DailyChecklist.getCheckBoxes();
-        JCheckBox[] customBoxes = addCustomCheckList.getRandomCheckBoxes();
-        for (int i = 0; i < checkBoxes.length; i++) {
-            checkPanel.add(checkBoxes[i]);
-        }
-        for (int i = 0; i < dailyBoxes.length; i++) {
-            dailyPanel.add(dailyBoxes[i]);
-        }
-        for (int i = 0; i < customBoxes.length; i++) {
-            customPanel.add(customBoxes[i]);
-        }
+        // checkPanel.removeAll();
+        // dailyPanel.removeAll();
+        // customPanel.removeAll();
+        // checkPanel.setBorder(BorderFactory.createLineBorder(Color.black));
+        // dailyPanel.setBorder(BorderFactory.createLineBorder(Color.black));
+        // customPanel.setBorder(BorderFactory.createLineBorder(Color.black));
+        // checkPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        // dailyPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        // customPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        // JCheckBox[] checkBoxes = gui.getCheckBoxes();
+        // JCheckBox[] dailyBoxes = DailyChecklist.getCheckBoxes();
+        // JCheckBox[] customBoxes = addCustomCheckList.getRandomCheckBoxes();
+        // for (int i = 0; i < checkBoxes.length; i++) {
+        //     JCheckBox checkBox = new JCheckBox(checkBoxes[i].getText());
+        //     checkBox.setText(checkBox.getText() + String.format("%"+(45 - checkBox.getText().length())+"s", ""));
+        //     checkPanel.add(checkBox);
+        // }
+        // for (int i = 0; i < dailyBoxes.length; i++) {
+        //     JCheckBox checkBox = new JCheckBox(dailyBoxes[i].getText());
+        //     dailyPanel.add(checkBox);
+        // }
+        // for (int i = 0; i < customBoxes.length; i++) {
+        //     JCheckBox checkBox = new JCheckBox(customBoxes[i].getText());
+        //     customPanel.add(checkBox);
+        // }
+        if (checkPanel != null)
+            checkPanel.removeAll();
+        if (dailyPanel != null)
+            dailyPanel.removeAll();
+        if (customPanel != null)
+            customPanel.removeAll();
+        
+        checkPanel = resetPanel(gui.getCheckBoxes(), "Checklist");
+        dailyPanel = resetPanel(DailyChecklist.getCheckBoxes(), "Daily");
+        customPanel = resetPanel(addCustomCheckList.getRandomCheckBoxes(), "Custom");
 
         Box vertical = Box.createVerticalBox();
         vertical.add(dailyPanel);
         vertical.add(customPanel);
 
+        for (Component c : super.getComponents()) {
+            if (c.equals(checkPanel)) {
+                super.remove(checkPanel);
+                super.remove(dailyPanel);
+                super.remove(customPanel);
+                break;
+            }
+        }
         super.setLayout(new BorderLayout());
         super.add(BorderLayout.WEST, checkPanel);
-        super.add(BorderLayout.EAST, vertical);
+        super.add(BorderLayout.CENTER, vertical);
+        gui.repaintFrame();
+    }
+
+    private JPanel resetPanel(JCheckBox[] boxes, String title) {
+        JPanel panel = new JPanel(new GridLayout( /*10 - ((boxes.length<10)?boxes.length:10)*/0, 2));
+        //System.out.println(10 - ((boxes.length<10)?boxes.length:10) + " : " + title);
+        JLabel label = new JLabel(title);
+        panel.add(label);
+        //panel.add(Box.createRigidArea(new Dimension(150, 0)));
+        panel.setBorder(BorderFactory.createLineBorder(Color.black));
+        for (int i = 0; i < boxes.length; i++) {
+            JCheckBox checkBox = new JCheckBox(boxes[i].getText());
+            panel.add(checkBox);
+        }
+        return panel;
     }
 }

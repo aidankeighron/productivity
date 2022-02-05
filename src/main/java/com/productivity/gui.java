@@ -9,13 +9,13 @@ public class gui extends JFrame {
 	
 	public static int length = 400;
 	public static int height = 300;
-	public static Boolean debug = true;
-	public static String debugPath = "src\\main\\java\\com\\productivity\\";
-	public static String jarPath = "classes\\com\\productivity\\";
-	public static String exePath = "target\\classes\\com\\productivity\\";
-	public static String customDebugPath = "src\\main\\java\\com\\productivity\\Custom\\Saves\\";
-	public static String customJarPath = "classes\\com\\productivity\\Custom\\Saves\\";
-	public static String customExePath = "target\\classes\\com\\productivity\\Custom\\Saves\\";
+	private static Boolean debug = true;
+	private static String debugPath = "src\\main\\java\\com\\productivity\\";
+	private static String jarPath = "classes\\com\\productivity\\";
+	private static String exePath = "target\\classes\\com\\productivity\\";
+	private static String customDebugPath = "src\\main\\java\\com\\productivity\\Custom\\Saves\\";
+	private static String customJarPath = "classes\\com\\productivity\\Custom\\Saves\\";
+	private static String customExePath = "target\\classes\\com\\productivity\\Custom\\Saves\\";
 	public static String currentPath;
 	public static String currentCustomPath;
 	
@@ -37,8 +37,16 @@ public class gui extends JFrame {
 	static String[] lookAndFeelValues = {"com.sun.java.swing.plaf.motif.MotifLookAndFeel", "javax.swing.plaf.metal.MetalLookAndFeel"};
 	
 	public static void main(String[] args) throws IOException {
-		currentPath = (debug)?debugPath: (args.length>0)?exePath:jarPath;
-		currentCustomPath = (debug)?customDebugPath: (args.length>0)?customExePath:customJarPath;
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				currentPath = (debug)?debugPath: (args.length>0)?exePath:jarPath;
+				currentCustomPath = (debug)?customDebugPath: (args.length>0)?customExePath:customJarPath;
+				createAndShowGUI();
+			}
+		});
+	}
+
+	private static void createAndShowGUI() {
 		loadFiles();
 		start();
 		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
@@ -68,17 +76,17 @@ public class gui extends JFrame {
 		}
 		load();
 		checkBoxPanel = new CheckBoxes(height, length, nameFile, stateFile, colorFile, false);
-		//homePanel = new HomePanel();
 		tabbedPane = new JTabbedPane();
-		//tabbedPane.addTab("Home", homePanel);
 		tabbedPane.addTab("Checklist", checkBoxPanel);
 		tabbedPane.addTab("Daily", new DailyChecklist());
 		tabbedPane.addTab("Timers", new TimerPanel());
 		tabbedPane.addTab("Notes", new NotesPanel());
-		tabbedPane.addTab("Settings", new SettingsPanel());
 		if (addCustomCheckList.getNumberOfChecklists() > 0) {
 			tabbedPane.addTab("Custom", customCheckList);
 		}
+		tabbedPane.addTab("Settings", new SettingsPanel());
+		homePanel = new HomePanel();
+		tabbedPane.insertTab("Home", null, homePanel, null, 0);
 		ImageIcon img = new ImageIcon("src\\main\\java\\com\\productivity\\icon.png");
 		frame.setIconImage(img.getImage());
 		frame.add(tabbedPane);
@@ -90,7 +98,8 @@ public class gui extends JFrame {
 	}
 	
 	public static void homeReset() {
-		homePanel.reset();
+		if (homePanel != null)
+			homePanel.reset();
 	}
 
 	public static JCheckBox[] getCheckBoxes() {
@@ -105,7 +114,7 @@ public class gui extends JFrame {
 	
 	public static void customCheckListVisibility(boolean value) {
 		if (value && tabbedPane.indexOfComponent(customCheckList) == -1) {
-			tabbedPane.addTab("Custom", customCheckList);
+			tabbedPane.insertTab("Custom", null, customCheckList, null, tabbedPane.getTabCount()-2);
 			repaintFrame();
 		}
 		else if (tabbedPane.indexOfComponent(customCheckList) != -1) {

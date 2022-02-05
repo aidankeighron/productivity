@@ -4,7 +4,6 @@ import java.io.*;
 import java.util.*;
 import javax.swing.*;
 import com.productivity.Custom.addCustomCheckList;
-
 import java.awt.*;
 import java.nio.file.Files;
 import java.util.Timer;
