@@ -1,10 +1,16 @@
 package com.productivity;
 
-import java.io.*;
+import javax.swing.Box;
+import javax.swing.JComboBox;
+import javax.swing.JDesktopPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+
 import java.nio.file.Files;
 import java.util.Scanner;
 import java.awt.BorderLayout;
-import javax.swing.*;
+import java.io.File;
+import java.io.FileWriter;
 
 public class NotesPanel extends JDesktopPane {
 	

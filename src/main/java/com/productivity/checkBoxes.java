@@ -1,10 +1,21 @@
 package com.productivity;
 
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
 import java.awt.BorderLayout;
-import java.io.*;
-import java.util.*;
-import javax.swing.*;
-import java.awt.*;
+import java.awt.GridLayout;
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Scanner;
+import java.io.File;
+import java.io.FileWriter;
 import java.nio.file.Files;
 
 public class CheckBoxes extends JPanel {
@@ -44,6 +55,7 @@ public class CheckBoxes extends JPanel {
 				DailyChecklist.resetBoxes(false);
 			}
 		});
+		reset.setFocusPainted(false);
 		JButton clear = new JButton("Clear Selected");
 		clear.addActionListener(e -> {
 			clearSelected();
@@ -51,7 +63,7 @@ public class CheckBoxes extends JPanel {
 				DailyChecklist.resetBoxes(false);
 			}
 		});
-		
+		clear.setFocusPainted(false);
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.add(reset);
 		buttonPanel.add(clear);
@@ -65,10 +77,10 @@ public class CheckBoxes extends JPanel {
 		super.add(checklistPanel, BorderLayout.CENTER);
 		super.add(buttonPanel, BorderLayout.SOUTH);
 	}
-
+	
 	public JCheckBox[] getBoxes() {
 		JCheckBox[] data = new JCheckBox[checkBoxes.size()];
-        data = checkBoxes.toArray(data);
+		data = checkBoxes.toArray(data);
 		return data;
 	}
 	
@@ -79,6 +91,7 @@ public class CheckBoxes extends JPanel {
 		});
 		checkBox.setForeground(color);
 		checkBox.setSelected(state);
+		checkBox.setFocusPainted(false);
 		checkBoxes.add(checkBox);
 		JMenuItem[] items = new JMenuItem[3];
 		items[0] = new JMenuItem("Edit");

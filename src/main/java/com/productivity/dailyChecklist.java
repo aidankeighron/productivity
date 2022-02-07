@@ -1,10 +1,15 @@
 package com.productivity;
 
-import java.io.*;
-import java.util.*;
-import javax.swing.*;
+import javax.swing.JCheckBox;
+import javax.swing.JPanel;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Scanner;
+import java.io.File;
+import java.io.FileWriter;
 import java.nio.file.Files;
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDateTime;
@@ -69,6 +74,7 @@ public class DailyChecklist extends JPanel {
 	
 	private static void addCheckBox(String name, Color color, Boolean checked) {
 		JCheckBox checkBox = new JCheckBox(name);
+		checkBox.setFocusPainted(false);
 		checkBox.addActionListener(e -> {
 			saveCheckBoxes();
 		});

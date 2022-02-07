@@ -1,12 +1,17 @@
 package com.productivity;
 
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
-import java.io.*;
-import java.util.*;
-import javax.swing.*;
+import javax.swing.JTextArea;
+
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Scanner;
 import java.awt.BorderLayout;
+import java.io.File;
+import java.io.FileWriter;
 
 public class BlockSites extends JPanel {
     
@@ -24,9 +29,11 @@ public class BlockSites extends JPanel {
         site.setText(load());
         
         JButton apply = new JButton("Apply");
+        apply.setFocusPainted(false);
         apply.addActionListener(e -> blockSite(site));
         
         JButton reset = new JButton("Reset");
+        reset.setFocusPainted(false);
         reset.addActionListener(e -> reset(site));
         
         JLabel label = new JLabel("You will need to run program as admin for this feature to work");

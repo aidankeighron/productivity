@@ -1,12 +1,28 @@
 package com.productivity;
 
-import java.io.*;
-import java.util.*;
-import javax.swing.*;
-import com.productivity.Custom.addCustomCheckList;
-import java.awt.*;
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
+
+import java.awt.Component;
+import java.io.File;
+import java.io.FileWriter;
 import java.nio.file.Files;
+import java.util.HashMap;
+import java.util.Scanner;
 import java.util.Timer;
+import java.util.TimerTask;
+import java.awt.Toolkit;
+
+import com.productivity.Custom.AddCustomCheckList;
+
 
 public class SettingsPanel extends JTabbedPane {
     
@@ -102,7 +118,7 @@ public class SettingsPanel extends JTabbedPane {
             super.addTab("Reminder", reminderPanel);
             reminder();
         }
-        super.addTab("Custom Checklsits", new addCustomCheckList());
+        super.addTab("Custom Checklsits", new AddCustomCheckList());
         super.addTab("Daily Checklist", dailyPanel);
     }
     
@@ -110,6 +126,7 @@ public class SettingsPanel extends JTabbedPane {
         switch(type) {
             case checkbox:
             JCheckBox checkBox = new JCheckBox(name);
+            checkBox.setFocusPainted(false);
             checkBox.addActionListener(e -> {
                 settings.put(key, Boolean.toString(checkBox.isSelected()));
                 if (rt != null) {
@@ -241,6 +258,7 @@ public class SettingsPanel extends JTabbedPane {
             }
         });
         JButton save = new JButton("      Save      ");
+        save.setFocusPainted(false);
         save.addActionListener(e -> {
             boolean notInt = false;
             try {

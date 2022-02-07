@@ -1,14 +1,25 @@
 package com.productivity.Custom;
 
 import java.awt.BorderLayout;
-import java.io.*;
+import java.io.File;
+import java.io.FileWriter;
 import java.nio.file.Files;
-import java.util.*;
-import javax.swing.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Scanner;
+
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
 import com.productivity.CheckBoxes;
 import com.productivity.gui;
 
-public class addCustomCheckList extends JPanel {
+public class AddCustomCheckList extends JPanel {
 
     private static ArrayList<String> names = new ArrayList<String>();
     //private static String customPath = (!gui.debug)?"classes\\com\\productivity\\Custom\\Saves\\":"src\\main\\java\\com\\productivity\\Custom\\Saves\\";
@@ -17,7 +28,7 @@ public class addCustomCheckList extends JPanel {
     private static Box vertical = Box.createVerticalBox();
     private static HashMap<String, CheckBoxes> checkBoxes = new HashMap<String, CheckBoxes>();
     
-    public addCustomCheckList() {
+    public AddCustomCheckList() {
         JTextField name = new JTextField();
         name.addActionListener(e -> {
             if (!names.contains(name.getText()) && !name.getText().equals("")) {
@@ -83,6 +94,7 @@ public class addCustomCheckList extends JPanel {
             deleteChecklist(n);
             saveChecklists();
         });
+        button.setFocusPainted(false);
         vertical.add(button);
         CheckBoxes checkBox = new CheckBoxes(gui.height, gui.length, name, check, color, false);
         checkBoxes.put(n, checkBox);

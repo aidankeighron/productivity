@@ -1,9 +1,19 @@
 package com.productivity;
 
-import java.io.*;
-import javax.swing.*;
-import com.productivity.Custom.addCustomCheckList;
-import com.productivity.Custom.customCheckList;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JCheckBox;
+import javax.swing.JFrame;
+import javax.swing.JTabbedPane;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+
+import com.productivity.Custom.AddCustomCheckList;
+import com.productivity.Custom.CustomCheckList;
 
 public class gui extends JFrame {
 	
@@ -22,7 +32,7 @@ public class gui extends JFrame {
 	private static boolean onTop = false;
 	private static JFrame frame = new JFrame("Produtivity");
 	private static JTabbedPane tabbedPane;
-	public static customCheckList customCheckList = new customCheckList();
+	public static CustomCheckList customCheckList = new CustomCheckList();
 	private static CheckBoxes checkBoxPanel;
 	private static HomePanel homePanel;
 	
@@ -81,7 +91,7 @@ public class gui extends JFrame {
 		tabbedPane.addTab("Daily", new DailyChecklist());
 		tabbedPane.addTab("Timers", new TimerPanel());
 		tabbedPane.addTab("Notes", new NotesPanel());
-		if (addCustomCheckList.getNumberOfChecklists() > 0) {
+		if (AddCustomCheckList.getNumberOfChecklists() > 0) {
 			tabbedPane.addTab("Custom", customCheckList);
 		}
 		tabbedPane.addTab("Settings", new SettingsPanel());
@@ -108,10 +118,10 @@ public class gui extends JFrame {
 
 	private static void load() {
 		SettingsPanel.loadSettings();
-		addCustomCheckList.loadCheckLists();
+		AddCustomCheckList.loadCheckLists();
 		onTop = Boolean.parseBoolean(SettingsPanel.getSetting("onTop"));
 	}
-	
+
 	public static void customCheckListVisibility(boolean value) {
 		if (value && tabbedPane.indexOfComponent(customCheckList) == -1) {
 			tabbedPane.insertTab("Custom", null, customCheckList, null, tabbedPane.getTabCount()-2);

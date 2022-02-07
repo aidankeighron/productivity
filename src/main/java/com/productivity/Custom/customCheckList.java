@@ -1,6 +1,5 @@
 package com.productivity.Custom;
 
-import java.util.*;
 import com.productivity.CheckBoxes;
 import com.productivity.gui;
 import java.awt.Component;
@@ -12,9 +11,11 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
+
 import javax.swing.JTabbedPane;
 
-public class customCheckList extends JTabbedPane {
+public class CustomCheckList extends JTabbedPane {
     
     static HashMap<String, CheckBoxes> boxes = new HashMap<String, CheckBoxes>();
     private boolean dragging = false;
@@ -22,18 +23,18 @@ public class customCheckList extends JTabbedPane {
     private Point currentMouseLocation = null;
     private int draggedTabIndex = 0;
     
-    public customCheckList() {
+    public CustomCheckList() {
         super();
         addMouseMotionListener(new MouseMotionAdapter() {
             public void mouseDragged(MouseEvent e) {
                 
                 if(!dragging) {
                     // Gets the tab index based on the mouse position
-                    int tabNumber = getUI().tabForCoordinate(customCheckList.this, e.getX(), e.getY());
+                    int tabNumber = getUI().tabForCoordinate(CustomCheckList.this, e.getX(), e.getY());
                     
                     if(tabNumber >= 0) {
                         draggedTabIndex = tabNumber;
-                        Rectangle bounds = getUI().getTabBounds(customCheckList.this, tabNumber);
+                        Rectangle bounds = getUI().getTabBounds(CustomCheckList.this, tabNumber);
                         
                         
                         // Paint the tabbed pane to a buffer
@@ -47,7 +48,7 @@ public class customCheckList extends JTabbedPane {
                         // Paint just the dragged tab to the buffer
                         tabImage = new BufferedImage(bounds.width, bounds.height, BufferedImage.TYPE_INT_ARGB);
                         Graphics graphics = tabImage.getGraphics();
-                        graphics.drawImage(totalImage, 0, 0, bounds.width, bounds.height, bounds.x, bounds.y, bounds.x + bounds.width, bounds.y+bounds.height, customCheckList.this);
+                        graphics.drawImage(totalImage, 0, 0, bounds.width, bounds.height, bounds.x, bounds.y, bounds.x + bounds.width, bounds.y+bounds.height, CustomCheckList.this);
                         
                         dragging = true;
                         repaint();
@@ -66,7 +67,7 @@ public class customCheckList extends JTabbedPane {
             public void mouseReleased(MouseEvent e) {
                 
                 if(dragging) {
-                    int tabNumber = getUI().tabForCoordinate(customCheckList.this, e.getX(), 10);
+                    int tabNumber = getUI().tabForCoordinate(CustomCheckList.this, e.getX(), 10);
                     
                     if(tabNumber >= 0) {
                         Component comp = getComponentAt(draggedTabIndex);

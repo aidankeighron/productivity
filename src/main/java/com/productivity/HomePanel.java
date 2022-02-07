@@ -1,9 +1,17 @@
 package com.productivity;
 
-import javax.swing.*;
-import com.productivity.Custom.addCustomCheckList;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
 import java.awt.BorderLayout;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.GridLayout;
+
+import com.productivity.Custom.AddCustomCheckList;
 
 public class HomePanel extends JPanel {
 
@@ -50,7 +58,7 @@ public class HomePanel extends JPanel {
         
         checkPanel = resetPanel(gui.getCheckBoxes(), "Checklist");
         dailyPanel = resetPanel(DailyChecklist.getCheckBoxes(), "Daily");
-        customPanel = resetPanel(addCustomCheckList.getRandomCheckBoxes(), "Custom");
+        customPanel = resetPanel(AddCustomCheckList.getRandomCheckBoxes(), "Custom");
 
         Box vertical = Box.createVerticalBox();
         vertical.add(dailyPanel);

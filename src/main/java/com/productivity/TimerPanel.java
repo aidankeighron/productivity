@@ -1,11 +1,27 @@
 package com.productivity;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 import javax.swing.border.Border;
-import java.awt.*;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.awt.Toolkit;
+
 
 public class TimerPanel extends JPanel {
 
@@ -93,6 +109,7 @@ public class TimerPanel extends JPanel {
         });
         JLabel alarmLbl = new JLabel("Alarm: ");
         JButton addBtn = new JButton("           Add           ");
+        addBtn.setFocusPainted(false);
         addBtn.addActionListener(e -> {
             boolean notInt = false;
             try {
@@ -195,6 +212,7 @@ public class TimerPanel extends JPanel {
         progressBar.setStringPainted(true);
         String title = (name.equals("")) ? Integer.toString(length) : name;
         JButton button = new JButton(title);
+        button.setFocusPainted(false);
         if (isBlockedTimer) {
             button.setBackground(Color.RED);
         }
