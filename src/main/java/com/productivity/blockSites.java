@@ -9,6 +9,8 @@ import javax.swing.JTextArea;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.awt.BorderLayout;
 import java.io.File;
 import java.io.FileWriter;
@@ -49,11 +51,11 @@ public class BlockSites extends JPanel {
         super.add(BorderLayout.CENTER, site);
         super.add(BorderLayout.SOUTH, vertical);
     }
-
+    
     private void loadFiles() {
-            newHosts = new File(gui.currentPath+"Saves\\Newhosts");
-            backupFile = new File(gui.currentPath+"Saves\\hosts");
-            blockedSites = new File(gui.currentPath+"Saves\\blockedSites.TXT");
+        newHosts = new File(gui.currentPath+"Saves\\Newhosts");
+        backupFile = new File(gui.currentPath+"Saves\\hosts");
+        blockedSites = new File(gui.currentPath+"Saves\\blockedSites.TXT");
     }
     
     public static void reBlockSites() {
@@ -75,31 +77,59 @@ public class BlockSites extends JPanel {
         String[] data = readData(blockedSites);
         if (data.length > 1) {
             for (int i = 0; i < data.length; i++) {
+                if (data[i].equals("*")) {
+                    continue;
+                }
                 result += data[i] + "\n";
             }
         }
         return result;
     }
     
+    private static boolean isMatch(String s, String pattern) {
+        try {
+            Pattern patt = Pattern.compile(pattern);
+            Matcher matcher = patt.matcher(s);
+            return matcher.matches();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+    
     private void blockSite(JTextArea site) {
         String[] sites = site.getText().split("\\r?\\n");
+        String[] validSites = new String[sites.length];
+        String regex = "[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
+        int numValidSites = 0;
+        for (int i = 0; i < sites.length; i++) {
+            if (isMatch(sites[i], regex)) {
+                 validSites[i] = sites[i];
+                 numValidSites++;
+            }
+            else {
+                validSites[i] = "*";
+            }
+        }
         String[] host = readData(backupFile);
-        String[] data = new String[sites.length + host.length];
+        String[] data = new String[numValidSites + host.length];
         int j = 0;
         for (int i = 0; i < host.length; i++) {
             data[j] = host[i];
             j++;
         }
-        for (int i = 0; i < sites.length; i++) {
-            if (sites[i].contains("www.")) {
-                data[j] = "127.0.0.1    " + sites[i];
+        for (int i = 0; i < validSites.length; i++) {
+            if (validSites[i].equals("*")) {
+                continue;
+            }
+            if (validSites[i].contains("www.")) {
+                data[j] = "127.0.0.1    " + validSites[i];
             }
             else {
-                data[j] = "127.0.0.1    www." + sites[i];
+                data[j] = "127.0.0.1    www." + validSites[i];
             }
             j++;
         }
-        writeData(sites, blockedSites);
+        writeData(validSites, blockedSites);
         writeData(data, newHosts);
     }
     

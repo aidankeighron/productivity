@@ -25,6 +25,7 @@ public class CustomCheckList extends JTabbedPane {
     
     public CustomCheckList() {
         super();
+        super.setFocusable(false);
         addMouseMotionListener(new MouseMotionAdapter() {
             public void mouseDragged(MouseEvent e) {
                 

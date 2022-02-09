@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
@@ -15,6 +14,21 @@ import javax.swing.UIManager;
 import com.productivity.Custom.AddCustomCheckList;
 import com.productivity.Custom.CustomCheckList;
 
+/* To do
+AddCustomCheckList
+BlockSites
+DailyChecklist
+HomePanel
+NotesPanel
+Popup
+SettingPanel
+TimerPanel
+*/
+
+/* Done
+CustomCheckList
+CheckBoxes
+*/
 public class gui extends JFrame {
 	
 	public static int length = 400;
@@ -87,6 +101,7 @@ public class gui extends JFrame {
 		load();
 		checkBoxPanel = new CheckBoxes(height, length, nameFile, stateFile, colorFile, false);
 		tabbedPane = new JTabbedPane();
+		tabbedPane.setFocusable(false);
 		tabbedPane.addTab("Checklist", checkBoxPanel);
 		tabbedPane.addTab("Daily", new DailyChecklist());
 		tabbedPane.addTab("Timers", new TimerPanel());

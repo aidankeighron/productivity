@@ -57,6 +57,7 @@ public class SettingsPanel extends JTabbedPane {
     TimerTask task;
     
     public SettingsPanel() {
+        super.setFocusable(false);
         dailyPanel = new CheckBoxes(gui.height, gui.length, nameFile, stateFile, colorFile, true);
         JLabel label = new JLabel("Press enter to confirm");
         configBox.add(label);
@@ -217,6 +218,7 @@ public class SettingsPanel extends JTabbedPane {
     private void reminder() {
         int[] data = loadTimer();
         JComboBox<String> timeList = new JComboBox<>(timeOptions);
+        timeList.setFocusable(false);
         timeList.addActionListener(e -> {
             switch(timeList.getSelectedIndex()) {
                 case 0:

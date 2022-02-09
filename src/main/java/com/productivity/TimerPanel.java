@@ -151,7 +151,7 @@ public class TimerPanel extends JPanel {
                 break;
             }
         });
-        
+        timeList.setFocusable(false);
         JPanel config = new JPanel();
         Box time = Box.createHorizontalBox();
         time.add(timeLbl);
