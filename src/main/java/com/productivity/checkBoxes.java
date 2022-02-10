@@ -193,12 +193,25 @@ public class CheckBoxes extends JPanel {
 	}
 	
 	public void loadCheckBoxes() {
-		String[] name = readData(nameFile);
-		String[] states = readData(checkFile);
-		String[] color = readData(colorFile);
-		for (int i = 0; i < name.length; i++) {
-			addCheckBox(name[i], new Color(Integer.parseInt(color[i])), Boolean.parseBoolean(states[i]));
+		try {
+			String[] name = readData(nameFile);
+			String[] states = readData(checkFile);
+			String[] color = readData(colorFile);
+			if (!(name.length == states.length && states.length == color.length)) {
+				writeData("", nameFile);
+				writeData("", checkFile);
+				writeData("", colorFile);
+				return;
+			}
+			for (int i = 0; i < name.length; i++) {
+				addCheckBox(name[i], new Color(Integer.parseInt(color[i])), Boolean.parseBoolean(states[i]));
+			}
+		} catch (Exception e) {
+			writeData("", nameFile);
+			writeData("", checkFile);
+			writeData("", colorFile);
 		}
+		
 	}
 	
 	public void saveCheckBoxes() {
@@ -210,9 +223,22 @@ public class CheckBoxes extends JPanel {
 			state[i] = Boolean.toString(checkBoxes.get(i).isSelected());
 			color[i] = Integer.toString(checkBoxes.get(i).getForeground().getRGB());
 		}
-		writeData(name, nameFile);
-		writeData(state, checkFile);
-		writeData(color, colorFile);
+		try {
+			if (!(name.length == state.length && state.length == color.length)) {
+				writeData("", nameFile);
+				writeData("", checkFile);
+				writeData("", colorFile);
+				return;
+			}
+			writeData(name, nameFile);
+			writeData(state, checkFile);
+			writeData(color, colorFile);
+		} catch (Exception e) {
+			writeData("", nameFile);
+			writeData("", checkFile);
+			writeData("", colorFile);
+		}
+		
 		gui.homeReset();
 	}
 	

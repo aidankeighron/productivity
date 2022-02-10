@@ -26,8 +26,8 @@ TimerPanel
 */
 
 /* Done
-CustomCheckList
 CheckBoxes
+CustomCheckList
 */
 public class gui extends JFrame {
 	
