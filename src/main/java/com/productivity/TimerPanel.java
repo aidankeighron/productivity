@@ -56,7 +56,7 @@ public class TimerPanel extends JPanel {
             } catch (Exception ex) {
                 notInt = true;
             }
-            if (timeField.getText().equals("") || notInt) {
+            if (timeField.getText().equals("") || notInt || (!notInt) && Integer.parseInt(timeField.getText()) > 1000 || nameFeild.getText().length() > 10) {
                 JOptionPane.showMessageDialog(this, "Enter vaild positive time");
             }
             else {
@@ -80,7 +80,7 @@ public class TimerPanel extends JPanel {
             } catch (Exception ex) {
                 notInt = true;
             }
-            if (timeField.getText().equals("") || notInt) {
+            if (timeField.getText().equals("") || notInt || (!notInt) && Integer.parseInt(timeField.getText()) > 1000 || nameFeild.getText().length() > 10) {
                 JOptionPane.showMessageDialog(this, "Enter vaild positive time");
             }
             else {
@@ -275,7 +275,7 @@ public class TimerPanel extends JPanel {
         buttons.add(button);
         Border barBorder = BorderFactory.createEmptyBorder(4, 0, 0, 0);
         progresrBars.setBorder(barBorder);
-        progresrBars.add(progressBar);//TODO fix borders
+        progresrBars.add(progressBar);
         progresrBars.add(progressBox);
         Border nameBorder = BorderFactory.createEmptyBorder(2, 0, 0, 0);
         names.setBorder(nameBorder);

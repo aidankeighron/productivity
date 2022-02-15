@@ -21,13 +21,19 @@ public class BlockSites extends JPanel {
     private static File newHosts;
     private static File backupFile;
     private static File blockedSites;
+    
+    private static boolean usingWindows;
     //private static File newHosts = new File((!gui.debug)?"classes\\com\\productivity\\Saves\\Newhosts":gui.debugPath+"Newhosts");
     //private static File backupFile = new File((!gui.debug)?"classes\\com\\productivity\\Saves\\hosts":gui.debugPath+"hosts");
     //private static File blockedSites = new File((!gui.debug)?"classes\\com\\productivity\\Saves\\blockedSites.TXT":gui.debugPath+"blockedSites.TXT");
     
     public BlockSites() {
+        String os = System.getProperty("os.name");
+        if (os.contains("Windwos")) usingWindows = true;
+        else usingWindows = false;
         loadFiles();
         JTextArea site = new JTextArea();
+        site.setDocument(new JTextFieldLimit(50));
         site.setText(load());
         
         JButton apply = new JButton("Apply");
@@ -59,30 +65,45 @@ public class BlockSites extends JPanel {
     }
     
     public static void reBlockSites() {
-        if (Files.isWritable(Paths.get(hostsFile.getAbsolutePath()))) {
-            String[] data = readData(newHosts);
-            writeData(data, hostsFile);
+        if (Files.isWritable(Paths.get(hostsFile.getAbsolutePath())) && usingWindows) {
+            try {
+                String[] data = readData(newHosts);
+                writeData(data, hostsFile);
+            } catch (Exception e) {
+                String[] data = readData(backupFile);
+                writeData(data, newHosts);
+            }
         }
     }
     
     public static void unBlockSites() {
-        if (Files.isWritable(Paths.get(hostsFile.getAbsolutePath()))) {
-            String[] data = readData(backupFile);
-            writeData(data, hostsFile);
+        if (Files.isWritable(Paths.get(hostsFile.getAbsolutePath())) && usingWindows) {
+            try {
+                String[] data = readData(backupFile);
+                writeData(data, hostsFile);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
         }
     }
     
     private String load() {
         String result = "";
-        String[] data = readData(blockedSites);
-        if (data.length > 1) {
-            for (int i = 0; i < data.length; i++) {
-                if (data[i].equals("*")) {
-                    continue;
+        try {
+            String[] data = readData(blockedSites);
+            if (data.length > 1) {
+                for (int i = 0; i < data.length; i++) {
+                    if (data[i].equals("*")) {
+                        continue;
+                    }
+                    result += data[i] + "\n";
                 }
-                result += data[i] + "\n";
             }
+        } catch (Exception e) {
+            writeData("", blockedSites);
         }
+
         return result;
     }
     
@@ -99,12 +120,12 @@ public class BlockSites extends JPanel {
     private void blockSite(JTextArea site) {
         String[] sites = site.getText().split("\\r?\\n");
         String[] validSites = new String[sites.length];
-        String regex = "[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
+        String regex = "^((https?|ftp|smtp):\\/\\/)?(www.)?[a-z0-9]+\\.[a-z]+(\\/[a-zA-Z0-9#]+\\/?)*$";
         int numValidSites = 0;
         for (int i = 0; i < sites.length; i++) {
             if (isMatch(sites[i], regex)) {
-                 validSites[i] = sites[i];
-                 numValidSites++;
+                validSites[i] = sites[i];
+                numValidSites++;
             }
             else {
                 validSites[i] = "*";
@@ -135,7 +156,7 @@ public class BlockSites extends JPanel {
     
     private void reset(JTextArea area) {
         String[] data = readData(backupFile);
-        if (Files.isWritable(Paths.get(hostsFile.getAbsolutePath()))) {
+        if (Files.isWritable(Paths.get(hostsFile.getAbsolutePath())) && usingWindows) {
             writeData(data, hostsFile);
         }
         writeData(data, newHosts);

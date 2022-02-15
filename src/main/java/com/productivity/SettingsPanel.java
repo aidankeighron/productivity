@@ -23,16 +23,22 @@ import java.awt.Toolkit;
 
 import com.productivity.Custom.AddCustomCheckList;
 
+/*
+reminder
+custom checklist
+config
+*/
 
 public class SettingsPanel extends JTabbedPane {
     
-    //TODO change look and feel
     private static HashMap<String, String> settings = new HashMap<String, String>();
     private static File settingsFile;
     private static File nameFile;
     private static File stateFile;
     private static File colorFile;
     private static File reminderFile;
+
+    private static boolean usingWindows;
     //private static File settingsFile = new File((!gui.debug)?"classes\\settings.TXT":gui.debugPath+"settings.TXT");
     //private static File nameFile = new File((!gui.debug)?"classes\\daily.TXT":gui.debugPath+"daily.TXT");
     //private static File stateFile = new File((!gui.debug)?"classes\\dailyCheck.TXT":gui.debugPath+"dailyCheck.TXT");
@@ -57,11 +63,20 @@ public class SettingsPanel extends JTabbedPane {
     TimerTask task;
     
     public SettingsPanel() {
+        String os = System.getProperty("os.name");
+        if (os.contains("Windwos")) usingWindows = true;
+        else usingWindows = false;
         super.setFocusable(false);
         dailyPanel = new CheckBoxes(gui.height, gui.length, nameFile, stateFile, colorFile, true);
         JLabel label = new JLabel("Press enter to confirm");
         configBox.add(label);
-        runBoolean allOnTop = (a) -> gui.setOnTop(a);
+        runBoolean allOnTop;
+        if (usingWindows) { 
+            allOnTop = (a) -> gui.setOnTop(a);
+        }
+        else {
+            allOnTop = null;
+        }
         addSetting("Always on top", "onTop", "Makes window always on your screen unless you minimize it", settingTypes.checkbox, allOnTop);
         runBoolean reminderActive = (a) -> {
             boolean exists = false;

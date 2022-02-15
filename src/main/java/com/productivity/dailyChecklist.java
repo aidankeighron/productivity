@@ -32,10 +32,15 @@ public class DailyChecklist extends JPanel {
 		boolean reset = false;
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");  
 		LocalDateTime now = LocalDateTime.now();
-		if (!dtf.format(now).equals(readData(timeFile)[0])) {
-			reset = true;
+		try {
+			if (!dtf.format(now).equals(readData(timeFile)[0])) {
+				reset = true;
+			}
+			writeData(dtf.format(now), timeFile);
+		} catch (Exception e) {
+			writeData("11/11/2020", timeFile);
 		}
-		writeData(dtf.format(now), timeFile);
+
 		resetBoxes(reset);
 		super.setLayout(new BorderLayout());
 		super.add(BorderLayout.WEST, checkListPanel);
@@ -58,18 +63,31 @@ public class DailyChecklist extends JPanel {
 		for (int i = 0; i < checkBoxes.size(); i++) {
 			checkListPanel.remove(checkBoxes.get(i));
 		}
-		String[] names = readData(nameFile);
-		String[] checked = readData(stateFile);
-		String[] color = readData(colorFile);
-		for (int i = 0; i < names.length; i++) {
-			if (!reset) {
-				addCheckBox(names[i], new Color(Integer.parseInt(color[i])), Boolean.parseBoolean(checked[i]));
+		try {
+			String[] names = readData(nameFile);
+			String[] checked = readData(stateFile);
+			String[] color = readData(colorFile);
+			if (!(names.length == checked.length && checked.length == color.length)) {
+				writeData("", nameFile);
+				writeData("", stateFile);
+				writeData("", colorFile);
+				return;
 			}
-			else {
-				addCheckBox(names[i], new Color(Integer.parseInt(color[i])), false);
+			for (int i = 0; i < names.length; i++) {
+				if (!reset) {
+					addCheckBox(names[i], new Color(Integer.parseInt(color[i])), Boolean.parseBoolean(checked[i]));
+				}
+				else {
+					addCheckBox(names[i], new Color(Integer.parseInt(color[i])), false);
+				}
 			}
+			gui.homeReset();
+		} catch (Exception e) {
+			writeData("", nameFile);
+			writeData("", stateFile);
+			writeData("", colorFile);
 		}
-		gui.homeReset();
+
 	}
 	
 	private static void addCheckBox(String name, Color color, Boolean checked) {
@@ -90,7 +108,12 @@ public class DailyChecklist extends JPanel {
 		for (int i = 0; i < checkBoxes.size(); i++) {
 			state[i] = Boolean.toString(checkBoxes.get(i).isSelected());
 		}
-		writeData(state, stateFile);
+		try {
+			writeData(state, stateFile);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 	}
 	
 	private static String[] readData(File file) {

@@ -15,18 +15,18 @@ import com.productivity.Custom.AddCustomCheckList;
 import com.productivity.Custom.CustomCheckList;
 
 /* To do
-AddCustomCheckList
-BlockSites
-DailyChecklist
 HomePanel
 NotesPanel
-Popup
 SettingPanel
-TimerPanel
 */
 
 /* Done
+BlockSites
+AddCustomCheckList
+Popup
+DailyChecklist
 CheckBoxes
+TimerPanel
 CustomCheckList
 */
 public class gui extends JFrame {

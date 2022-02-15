@@ -31,6 +31,12 @@ public class CheckBoxes extends JPanel {
 	private static int charLimit = 20;
 	private static int checkBoxLimit = 20;
 	private int numCheckBox = 0;
+
+	private enum fileType {
+		name,
+		check,
+		color
+	}
 	
 	public CheckBoxes(int height, int length, File name, File check, File color, Boolean daily) {
 		nameFile = name;
@@ -119,7 +125,7 @@ public class CheckBoxes extends JPanel {
 		}
 		JCheckBox checkBox = new JCheckBox(name);
 		checkBox.addActionListener(e -> {
-			saveCheckBoxes();
+			saveCheckBoxes(fileType.check);
 		});
 		checkBox.setForeground(color);
 		checkBox.setSelected(state);
@@ -132,7 +138,7 @@ public class CheckBoxes extends JPanel {
 			if (input != null) {
 				checkBox.setText(input);
 			}
-			saveCheckBoxes();
+			saveCheckBoxes(fileType.name);
 		});
 		items[1] = new JMenuItem("Change color");
 		items[1].addActionListener(e -> {
@@ -152,7 +158,7 @@ public class CheckBoxes extends JPanel {
 				}
 			}
 			checkBox.setForeground(newColor);
-			saveCheckBoxes();
+			saveCheckBoxes(fileType.color);
 		});
 		items[2] = new JMenuItem("Remove");
 		items[2].addActionListener(e -> {
@@ -188,6 +194,7 @@ public class CheckBoxes extends JPanel {
 		checkBoxes = new ArrayList<JCheckBox>();
 		writeData("", nameFile);
 		writeData("", checkFile);
+		writeData("", colorFile);
 		gui.repaintFrame();
 		numCheckBox = 0;
 	}
@@ -239,6 +246,47 @@ public class CheckBoxes extends JPanel {
 			writeData("", colorFile);
 		}
 		
+		gui.homeReset();
+	}
+
+	public void saveCheckBoxes(fileType type) {
+		switch (type) {
+			case name:
+			String[] name = new String[checkBoxes.size()];
+			for (int i = 0; i < checkBoxes.size(); i++) {
+				name[i] = checkBoxes.get(i).getText();
+			}
+			try {
+				writeData(name, nameFile);
+			} catch (Exception e) {
+				writeData("", nameFile);
+			}
+				break;
+			case check:
+			String[] check = new String[checkBoxes.size()];
+			for (int i = 0; i < checkBoxes.size(); i++) {
+				check[i] = Boolean.toString(checkBoxes.get(i).isSelected());
+			}
+			try {
+				writeData(check, checkFile);
+			} catch (Exception e) {
+				writeData("", checkFile);
+			}
+				break;
+			case color:
+			String[] color = new String[checkBoxes.size()];
+			for (int i = 0; i < checkBoxes.size(); i++) {
+				color[i] = Integer.toString(checkBoxes.get(i).getForeground().getRGB());
+			}
+			try {
+				writeData(color, colorFile);
+			} catch (Exception e) {
+				writeData("", colorFile);
+			}
+				break;
+			default:
+				break;
+		}		
 		gui.homeReset();
 	}
 	
