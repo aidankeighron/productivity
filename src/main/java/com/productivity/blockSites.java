@@ -21,16 +21,12 @@ public class BlockSites extends JPanel {
     private static File newHosts;
     private static File backupFile;
     private static File blockedSites;
-    
-    private static boolean usingWindows;
+
     //private static File newHosts = new File((!gui.debug)?"classes\\com\\productivity\\Saves\\Newhosts":gui.debugPath+"Newhosts");
     //private static File backupFile = new File((!gui.debug)?"classes\\com\\productivity\\Saves\\hosts":gui.debugPath+"hosts");
     //private static File blockedSites = new File((!gui.debug)?"classes\\com\\productivity\\Saves\\blockedSites.TXT":gui.debugPath+"blockedSites.TXT");
     
     public BlockSites() {
-        String os = System.getProperty("os.name");
-        if (os.contains("Windwos")) usingWindows = true;
-        else usingWindows = false;
         loadFiles();
         JTextArea site = new JTextArea();
         site.setDocument(new JTextFieldLimit(50));
@@ -38,7 +34,10 @@ public class BlockSites extends JPanel {
         
         JButton apply = new JButton("Apply");
         apply.setFocusPainted(false);
-        apply.addActionListener(e -> blockSite(site));
+        apply.addActionListener(e -> {
+            blockSite(site);
+            site.setText(load());
+        });
         
         JButton reset = new JButton("Reset");
         reset.setFocusPainted(false);
@@ -65,7 +64,7 @@ public class BlockSites extends JPanel {
     }
     
     public static void reBlockSites() {
-        if (Files.isWritable(Paths.get(hostsFile.getAbsolutePath())) && usingWindows) {
+        if (Files.isWritable(Paths.get(hostsFile.getAbsolutePath())) && gui.usingWindows) {
             try {
                 String[] data = readData(newHosts);
                 writeData(data, hostsFile);
@@ -77,7 +76,7 @@ public class BlockSites extends JPanel {
     }
     
     public static void unBlockSites() {
-        if (Files.isWritable(Paths.get(hostsFile.getAbsolutePath())) && usingWindows) {
+        if (Files.isWritable(Paths.get(hostsFile.getAbsolutePath())) && gui.usingWindows) {
             try {
                 String[] data = readData(backupFile);
                 writeData(data, hostsFile);
@@ -133,15 +132,19 @@ public class BlockSites extends JPanel {
         }
         String[] host = readData(backupFile);
         String[] data = new String[numValidSites + host.length];
+        String[] filteredSites = new String[numValidSites];
         int j = 0;
         for (int i = 0; i < host.length; i++) {
             data[j] = host[i];
             j++;
         }
+        int k = 0;
         for (int i = 0; i < validSites.length; i++) {
             if (validSites[i].equals("*")) {
                 continue;
             }
+            filteredSites[k] = validSites[i];
+            k++;
             if (validSites[i].contains("www.")) {
                 data[j] = "127.0.0.1    " + validSites[i];
             }
@@ -150,13 +153,13 @@ public class BlockSites extends JPanel {
             }
             j++;
         }
-        writeData(validSites, blockedSites);
+        writeData(filteredSites, blockedSites);
         writeData(data, newHosts);
     }
     
     private void reset(JTextArea area) {
         String[] data = readData(backupFile);
-        if (Files.isWritable(Paths.get(hostsFile.getAbsolutePath())) && usingWindows) {
+        if (Files.isWritable(Paths.get(hostsFile.getAbsolutePath())) && gui.usingWindows) {
             writeData(data, hostsFile);
         }
         writeData(data, newHosts);

@@ -44,11 +44,12 @@ public class gui extends JFrame {
 	public static String currentCustomPath;
 	
 	private static boolean onTop = false;
-	private static JFrame frame = new JFrame("Produtivity");
+	private static JFrame frame = new JFrame("Productivity");
 	private static JTabbedPane tabbedPane;
 	public static CustomCheckList customCheckList = new CustomCheckList();
 	private static CheckBoxes checkBoxPanel;
 	private static HomePanel homePanel;
+	public static boolean usingWindows;
 	
 	private static File nameFile;
 	private static File stateFile;
@@ -61,6 +62,9 @@ public class gui extends JFrame {
 	static String[] lookAndFeelValues = {"com.sun.java.swing.plaf.motif.MotifLookAndFeel", "javax.swing.plaf.metal.MetalLookAndFeel"};
 	
 	public static void main(String[] args) throws IOException {
+		String os = System.getProperty("os.name");
+		if (os.contains("Windows")) usingWindows = true;
+		else usingWindows = false;
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				currentPath = (debug)?debugPath: (args.length>0)?exePath:jarPath;
@@ -69,15 +73,17 @@ public class gui extends JFrame {
 			}
 		});
 	}
-
+	
 	private static void createAndShowGUI() {
 		loadFiles();
 		start();
-		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-			public void run() {
-				BlockSites.unBlockSites();
-			}
-		}, "Shutdown-thread"));
+		if (usingWindows) {
+			Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+				public void run() {
+					BlockSites.unBlockSites();
+				}
+			}, "Shutdown-thread"));
+		}
 	}
 	
 	private static void loadFiles() {
@@ -110,8 +116,8 @@ public class gui extends JFrame {
 			tabbedPane.addTab("Custom", customCheckList);
 		}
 		tabbedPane.addTab("Settings", new SettingsPanel());
-		homePanel = new HomePanel();
-		tabbedPane.insertTab("Home", null, homePanel, null, 0);
+		//homePanel = new HomePanel();
+		//tabbedPane.insertTab("Home", null, homePanel, null, 0);
 		ImageIcon img = new ImageIcon("src\\main\\java\\com\\productivity\\icon.png");
 		frame.setIconImage(img.getImage());
 		frame.add(tabbedPane);
@@ -124,19 +130,19 @@ public class gui extends JFrame {
 	
 	public static void homeReset() {
 		if (homePanel != null)
-			homePanel.reset();
+		homePanel.reset();
 	}
-
+	
 	public static JCheckBox[] getCheckBoxes() {
 		return checkBoxPanel.getBoxes();
 	}
-
+	
 	private static void load() {
 		SettingsPanel.loadSettings();
 		AddCustomCheckList.loadCheckLists();
 		onTop = Boolean.parseBoolean(SettingsPanel.getSetting("onTop"));
 	}
-
+	
 	public static void customCheckListVisibility(boolean value) {
 		if (value && tabbedPane.indexOfComponent(customCheckList) == -1) {
 			tabbedPane.insertTab("Custom", null, customCheckList, null, tabbedPane.getTabCount()-2);

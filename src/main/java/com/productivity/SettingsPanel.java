@@ -14,6 +14,7 @@ import javax.swing.JTextField;
 import java.awt.Component;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -24,9 +25,8 @@ import java.awt.Toolkit;
 import com.productivity.Custom.AddCustomCheckList;
 
 /*
-reminder
+daily
 custom checklist
-config
 */
 
 public class SettingsPanel extends JTabbedPane {
@@ -37,8 +37,7 @@ public class SettingsPanel extends JTabbedPane {
     private static File stateFile;
     private static File colorFile;
     private static File reminderFile;
-
-    private static boolean usingWindows;
+    
     //private static File settingsFile = new File((!gui.debug)?"classes\\settings.TXT":gui.debugPath+"settings.TXT");
     //private static File nameFile = new File((!gui.debug)?"classes\\daily.TXT":gui.debugPath+"daily.TXT");
     //private static File stateFile = new File((!gui.debug)?"classes\\dailyCheck.TXT":gui.debugPath+"dailyCheck.TXT");
@@ -51,7 +50,7 @@ public class SettingsPanel extends JTabbedPane {
     
     private JPanel dailyPanel;
     private static String[] timeOptions = {"Seconds", "Minutes", "Hours"};
-    private static int timeMuitplyer = 1;
+    private static int timeMultiplier = 1;
     
     private enum settingTypes {
         text,
@@ -63,21 +62,18 @@ public class SettingsPanel extends JTabbedPane {
     TimerTask task;
     
     public SettingsPanel() {
-        String os = System.getProperty("os.name");
-        if (os.contains("Windwos")) usingWindows = true;
-        else usingWindows = false;
         super.setFocusable(false);
         dailyPanel = new CheckBoxes(gui.height, gui.length, nameFile, stateFile, colorFile, true);
         JLabel label = new JLabel("Press enter to confirm");
         configBox.add(label);
         runBoolean allOnTop;
-        if (usingWindows) { 
+        if (gui.usingWindows) { 
             allOnTop = (a) -> gui.setOnTop(a);
         }
         else {
             allOnTop = null;
         }
-        addSetting("Always on top", "onTop", "Makes window always on your screen unless you minimize it", settingTypes.checkbox, allOnTop);
+        addSetting("Always on top", "onTop", "Makes window always on your screen unless you minimize it", settingTypes.checkbox, allOnTop, false, null);
         runBoolean reminderActive = (a) -> {
             boolean exists = false;
             Component[] comp = super.getComponents();
@@ -89,7 +85,7 @@ public class SettingsPanel extends JTabbedPane {
             }
             if (a) {
                 if (!exists) {
-                    super.addTab("Reminder", reminderPanel);
+                    super.insertTab("Reminder", null, reminderPanel, null, 1);
                     reminder();
                 }
             }
@@ -100,50 +96,61 @@ public class SettingsPanel extends JTabbedPane {
                 }
             }
         };
-        addSetting("Reminder", "reminderActive", "Activates reminder tab", settingTypes.checkbox, reminderActive);
-        runBoolean runOnStartup = (a) -> gui.runOnStartup(a);
-        addSetting("Run on startup", "runOnStartup", "Runs program when your computer starts", settingTypes.checkbox, runOnStartup);
-        runBoolean blockSitesActive = (a) -> {
-            boolean exists = false;
-            Component[] comp = super.getComponents();
-            for (Component c : comp) {
-                if (c.equals(BlockSites)) {
-                    exists = true;
-                    break;
+        addSetting("Reminder", "reminderActive", "Activates reminder tab", settingTypes.checkbox, reminderActive, false, null);
+        if (gui.usingWindows) {
+            runBoolean runOnStartup = (a) -> gui.runOnStartup(a);
+            addSetting("Run on startup", "runOnStartup", "Runs program when your computer starts", settingTypes.checkbox, runOnStartup, true, "Are you sure");
+        }
+        if (gui.usingWindows) {
+            runBoolean blockSitesActive = (a) -> {
+                boolean exists = false;
+                Component[] comp = super.getComponents();
+                for (Component c : comp) {
+                    if (c.equals(BlockSites)) {
+                        exists = true;
+                        break;
+                    }
                 }
-            }
-            if (a) {
-                if (!exists) {
-                    super.addTab("Block Sites", BlockSites);
+                if (a) {
+                    if (!exists) {
+                        super.insertTab("Block Sites", null, BlockSites, null, 2);
+                    }
                 }
-            }
-            else {
-                if (exists) {
-                    super.remove(BlockSites);
+                else {
+                    if (exists) {
+                        super.remove(BlockSites);
+                    }
                 }
-            }
-            TimerPanel.setAllowBlock(a);
-        };
-        addSetting("Block Sites", "blockSites", "Allows you to block sites", settingTypes.checkbox, blockSitesActive);
+                TimerPanel.setAllowBlock(a);
+            };
+            addSetting("Block Sites", "blockSites", "Allows you to block sites", settingTypes.checkbox, blockSitesActive, true, "Are you sure");
+        }
         configPanel.add(configBox);
         super.addTab("Config", configPanel);
-        if (Boolean.parseBoolean(getSetting("blockSites"))) {
+        if (Boolean.parseBoolean(getSetting("blockSites")) && gui.usingWindows) {
             super.addTab("Block Sites", BlockSites);
         }
         if (Boolean.parseBoolean(getSetting("reminderActive"))) {
             super.addTab("Reminder", reminderPanel);
             reminder();
         }
-        super.addTab("Custom Checklsits", new AddCustomCheckList());
+        super.addTab("Custom Checklists", new AddCustomCheckList());
         super.addTab("Daily Checklist", dailyPanel);
     }
     
-    private void addSetting(String name, String key, String tooltip, settingTypes type, runBoolean rt) {
+    private void addSetting(String name, String key, String tooltip, settingTypes type, runBoolean rt, boolean conformation, String conformationDio) {
         switch(type) {
             case checkbox:
             JCheckBox checkBox = new JCheckBox(name);
             checkBox.setFocusPainted(false);
             checkBox.addActionListener(e -> {
+                if (conformation && checkBox.isSelected()) {
+                    int result = JOptionPane.showConfirmDialog(this, conformationDio);
+                    if (result != JOptionPane.YES_OPTION) {
+                        checkBox.setSelected(false);
+                        return;
+                    }
+                }
                 settings.put(key, Boolean.toString(checkBox.isSelected()));
                 if (rt != null) {
                     runOperation(checkBox.isSelected(), rt);
@@ -154,7 +161,7 @@ public class SettingsPanel extends JTabbedPane {
                 checkBox.setSelected(Boolean.parseBoolean(settings.get(key)));
             }
             catch(Exception e) {
-                System.out.println("Setting dosent exist");
+                System.out.println("Setting does not exist");
             }
             checkBox.setToolTipText(tooltip);
             Box horizontal = Box.createHorizontalBox();
@@ -172,7 +179,7 @@ public class SettingsPanel extends JTabbedPane {
                     notInt = true;
                 }
                 if (notInt || Integer.parseInt(numField.getText()) <= 0) {
-                    JOptionPane.showMessageDialog(this, "Enter vaild positive number");
+                    JOptionPane.showMessageDialog(this, "Enter valid positive number");
                 }
                 else {
                     settings.put(key, numField.getText());
@@ -183,7 +190,7 @@ public class SettingsPanel extends JTabbedPane {
                 numField.setText(settings.get(key));
             }
             catch(Exception e) {
-                System.out.println("Setting dosent exist");
+                System.out.println("Setting does not exist");
             }
             numField.setToolTipText(tooltip);
             Box numHorizontal = Box.createHorizontalBox();
@@ -196,7 +203,7 @@ public class SettingsPanel extends JTabbedPane {
             JTextField txtField = new JTextField();
             txtField.addActionListener(e -> {
                 if (txtField.getText().equals("")) {
-                    JOptionPane.showMessageDialog(this, "Enter vaild text");
+                    JOptionPane.showMessageDialog(this, "Enter valid text");
                 }
                 else {
                     settings.put(key, txtField.getText());
@@ -207,7 +214,7 @@ public class SettingsPanel extends JTabbedPane {
                 txtField.setText(settings.get(key));
             }
             catch(Exception e) {
-                System.out.println("Setting dosent exist");
+                System.out.println("Setting does not exist");
             }
             txtField.setToolTipText(tooltip);
             Box txtHorizontal = Box.createHorizontalBox();
@@ -237,23 +244,23 @@ public class SettingsPanel extends JTabbedPane {
         timeList.addActionListener(e -> {
             switch(timeList.getSelectedIndex()) {
                 case 0:
-                timeMuitplyer = 1;
+                timeMultiplier = 1;
                 break;
                 case 1:
-                timeMuitplyer = 60;
+                timeMultiplier = 1 * 60;
                 break;
                 case 2:
-                timeMuitplyer = 60 * 60;
+                timeMultiplier = 1 * 60 * 60;
                 break;
                 default:
-                timeMuitplyer = 1;
+                timeMultiplier = 1;
                 break;
             }
         });
         timeList.setSelectedIndex(data[0]);
         JTextField textField = new JTextField();
         textField.setText(Integer.toString(data[1]));
-        JProgressBar progressBar = new JProgressBar(0, Integer.parseInt(textField.getText()) * timeMuitplyer);
+        JProgressBar progressBar = new JProgressBar(0, Integer.parseInt(textField.getText()) * timeMultiplier);
         textField.addActionListener(e -> {
             boolean notInt = false;
             try {
@@ -265,10 +272,10 @@ public class SettingsPanel extends JTabbedPane {
                 notInt = true;
             }
             if (textField.getText().equals("") || notInt) {
-                JOptionPane.showMessageDialog(this, "Enter vaild positive time");
+                JOptionPane.showMessageDialog(this, "Enter valid positive time");
             }
             else {
-                progressBar.setMaximum(Integer.parseInt(textField.getText()) * timeMuitplyer);
+                progressBar.setMaximum(Integer.parseInt(textField.getText()) * timeMultiplier);
                 stopTimer();
                 startTimer(Integer.parseInt(textField.getText()), progressBar);
                 saveTimer(timeList, textField);
@@ -287,10 +294,10 @@ public class SettingsPanel extends JTabbedPane {
                 notInt = true;
             }
             if (textField.getText().equals("") || notInt) {
-                JOptionPane.showMessageDialog(this, "Enter vaild positive time");
+                JOptionPane.showMessageDialog(this, "Enter valid positive time");
             }
             else {
-                progressBar.setMaximum(Integer.parseInt(textField.getText()) * timeMuitplyer);
+                progressBar.setMaximum(Integer.parseInt(textField.getText()) * timeMultiplier);
                 stopTimer();
                 startTimer(Integer.parseInt(textField.getText()), progressBar);
                 saveTimer(timeList, textField);
@@ -315,7 +322,7 @@ public class SettingsPanel extends JTabbedPane {
     private void startTimer(int length, JProgressBar bar) {
         task = new TimerTask()
         {
-            int seconds = length * timeMuitplyer;
+            int seconds = length * timeMultiplier;
             int i = 0;
             @Override
             public void run()
@@ -342,16 +349,16 @@ public class SettingsPanel extends JTabbedPane {
         int[] results = new int[2];
         switch(Integer.parseInt(data[0])) {
             case 0:
-            timeMuitplyer = 1;
+            timeMultiplier = 1;
             break;
             case 1:
-            timeMuitplyer = 60;
+            timeMultiplier = 60;
             break;
             case 2:
-            timeMuitplyer = 60 * 60;
+            timeMultiplier = 60 * 60;
             break;
             default:
-            timeMuitplyer = 1;
+            timeMultiplier = 1;
             break;
         }
         results[0] = Integer.parseInt(data[0]);
@@ -405,6 +412,16 @@ public class SettingsPanel extends JTabbedPane {
             index++;
         }
         writeData(data, settingsFile);
+    }
+    
+    public static void checkFile(File f) {
+        try {
+            if (f.exists()) {
+                f.createNewFile();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     
     private static String[] readData(File file) {
