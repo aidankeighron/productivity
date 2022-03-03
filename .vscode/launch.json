@@ -6,13 +6,6 @@
     "configurations": [
         {
             "type": "java",
-            "name": "Launch CheckableItem",
-            "request": "launch",
-            "mainClass": "com.productivity.Custom.CheckableItem",
-            "projectName": "Productivity"
-        },
-        {
-            "type": "java",
             "name": "Launch gui",
             "request": "launch",
             "mainClass": "com.productivity.gui",

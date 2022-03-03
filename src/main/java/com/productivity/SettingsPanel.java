@@ -48,7 +48,7 @@ public class SettingsPanel extends JTabbedPane {
     private JPanel reminderPanel = new JPanel();
     private BlockSites BlockSites = new BlockSites();
     
-    private JPanel dailyPanel;
+    public static CheckBoxes dailyPanel;
     private static String[] timeOptions = {"Seconds", "Minutes", "Hours"};
     private static int timeMultiplier = 1;
     

@@ -161,6 +161,10 @@ public class AddCustomCheckList extends JPanel {
         CheckBoxes checkBox = checkBoxes.get(names.get(index));
         return checkBox.getBoxes();
     }
+
+    public static void setCheckList(boolean state, int index, String name) {
+        checkBoxes.get(name).setSelected(state, index);
+    }
     
     private static void addCheckList(String n) {
         File name = new File(customPath + n + "Name.TXT");

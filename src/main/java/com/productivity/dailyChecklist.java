@@ -52,6 +52,11 @@ public class DailyChecklist extends JPanel {
 		return data;
 	}
 
+	public static void setCheckBoxes(boolean state, int index) {
+		checkBoxes.get(index).setSelected(state);
+		saveCheckBoxes();
+	}
+
 	private void loadFiles() {
 		nameFile = new File(gui.currentPath+"Saves\\daily.TXT");
 		stateFile = new File(gui.currentPath+"Saves\\dailyCheck.TXT");
@@ -75,10 +80,10 @@ public class DailyChecklist extends JPanel {
 			}
 			for (int i = 0; i < names.length; i++) {
 				if (!reset) {
-					addCheckBox(names[i], new Color(Integer.parseInt(color[i])), Boolean.parseBoolean(checked[i]));
+					addCheckBox(names[i], new Color(Integer.parseInt(color[i])), Boolean.parseBoolean(checked[i]), i);
 				}
 				else {
-					addCheckBox(names[i], new Color(Integer.parseInt(color[i])), false);
+					addCheckBox(names[i], new Color(Integer.parseInt(color[i])), false, i);
 				}
 			}
 			gui.homeReset();
@@ -90,11 +95,12 @@ public class DailyChecklist extends JPanel {
 
 	}
 	
-	private static void addCheckBox(String name, Color color, Boolean checked) {
+	private static void addCheckBox(String name, Color color, Boolean checked, int index) {
 		JCheckBox checkBox = new JCheckBox(name);
 		checkBox.setFocusPainted(false);
 		checkBox.addActionListener(e -> {
 			saveCheckBoxes();
+			SettingsPanel.dailyPanel.setSelected(checkBox.isSelected(), index);
 		});
 		checkBox.setForeground(color);
 		checkBox.setSelected(checked);

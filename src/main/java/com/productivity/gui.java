@@ -5,7 +5,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import javax.swing.ImageIcon;
-import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
@@ -47,7 +46,7 @@ public class gui extends JFrame {
 	private static JFrame frame = new JFrame("Productivity");
 	private static JTabbedPane tabbedPane;
 	public static CustomCheckList customCheckList = new CustomCheckList();
-	private static CheckBoxes checkBoxPanel;
+	public static CheckBoxes checkBoxPanel;
 	private static HomePanel homePanel;
 	public static boolean usingWindows;
 	
@@ -116,8 +115,8 @@ public class gui extends JFrame {
 			tabbedPane.addTab("Custom", customCheckList);
 		}
 		tabbedPane.addTab("Settings", new SettingsPanel());
-		//homePanel = new HomePanel();
-		//tabbedPane.insertTab("Home", null, homePanel, null, 0);
+		homePanel = new HomePanel();
+		tabbedPane.insertTab("Home", null, homePanel, null, 0);
 		ImageIcon img = new ImageIcon("src\\main\\java\\com\\productivity\\icon.png");
 		frame.setIconImage(img.getImage());
 		frame.add(tabbedPane);
@@ -131,10 +130,6 @@ public class gui extends JFrame {
 	public static void homeReset() {
 		if (homePanel != null)
 		homePanel.reset();
-	}
-	
-	public static JCheckBox[] getCheckBoxes() {
-		return checkBoxPanel.getBoxes();
 	}
 	
 	private static void load() {

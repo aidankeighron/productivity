@@ -31,6 +31,8 @@ public class CheckBoxes extends JPanel {
 	private static int charLimit = 20;
 	private static int checkBoxLimit = 20;
 	private int numCheckBox = 0;
+	public boolean home;
+	public boolean alert;
 
 	private enum fileType {
 		name,
@@ -39,6 +41,8 @@ public class CheckBoxes extends JPanel {
 	}
 	
 	public CheckBoxes(int height, int length, File name, File check, File color, boolean daily, boolean home, boolean alert) {
+		this.home = home;
+		this.alert = alert;
 		nameFile = name;
 		checkFile = check;
 		colorFile = color;
@@ -96,6 +100,11 @@ public class CheckBoxes extends JPanel {
 	
 	private boolean testValidFileName(String text) {
 		return text.matches("^[a-zA-Z0-9._ <>{}\\[\\]\\|\\\\`~!@#$%^&*()-=+;:'\",?\\/]+$");
+	}
+
+	public void setSelected(boolean state, int index) {
+		checkBoxes.get(index).setSelected(state);
+		saveCheckBoxes(fileType.check);
 	}
 	
 	public JCheckBox[] getBoxes() {
