@@ -63,7 +63,7 @@ public class SettingsPanel extends JTabbedPane {
     
     public SettingsPanel() {
         super.setFocusable(false);
-        dailyPanel = new CheckBoxes(gui.height, gui.length, nameFile, stateFile, colorFile, true);
+        dailyPanel = new CheckBoxes(gui.height, gui.length, nameFile, stateFile, colorFile, true, false, false);
         JLabel label = new JLabel("Press enter to confirm");
         configBox.add(label);
         runBoolean allOnTop;
@@ -383,7 +383,7 @@ public class SettingsPanel extends JTabbedPane {
         String[] values = new String[(data.length - 1)/2];
         for (int i = 0; i < (data.length - 1)/2; i++) {
             if (data[i].equals("*")) {
-                System.out.println("End of keys");
+                //System.out.println("End of keys");
                 break;
             }
             keys[i] = data[i];

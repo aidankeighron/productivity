@@ -1,6 +1,7 @@
 package com.productivity.Custom;
 
 import java.awt.BorderLayout;
+import java.awt.Point;
 import java.io.File;
 import java.io.FileWriter;
 import java.nio.file.Files;
@@ -11,9 +12,12 @@ import java.util.Scanner;
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JTextField;
 
 import com.productivity.CheckBoxes;
@@ -31,6 +35,8 @@ public class AddCustomCheckList extends JPanel {
     private static int charLimit = 10;
     private static int maxCustomCheckLists = 8;
     private static int currentNumCheckLists = 0;
+    private static boolean wantHome = false;
+    private static boolean wantAlert = false;
     
     public AddCustomCheckList() {
         JTextField name = new JTextField();
@@ -57,17 +63,56 @@ public class AddCustomCheckList extends JPanel {
                 JOptionPane.showMessageDialog(this, "Please enter valid name");
             }
         });
+        JButton selector = makeCheckableList();
+
         JLabel nameLbl = new JLabel("Name Of Custom Checklist:");
         Box nameBox = Box.createVerticalBox();
+        Box inputBox = Box.createHorizontalBox();
+        inputBox.add(name);
+        inputBox.add(selector);
         nameBox.add(nameLbl);
-        nameBox.add(name);
+        nameBox.add(inputBox);
         super.setLayout(new BorderLayout());
         super.add(BorderLayout.NORTH, nameBox);
         super.add(BorderLayout.CENTER, vertical);
     }
 
+    private JButton makeCheckableList() {
+    JPopupMenu menu = new JPopupMenu();
+    JMenuItem one = new JCheckBoxMenuItem("Home");
+    JMenuItem two = new JCheckBoxMenuItem("Alert");
+    menu.add(one);
+    menu.add(two);
+    
+    
+    JButton button = new JButton("Modifiers");
+    button.addActionListener(e -> {
+          if (!menu.isVisible()) {
+            Point p = button.getLocationOnScreen();
+            menu.setInvoker(button);
+            menu.setLocation((int) p.getX(),
+            (int) p.getY() + button.getHeight());
+            menu.setVisible(true);
+          } 
+          else {
+            menu.setVisible(false);
+          }
+        });
+    
+    one.addActionListener(e -> {
+        new CheckableItem(menu, button);
+        wantHome = one.isSelected();
+    });
+    two.addActionListener(e -> {
+        new CheckableItem(menu, button);
+        wantAlert = two.isSelected();
+    });
+    
+    return button;
+    }
+
     private boolean testValidFileName(String text) {
-        return text.matches("^[a-zA-Z._ ]+$");
+        return text.matches("^[a-zA-Z0-9._ ]+$");
     }
     
     public static int getNumberOfChecklists() {
@@ -143,7 +188,7 @@ public class AddCustomCheckList extends JPanel {
         });
         button.setFocusPainted(false);
         vertical.add(button);
-        CheckBoxes checkBox = new CheckBoxes(gui.height, gui.length, name, check, color, false);
+        CheckBoxes checkBox = new CheckBoxes(gui.height, gui.length, name, check, color, false, wantHome, wantAlert);
         checkBoxes.put(n, checkBox);
         gui.customCheckList.addCheckList(checkBox, n);
     }

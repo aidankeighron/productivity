@@ -105,7 +105,7 @@ public class gui extends JFrame {
 			e.printStackTrace();
 		}
 		load();
-		checkBoxPanel = new CheckBoxes(height, length, nameFile, stateFile, colorFile, false);
+		checkBoxPanel = new CheckBoxes(height, length, nameFile, stateFile, colorFile, false, false, false);
 		tabbedPane = new JTabbedPane();
 		tabbedPane.setFocusable(false);
 		tabbedPane.addTab("Checklist", checkBoxPanel);
