@@ -136,6 +136,7 @@ public class SettingsPanel extends JTabbedPane {
         }
         super.addTab("Custom Checklists", new AddCustomCheckList());
         super.addTab("Daily Checklist", dailyPanel);
+        super.addTab("Help", new HelpPanel());
     }
     
     private void addSetting(String name, String key, String tooltip, settingTypes type, runBoolean rt, boolean conformation, String conformationDio) {

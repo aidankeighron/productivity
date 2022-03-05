@@ -33,6 +33,7 @@ public class CheckBoxes extends JPanel {
 	private int numCheckBox = 0;
 	public boolean home;
 	public boolean alert;
+	private boolean daily;
 
 	private enum fileType {
 		name,
@@ -43,6 +44,7 @@ public class CheckBoxes extends JPanel {
 	public CheckBoxes(int height, int length, File name, File check, File color, boolean daily, boolean home, boolean alert) {
 		this.home = home;
 		this.alert = alert;
+		this.daily = daily;
 		nameFile = name;
 		checkFile = check;
 		colorFile = color;
@@ -123,6 +125,10 @@ public class CheckBoxes extends JPanel {
 		JCheckBox checkBox = new JCheckBox(name);
 		checkBox.addActionListener(e -> {
 			saveCheckBoxes(fileType.check);
+			if (daily) {
+				DailyChecklist.resetBoxes(false);
+			}
+
 		});
 		checkBox.setForeground(color);
 		checkBox.setSelected(state);

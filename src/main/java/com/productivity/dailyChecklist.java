@@ -26,7 +26,7 @@ public class DailyChecklist extends JPanel {
 	//private static File timeFile = new File((!gui.debug)?"classes\\time.TXT":gui.debugPath+"time.TXT");
 	private static JPanel checkListPanel = new JPanel(new GridLayout(gui.height/30, gui.length/200));
 	private static ArrayList<JCheckBox> checkBoxes = new ArrayList<JCheckBox>();
-	
+
 	public DailyChecklist() {
 		loadFiles();
 		boolean reset = false;
