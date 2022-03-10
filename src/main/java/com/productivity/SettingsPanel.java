@@ -134,8 +134,8 @@ public class SettingsPanel extends JTabbedPane {
             super.addTab("Reminder", reminderPanel);
             reminder();
         }
-        super.addTab("Custom Checklists", new AddCustomCheckList());
-        super.addTab("Daily Checklist", dailyPanel);
+        super.addTab("Custom Setup", new AddCustomCheckList());
+        super.addTab("Daily Setup", dailyPanel);
         super.addTab("Help", new HelpPanel());
     }
     

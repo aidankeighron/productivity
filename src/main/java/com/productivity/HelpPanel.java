@@ -5,6 +5,13 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
 public class HelpPanel extends JTabbedPane {
-    JPanel warning = new JPanel();
-    JLabel warningLable = new JLabel();
+    
+
+    public HelpPanel() {
+        JPanel warning = new JPanel();
+        JLabel warningLabel = new JLabel("Warning");
+        warning.add(warningLabel);
+        
+        super.addTab("Warning", warning);
+    }
 }

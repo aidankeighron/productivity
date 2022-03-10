@@ -30,9 +30,9 @@ public class HomePanel extends JPanel {
     }
     
     public void reset() {
-        checkPanel = resetPanel(gui.checkBoxPanel.getBoxes(), "Checklist", BoxType.check);
-        dailyPanel = resetPanel(DailyChecklist.getCheckBoxes(), "Daily", BoxType.daily);
-        customPanel = resetPanel(AddCustomCheckList.getRandomCheckBoxes(), "Custom", BoxType.custom);
+        checkPanel = makePanel(gui.checkBoxPanel.getBoxes(), "Checklist", BoxType.check);
+        dailyPanel = makePanel(DailyChecklist.getCheckBoxes(), "Daily", BoxType.daily);
+        customPanel = makePanel(AddCustomCheckList.getRandomCheckBoxes(), "Custom", BoxType.custom);
         
         Box vertical = Box.createVerticalBox();
         vertical.add(dailyPanel);
@@ -46,8 +46,9 @@ public class HomePanel extends JPanel {
         this.repaint();
     }
     
-    private JPanel resetPanel(JCheckBox[] boxes, String title, BoxType type) {
-        JPanel panel = new JPanel(new GridLayout(0, 2));
+    private JPanel makePanel(JCheckBox[] boxes, String title, BoxType type) {
+        //JPanel panel = new JPanel(new GridLayout(0, 2));
+        JPanel panel = new JPanel(new GridLayout(gui.height/30, gui.length/200));
         JLabel label = new JLabel(title);
         panel.add(label);
         panel.setBorder(BorderFactory.createLineBorder(Color.black));
