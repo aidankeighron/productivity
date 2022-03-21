@@ -24,11 +24,6 @@ import java.awt.Toolkit;
 
 import com.productivity.Custom.AddCustomCheckList;
 
-/*
-daily
-custom checklist
-*/
-
 public class SettingsPanel extends JTabbedPane {
     
     private static HashMap<String, String> settings = new HashMap<String, String>();
@@ -63,7 +58,7 @@ public class SettingsPanel extends JTabbedPane {
     
     public SettingsPanel() {
         super.setFocusable(false);
-        dailyPanel = new CheckBoxes(gui.height, gui.length, nameFile, stateFile, colorFile, true, false, false);
+        dailyPanel = new CheckBoxes(gui.height, gui.length, nameFile, stateFile, colorFile, true, true);
         JLabel label = new JLabel("Press enter to confirm");
         configBox.add(label);
         runBoolean allOnTop;

@@ -17,9 +17,6 @@ import com.productivity.Custom.CustomCheckList;
 HomePanel
 NotesPanel
 SettingPanel
-*/
-
-/* Done
 BlockSites
 AddCustomCheckList
 Popup
@@ -27,6 +24,10 @@ DailyChecklist
 CheckBoxes
 TimerPanel
 CustomCheckList
+*/
+
+/* Done
+
 */
 public class gui extends JFrame {
 	
@@ -57,8 +58,6 @@ public class gui extends JFrame {
 	//private static File stateFile = new File((!debug)?"classes\\listCheck.TXT":debugPath+"listCheck.TXT");
 	//private static File colorFile = new File((!debug)?"classes\\listColor.TXT":debugPath+"listColor.TXT");
 	
-	static String[] lookAndFeel = {"Motif", "Metal"};
-	static String[] lookAndFeelValues = {"com.sun.java.swing.plaf.motif.MotifLookAndFeel", "javax.swing.plaf.metal.MetalLookAndFeel"};
 	
 	public static void main(String[] args) throws IOException {
 		String os = System.getProperty("os.name");
@@ -104,7 +103,7 @@ public class gui extends JFrame {
 			e.printStackTrace();
 		}
 		load();
-		checkBoxPanel = new CheckBoxes(height, length, nameFile, stateFile, colorFile, false, false, false);
+		checkBoxPanel = new CheckBoxes(height, length, nameFile, stateFile, colorFile, false, true);
 		tabbedPane = new JTabbedPane();
 		tabbedPane.setFocusable(false);
 		tabbedPane.addTab("Checklist", checkBoxPanel);
@@ -182,16 +181,6 @@ public class gui extends JFrame {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		}
-	}
-	
-	public static void setLookAndFeel(int index) {
-		try {
-			UIManager.setLookAndFeel(lookAndFeelValues[index]);
-			SwingUtilities.updateComponentTreeUI(frame);
-			frame.pack();
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 	}
 	

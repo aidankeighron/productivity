@@ -6,9 +6,9 @@ import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import java.awt.BorderLayout;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
 import java.awt.Color;
-import java.awt.GridLayout;
 
 import com.productivity.Custom.AddCustomCheckList;
 
@@ -17,7 +17,7 @@ public class HomePanel extends JPanel {
     JPanel checkPanel;
     JPanel dailyPanel;
     JPanel customPanel;
-    
+    GridBagConstraints c = new GridBagConstraints();
     
     enum BoxType {
         check,
@@ -26,36 +26,76 @@ public class HomePanel extends JPanel {
     }
     
     public HomePanel() {
+        super.setLayout(new GridBagLayout());
         reset();
     }
     
     public void reset() {
-        checkPanel = makePanel(gui.checkBoxPanel.getBoxes(), "Checklist", BoxType.check);
-        dailyPanel = makePanel(DailyChecklist.getCheckBoxes(), "Daily", BoxType.daily);
-        customPanel = makePanel(AddCustomCheckList.getRandomCheckBoxes(), "Custom", BoxType.custom);
+
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.weightx = 1.0;
+        c.weighty = 1.0;
+        c.ipady = gui.height;
+
+        if (checkPanel != null) 
+            super.remove(checkPanel);
+        if (dailyPanel != null) 
+            super.remove(dailyPanel);
+        if (customPanel != null) 
+            super.remove(customPanel);
         
-        Box vertical = Box.createVerticalBox();
-        vertical.add(dailyPanel);
-        if (customPanel != null)
-            vertical.add(customPanel);
-        
-        super.setLayout(new BorderLayout());
-        super.add(BorderLayout.WEST, checkPanel);
-        super.add(BorderLayout.CENTER, vertical);
+
+        checkPanel = makePanel(gui.checkBoxPanel.getBoxes(), "Checklist", BoxType.check, c);
+        dailyPanel = makePanel(DailyChecklist.getCheckBoxes(), "Daily", BoxType.daily, c);
+        customPanel = makePanel(AddCustomCheckList.getRandomCheckBoxes(), "Custom", BoxType.custom, c);
+
+        if (customPanel != null) {
+            c.gridx = 0;
+            c.gridy = 0;
+            c.gridheight = 2;
+            super.add(checkPanel, c);
+
+            c.gridheight = 1;
+            c.gridx = 1;
+            c.gridy = 0;
+            super.add(dailyPanel, c);
+
+            c.gridx = 1;
+            c.gridy = 1;
+            super.add(customPanel, c);
+        }
+        else {
+            c.gridx = 0;
+            c.gridy = 0;
+            super.add(checkPanel, c);
+
+            c.gridx = 1;
+            c.gridy = 0;
+            super.add(dailyPanel, c);
+        }
+
         gui.repaintFrame();
         this.repaint();
     }
     
-    private JPanel makePanel(JCheckBox[] boxes, String title, BoxType type) {
-        //JPanel panel = new JPanel(new GridLayout(0, 2));
-        JPanel panel = new JPanel(new GridLayout(gui.height/30, gui.length/200));
-        JLabel label = new JLabel(title);
-        panel.add(label);
+    private JPanel makePanel(JCheckBox[] boxes, String title, BoxType type, GridBagConstraints c) {
+        //JPanel panel = new JPanel(new GridLayout(gui.height/30, gui.length/200));
+        JPanel panel = new JPanel(new GridBagLayout());
+        Box vertical = Box.createVerticalBox();
         panel.setBorder(BorderFactory.createLineBorder(Color.black));
+        if (type == BoxType.custom) {
+            title += AddCustomCheckList.getrandomName();
+        }
+        JLabel label = new JLabel(title);
+        c.weighty = 1.0;
+        c.gridx = 0;
+        c.gridy = 0;
+        vertical.add(label);
         if (boxes != null) {
             for (int i = 0; i < boxes.length; i++) {
                 JCheckBox checkBox = new JCheckBox(boxes[i].getText());
                 checkBox.setSelected(boxes[i].isSelected());
+                checkBox.setForeground(boxes[i].getForeground());
                 checkBox.setFocusPainted(false);
                 int index = i;
                 checkBox.addActionListener(e -> {
@@ -74,8 +114,9 @@ public class HomePanel extends JPanel {
                         break;
                     }
                 });
-                panel.add(checkBox);
+                vertical.add(checkBox);
             }
+            panel.add(vertical, c);
             return panel;
         }
         return null;

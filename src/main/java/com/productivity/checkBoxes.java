@@ -31,8 +31,7 @@ public class CheckBoxes extends JPanel {
 	private static int charLimit = 20;
 	private static int checkBoxLimit = 20;
 	private int numCheckBox = 0;
-	public boolean home;
-	public boolean alert;
+	private boolean home;
 	private boolean daily;
 
 	private enum fileType {
@@ -41,9 +40,8 @@ public class CheckBoxes extends JPanel {
 		color
 	}
 	
-	public CheckBoxes(int height, int length, File name, File check, File color, boolean daily, boolean home, boolean alert) {
+	public CheckBoxes(int height, int length, File name, File check, File color, boolean daily, boolean home) {
 		this.home = home;
-		this.alert = alert;
 		this.daily = daily;
 		nameFile = name;
 		checkFile = check;
@@ -250,6 +248,10 @@ public class CheckBoxes extends JPanel {
 		}
 		
 		gui.homeReset();
+	}
+
+	public boolean getHome() {
+		return home;
 	}
 
 	public void saveCheckBoxes(fileType type) {
