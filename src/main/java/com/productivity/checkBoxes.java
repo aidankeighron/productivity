@@ -167,13 +167,13 @@ public class CheckBoxes extends JPanel {
 			checklistPanel.remove(checkBox);
 			numCheckBox--;
 			saveCheckBoxes();
-			gui.repaintFrame();
+			Productivity.repaintFrame();
 		});
 		Popup pop = new Popup(items);
 		checkBox.addMouseListener(pop.new PopClickListener());
 		checklistPanel.add(checkBox);
 		saveCheckBoxes();
-		gui.repaintFrame();
+		Productivity.repaintFrame();
 	}
 	
 	public void clearSelected() {
@@ -185,7 +185,7 @@ public class CheckBoxes extends JPanel {
 			}
 		}
 		saveCheckBoxes();
-		gui.repaintFrame();
+		Productivity.repaintFrame();
 	}
 	
 	public void removeCheckBoxes() {
@@ -196,7 +196,7 @@ public class CheckBoxes extends JPanel {
 		writeData("", nameFile);
 		writeData("", checkFile);
 		writeData("", colorFile);
-		gui.repaintFrame();
+		Productivity.repaintFrame();
 		numCheckBox = 0;
 	}
 	
@@ -247,7 +247,7 @@ public class CheckBoxes extends JPanel {
 			writeData("", colorFile);
 		}
 		
-		gui.homeReset();
+		HomePanel.getInstance().reset();
 	}
 
 	public boolean getHome() {
@@ -292,7 +292,7 @@ public class CheckBoxes extends JPanel {
 			default:
 				break;
 		}		
-		gui.homeReset();
+		HomePanel.getInstance().reset();
 	}
 	
 	public String[] readData(File file) {

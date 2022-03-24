@@ -35,7 +35,7 @@ public class HomePanel extends JPanel {
         c.fill = GridBagConstraints.HORIZONTAL;
         c.weightx = 1.0;
         c.weighty = 1.0;
-        c.ipady = gui.height;
+        c.ipady = Productivity.kHeight;
 
         if (checkPanel != null) 
             super.remove(checkPanel);
@@ -44,8 +44,7 @@ public class HomePanel extends JPanel {
         if (customPanel != null) 
             super.remove(customPanel);
         
-
-        checkPanel = makePanel(gui.checkBoxPanel.getBoxes(), "Checklist", BoxType.check, c);
+        checkPanel = makePanel(Productivity.getBoxes(), "Checklist", BoxType.check, c);
         dailyPanel = makePanel(DailyChecklist.getCheckBoxes(), "Daily", BoxType.daily, c);
         customPanel = makePanel(AddCustomCheckList.getRandomCheckBoxes(), "Custom", BoxType.custom, c);
 
@@ -74,7 +73,7 @@ public class HomePanel extends JPanel {
             super.add(dailyPanel, c);
         }
 
-        gui.repaintFrame();
+        Productivity.repaintFrame();
         this.repaint();
     }
     
@@ -101,7 +100,7 @@ public class HomePanel extends JPanel {
                 checkBox.addActionListener(e -> {
                     switch (type) {
                         case check:
-                        gui.checkBoxPanel.setSelected(checkBox.isSelected(), index);
+                        Productivity.setSelected(checkBox.isSelected(), index);
                         break;
                         case daily:
                         DailyChecklist.setCheckBoxes(checkBox.isSelected(), index);
@@ -120,5 +119,13 @@ public class HomePanel extends JPanel {
             return panel;
         }
         return null;
+    }
+
+    private static HomePanel mInstance = null;
+    public synchronized static HomePanel getInstance() {
+        if (mInstance == null) {
+            mInstance = new HomePanel();
+        }
+        return mInstance;
     }
 }

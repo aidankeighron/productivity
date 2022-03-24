@@ -58,12 +58,12 @@ public class SettingsPanel extends JTabbedPane {
     
     public SettingsPanel() {
         super.setFocusable(false);
-        dailyPanel = new CheckBoxes(gui.height, gui.length, nameFile, stateFile, colorFile, true, true);
+        dailyPanel = new CheckBoxes(Productivity.kHeight, Productivity.kLength, nameFile, stateFile, colorFile, true, true);
         JLabel label = new JLabel("Press enter to confirm");
         configBox.add(label);
         runBoolean allOnTop;
-        if (gui.usingWindows) { 
-            allOnTop = (a) -> gui.setOnTop(a);
+        if (Productivity.getUsingWindows()) { 
+            allOnTop = (a) -> Productivity.setOnTop(a);
         }
         else {
             allOnTop = null;
@@ -92,11 +92,11 @@ public class SettingsPanel extends JTabbedPane {
             }
         };
         addSetting("Reminder", "reminderActive", "Activates reminder tab", settingTypes.checkbox, reminderActive, false, null);
-        if (gui.usingWindows) {
-            runBoolean runOnStartup = (a) -> gui.runOnStartup(a);
+        if (Productivity.getUsingWindows()) {
+            runBoolean runOnStartup = (a) -> Productivity.runOnStartup(a);
             addSetting("Run on startup", "runOnStartup", "Runs program when your computer starts", settingTypes.checkbox, runOnStartup, true, "Are you sure");
         }
-        if (gui.usingWindows) {
+        if (Productivity.getUsingWindows()) {
             runBoolean blockSitesActive = (a) -> {
                 boolean exists = false;
                 Component[] comp = super.getComponents();
@@ -122,7 +122,7 @@ public class SettingsPanel extends JTabbedPane {
         }
         configPanel.add(configBox);
         super.addTab("Config", configPanel);
-        if (Boolean.parseBoolean(getSetting("blockSites")) && gui.usingWindows) {
+        if (Boolean.parseBoolean(getSetting("blockSites")) && Productivity.getUsingWindows()) {
             super.addTab("Block Sites", BlockSites);
         }
         if (Boolean.parseBoolean(getSetting("reminderActive"))) {
@@ -226,11 +226,11 @@ public class SettingsPanel extends JTabbedPane {
     }
     
     private static void loadFiles() {
-        settingsFile = new File(gui.currentPath+"Saves\\settings.TXT");
-        nameFile = new File(gui.currentPath+"Saves\\daily.TXT");
-        stateFile = new File(gui.currentPath+"Saves\\dailyCheck.TXT");
-        colorFile = new File(gui.currentPath+"Saves\\dailyColor.TXT");
-        reminderFile = new File(gui.currentPath+"Saves\\reminder.TXT");
+        settingsFile = new File(Productivity.getCurrentPath()+"Saves\\settings.TXT");
+        nameFile = new File(Productivity.getCurrentPath()+"Saves\\daily.TXT");
+        stateFile = new File(Productivity.getCurrentPath()+"Saves\\dailyCheck.TXT");
+        colorFile = new File(Productivity.getCurrentPath()+"Saves\\dailyColor.TXT");
+        reminderFile = new File(Productivity.getCurrentPath()+"Saves\\reminder.TXT");
     }
     
     private void reminder() {

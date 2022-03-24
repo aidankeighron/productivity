@@ -6,9 +6,9 @@
     "configurations": [
         {
             "type": "java",
-            "name": "Launch gui",
+            "name": "Launch Productivity",
             "request": "launch",
-            "mainClass": "com.productivity.gui",
+            "mainClass": "com.productivity.Productivity",
             "projectName": "Productivity"
         },
         {

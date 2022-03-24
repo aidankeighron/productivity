@@ -17,15 +17,16 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import com.productivity.CheckBoxes;
+import com.productivity.HomePanel;
 import com.productivity.JTextFieldLimit;
-import com.productivity.gui;
+import com.productivity.Productivity;
 
 public class AddCustomCheckList extends JPanel {
     
     private static ArrayList<String> names = new ArrayList<String>();
     //private static String customPath = (!gui.debug)?"classes\\com\\productivity\\Custom\\Saves\\":"src\\main\\java\\com\\productivity\\Custom\\Saves\\";
-    private static String customPath = gui.currentCustomPath;
-    private static File customNames = new File(gui.currentCustomPath + "customNames.TXT");
+    private static String customPath = Productivity.getCurrentCustomPath();
+    private static File customNames = new File(Productivity.getCurrentCustomPath()+"customNames.TXT");
     private static Box vertical = Box.createVerticalBox();
     private static HashMap<String, CheckBoxes> checkBoxes = new HashMap<String, CheckBoxes>();
     private static int charLimit = 10;
@@ -50,17 +51,18 @@ public class AddCustomCheckList extends JPanel {
                 addCheckList(name.getText(), wantHome);
                 currentNumCheckLists++;
                 if (getNumberOfChecklists() == 1) {
-                    gui.customCheckListVisibility(true);
-                    gui.repaintFrame();
+                    Productivity.customCheckListVisibility(true);
+                    Productivity.repaintFrame();
                 }
                 name.setText("");
-                gui.homeReset();
+                HomePanel.getInstance().reset();
             }
             else {
                 JOptionPane.showMessageDialog(this, "Please enter valid name");
             }
         });
         JCheckBox home = new JCheckBox("Home");
+        home.setSelected(true);
         home.addActionListener(e -> {
             wantHome = home.isSelected();
         });
@@ -95,7 +97,7 @@ public class AddCustomCheckList extends JPanel {
             }
 
         } catch (Exception e) {
-            File dir = new File(gui.currentCustomPath);
+            File dir = new File(Productivity.getCurrentCustomPath());
             purgeDirectory(dir);
             try {
                 customNames.createNewFile();
@@ -178,17 +180,17 @@ public class AddCustomCheckList extends JPanel {
         JButton button = new JButton(n);
         button.addActionListener(e -> {
             vertical.remove(button);
-            gui.repaintFrame();
+            Productivity.repaintFrame();
             deleteChecklist(n);
             saveChecklists();
-            gui.homeReset();
+            HomePanel.getInstance().reset();
         });
         button.setFocusPainted(false);
         vertical.add(button);
-        CheckBoxes checkBox = new CheckBoxes(gui.height, gui.length, name, check, color, false, home);
+        CheckBoxes checkBox = new CheckBoxes(Productivity.kHeight, Productivity.kLength, name, check, color, false, home);
         checkBoxes.put(n, checkBox);
         saveChecklists();
-        gui.customCheckList.addCheckList(checkBox, n);
+        CustomCheckList.getInstance().addCheckList(checkBox, n);
     }
     
     private static void deleteChecklist(String n) {
@@ -200,9 +202,9 @@ public class AddCustomCheckList extends JPanel {
         check.delete();
         names.remove(n);
         checkBoxes.remove(n);
-        gui.customCheckList.removeChecklist(n);
+        CustomCheckList.getInstance().removeChecklist(n);
         if (names.size() <= 0) {
-            gui.customCheckListVisibility(false);
+            Productivity.customCheckListVisibility(false);
         }
         currentNumCheckLists--;
     }

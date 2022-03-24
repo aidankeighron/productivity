@@ -24,7 +24,7 @@ public class DailyChecklist extends JPanel {
 	//private static File stateFile = new File((!gui.debug)?"classes\\dailyCheck.TXT":gui.debugPath+"dailyCheck.TXT");
 	//private static File colorFile = new File((!gui.debug)?"classes\\dailyColor.TXT":gui.debugPath+"dailyColor.TXT");
 	//private static File timeFile = new File((!gui.debug)?"classes\\time.TXT":gui.debugPath+"time.TXT");
-	private static JPanel checkListPanel = new JPanel(new GridLayout(gui.height/30, gui.length/200));
+	private static JPanel checkListPanel = new JPanel(new GridLayout(Productivity.kHeight/30, Productivity.kLength/200));
 	private static ArrayList<JCheckBox> checkBoxes = new ArrayList<JCheckBox>();
 
 	public DailyChecklist() {
@@ -58,10 +58,10 @@ public class DailyChecklist extends JPanel {
 	}
 
 	private void loadFiles() {
-		nameFile = new File(gui.currentPath+"Saves\\daily.TXT");
-		stateFile = new File(gui.currentPath+"Saves\\dailyCheck.TXT");
-		colorFile = new File(gui.currentPath+"Saves\\dailyColor.TXT");
-		timeFile = new File(gui.currentPath+"Saves\\time.TXT");
+		nameFile = new File(Productivity.getCurrentPath()+"Saves\\daily.TXT");
+		stateFile = new File(Productivity.getCurrentPath()+"Saves\\dailyCheck.TXT");
+		colorFile = new File(Productivity.getCurrentPath()+"Saves\\dailyColor.TXT");
+		timeFile = new File(Productivity.getCurrentPath()+"Saves\\time.TXT");
 	}
 	
 	public static void resetBoxes(boolean reset) {
@@ -86,7 +86,7 @@ public class DailyChecklist extends JPanel {
 					addCheckBox(names[i], new Color(Integer.parseInt(color[i])), false, i);
 				}
 			}
-			gui.homeReset();
+			HomePanel.getInstance().reset();
 		} catch (Exception e) {
 			writeData("", nameFile);
 			writeData("", stateFile);
@@ -106,7 +106,7 @@ public class DailyChecklist extends JPanel {
 		checkBox.setSelected(checked);
 		checkBoxes.add(checkBox);
 		checkListPanel.add(checkBox);
-		gui.repaintFrame();
+		Productivity.repaintFrame();
 	}
 	
 	private static void saveCheckBoxes() {

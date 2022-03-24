@@ -1,7 +1,7 @@
 package com.productivity.Custom;
 
 import com.productivity.CheckBoxes;
-import com.productivity.gui;
+import com.productivity.Productivity;
 import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -87,13 +87,13 @@ public class CustomCheckList extends JTabbedPane {
     public void addCheckList(CheckBoxes checkBoxes, String name) {
         super.addTab(name, checkBoxes);
         boxes.put(name, checkBoxes);
-        gui.repaintFrame();
+        Productivity.repaintFrame();
     }
     
     public void removeChecklist(String name) {
         super.remove(boxes.get(name));
         boxes.remove(name);
-        gui.repaintFrame();
+        Productivity.repaintFrame();
     }
     
     protected void paintComponent(Graphics g) {
@@ -104,5 +104,13 @@ public class CustomCheckList extends JTabbedPane {
             // Draw the dragged tab
             g.drawImage(tabImage, currentMouseLocation.x, currentMouseLocation.y, this);
         }
+    }
+
+    private static CustomCheckList mInstance = null;
+    public synchronized static CustomCheckList getInstance() {
+        if (mInstance == null) {
+            mInstance = new CustomCheckList();
+        }
+        return mInstance;
     }
 }
