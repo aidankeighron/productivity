@@ -6,7 +6,7 @@ import javax.swing.JTabbedPane;
 
 public class HelpPanel extends JTabbedPane {
     
-
+    
     public HelpPanel() {
         JPanel warning = new JPanel();
         JLabel warningLabel = new JLabel("Warning");

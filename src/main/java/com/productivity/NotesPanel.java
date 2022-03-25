@@ -16,43 +16,43 @@ import java.io.IOException;
 
 public class NotesPanel extends JDesktopPane {
 	
-	private static File namesFile = new File(Productivity.getCurrentPath() + "Notes\\names.TXT");
-	private static String filePath = Productivity.getCurrentPath() + "Notes\\";
-	private static int textLimit = 10;
+	private static final File kNamesFile = new File(Productivity.getCurrentPath() + "Notes\\names.TXT");
+	private static final String kFilePath = Productivity.getCurrentPath() + "Notes\\";
+	private static final int kTextLimit = 10;
 	
 	public NotesPanel() {
-		String[] names = readData(namesFile);
+		String[] names = readData(kNamesFile);
 		
 		JComboBox<String> noteChoose = new JComboBox<>(names);
 		noteChoose.setFocusable(false);
 		
 		JTextField nameField = new JTextField();
-		nameField.setDocument(new JTextFieldLimit(textLimit));
+		nameField.setDocument(new JTextFieldLimit(kTextLimit));
 		nameField.addActionListener(e -> {
 			String text  = nameField.getText();
 			if (!testValidFileName(text)) {
 				nameField.setText((String)noteChoose.getSelectedItem());
 				return;
 			}
-			File file = new File(filePath + (String)noteChoose.getSelectedItem() + ".txt");
-			File newFile = new File(filePath + text + ".txt");
+			File file = new File(kFilePath + (String)noteChoose.getSelectedItem() + ".txt");
+			File newFile = new File(kFilePath + text + ".txt");
 			file.renameTo(newFile);
 			int index = noteChoose.getSelectedIndex();
 			names[index] = text;
-			writeData(names, namesFile);
+			writeData(names, kNamesFile);
 			noteChoose.setModel(new JComboBox<>(names).getModel());
 			noteChoose.setSelectedIndex(index);
 		});
 		
 		JTextArea textArea = new JTextArea();
 		textArea.addCaretListener(e -> {
-			File file = new File(filePath + (String)noteChoose.getSelectedItem() + ".txt");
+			File file = new File(kFilePath + (String)noteChoose.getSelectedItem() + ".txt");
 			String[] data = textArea.getText().split("\\r?\\n");
 			writeData(data, file);
 		});
 		
 		noteChoose.addActionListener(e -> {
-			File file = new File(filePath + (String)noteChoose.getSelectedItem() + ".txt");
+			File file = new File(kFilePath + (String)noteChoose.getSelectedItem() + ".txt");
 			String[] data;
 			try {
 				data = readData(file);
@@ -76,7 +76,7 @@ public class NotesPanel extends JDesktopPane {
 			nameField.setText((String)noteChoose.getSelectedItem());
 		});
 		
-		File file = new File(filePath + (String)noteChoose.getSelectedItem() + ".txt");
+		File file = new File(kFilePath + (String)noteChoose.getSelectedItem() + ".txt");
 		String[] data;
 		try {
 			data = readData(file);

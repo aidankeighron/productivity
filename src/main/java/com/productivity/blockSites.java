@@ -17,17 +17,16 @@ import java.io.FileWriter;
 
 public class BlockSites extends JPanel {
     
-    private static File hostsFile = new File("C:\\Windows\\System32\\drivers\\etc\\hosts");
-    private static File newHosts;
-    private static File backupFile;
-    private static File blockedSites;
-
-    //private static File newHosts = new File((!gui.debug)?"classes\\com\\productivity\\Saves\\Newhosts":gui.debugPath+"Newhosts");
-    //private static File backupFile = new File((!gui.debug)?"classes\\com\\productivity\\Saves\\hosts":gui.debugPath+"hosts");
-    //private static File blockedSites = new File((!gui.debug)?"classes\\com\\productivity\\Saves\\blockedSites.TXT":gui.debugPath+"blockedSites.TXT");
+    private static final File kHostsFile = new File("C:\\Windows\\System32\\drivers\\etc\\hosts");
+    
+    private static File mNewHosts;
+    private static File mBackupFile;
+    private static File mBlockedSites;
     
     public BlockSites() {
-        loadFiles();
+        mNewHosts = new File(Productivity.getCurrentPath()+"Saves\\Newhosts");
+        mBackupFile = new File(Productivity.getCurrentPath()+"Saves\\hosts");
+        mBlockedSites = new File(Productivity.getCurrentPath()+"Saves\\blockedSites.TXT");
         JTextArea site = new JTextArea();
         site.setDocument(new JTextFieldLimit(50));
         site.setText(load());
@@ -57,40 +56,34 @@ public class BlockSites extends JPanel {
         super.add(BorderLayout.SOUTH, vertical);
     }
     
-    private void loadFiles() {
-        newHosts = new File(Productivity.getCurrentPath()+"Saves\\Newhosts");
-        backupFile = new File(Productivity.getCurrentPath()+"Saves\\hosts");
-        blockedSites = new File(Productivity.getCurrentPath()+"Saves\\blockedSites.TXT");
-    }
-    
     public static void reBlockSites() {
-        if (Files.isWritable(Paths.get(hostsFile.getAbsolutePath())) && Productivity.getUsingWindows()) {
+        if (Files.isWritable(Paths.get(kHostsFile.getAbsolutePath())) && Productivity.getUsingWindows()) {
             try {
-                String[] data = readData(newHosts);
-                writeData(data, hostsFile);
+                String[] data = readData(mNewHosts);
+                writeData(data, kHostsFile);
             } catch (Exception e) {
-                String[] data = readData(backupFile);
-                writeData(data, newHosts);
+                String[] data = readData(mBackupFile);
+                writeData(data, mNewHosts);
             }
         }
     }
     
     public static void unBlockSites() {
-        if (Files.isWritable(Paths.get(hostsFile.getAbsolutePath())) && Productivity.getUsingWindows()) {
+        if (Files.isWritable(Paths.get(kHostsFile.getAbsolutePath())) && Productivity.getUsingWindows()) {
             try {
-                String[] data = readData(backupFile);
-                writeData(data, hostsFile);
+                String[] data = readData(mBackupFile);
+                writeData(data, kHostsFile);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
+            
         }
     }
     
     private String load() {
         String result = "";
         try {
-            String[] data = readData(blockedSites);
+            String[] data = readData(mBlockedSites);
             if (data.length > 1) {
                 for (int i = 0; i < data.length; i++) {
                     if (data[i].equals("*")) {
@@ -100,9 +93,9 @@ public class BlockSites extends JPanel {
                 }
             }
         } catch (Exception e) {
-            writeData("", blockedSites);
+            writeData("", mBlockedSites);
         }
-
+        
         return result;
     }
     
@@ -130,7 +123,7 @@ public class BlockSites extends JPanel {
                 validSites[i] = "*";
             }
         }
-        String[] host = readData(backupFile);
+        String[] host = readData(mBackupFile);
         String[] data = new String[numValidSites + host.length];
         String[] filteredSites = new String[numValidSites];
         int j = 0;
@@ -153,17 +146,17 @@ public class BlockSites extends JPanel {
             }
             j++;
         }
-        writeData(filteredSites, blockedSites);
-        writeData(data, newHosts);
+        writeData(filteredSites, mBlockedSites);
+        writeData(data, mNewHosts);
     }
     
     private void reset(JTextArea area) {
-        String[] data = readData(backupFile);
-        if (Files.isWritable(Paths.get(hostsFile.getAbsolutePath())) && Productivity.getUsingWindows()) {
-            writeData(data, hostsFile);
+        String[] data = readData(mBackupFile);
+        if (Files.isWritable(Paths.get(kHostsFile.getAbsolutePath())) && Productivity.getUsingWindows()) {
+            writeData(data, kHostsFile);
         }
-        writeData(data, newHosts);
-        writeData("", blockedSites);
+        writeData(data, mNewHosts);
+        writeData("", mBlockedSites);
         area.setText("");
     }
     

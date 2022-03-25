@@ -17,11 +17,11 @@ import javax.swing.JTabbedPane;
 
 public class CustomCheckList extends JTabbedPane {
     
-    static HashMap<String, CheckBoxes> boxes = new HashMap<String, CheckBoxes>();
-    private boolean dragging = false;
-    private Image tabImage = null;
-    private Point currentMouseLocation = null;
-    private int draggedTabIndex = 0;
+    private static HashMap<String, CheckBoxes> mBoxes = new HashMap<String, CheckBoxes>();
+    private boolean mDragging = false;
+    private Image mTabImage = null;
+    private Point mCurrentMouseLocation = null;
+    private int mDraggedTabIndex = 0;
     
     public CustomCheckList() {
         super();
@@ -29,12 +29,12 @@ public class CustomCheckList extends JTabbedPane {
         addMouseMotionListener(new MouseMotionAdapter() {
             public void mouseDragged(MouseEvent e) {
                 
-                if(!dragging) {
+                if(!mDragging) {
                     // Gets the tab index based on the mouse position
                     int tabNumber = getUI().tabForCoordinate(CustomCheckList.this, e.getX(), e.getY());
                     
                     if(tabNumber >= 0) {
-                        draggedTabIndex = tabNumber;
+                        mDraggedTabIndex = tabNumber;
                         Rectangle bounds = getUI().getTabBounds(CustomCheckList.this, tabNumber);
                         
                         
@@ -47,15 +47,15 @@ public class CustomCheckList extends JTabbedPane {
                         paintComponent(totalGraphics);
                         
                         // Paint just the dragged tab to the buffer
-                        tabImage = new BufferedImage(bounds.width, bounds.height, BufferedImage.TYPE_INT_ARGB);
-                        Graphics graphics = tabImage.getGraphics();
+                        mTabImage = new BufferedImage(bounds.width, bounds.height, BufferedImage.TYPE_INT_ARGB);
+                        Graphics graphics = mTabImage.getGraphics();
                         graphics.drawImage(totalImage, 0, 0, bounds.width, bounds.height, bounds.x, bounds.y, bounds.x + bounds.width, bounds.y+bounds.height, CustomCheckList.this);
                         
-                        dragging = true;
+                        mDragging = true;
                         repaint();
                     }
                 } else {
-                    currentMouseLocation = e.getPoint();
+                    mCurrentMouseLocation = e.getPoint();
                     
                     // Need to repaint
                     repaint();
@@ -67,32 +67,32 @@ public class CustomCheckList extends JTabbedPane {
         addMouseListener(new MouseAdapter() {
             public void mouseReleased(MouseEvent e) {
                 
-                if(dragging) {
+                if(mDragging) {
                     int tabNumber = getUI().tabForCoordinate(CustomCheckList.this, e.getX(), 10);
                     
                     if(tabNumber >= 0) {
-                        Component comp = getComponentAt(draggedTabIndex);
-                        String title = getTitleAt(draggedTabIndex);
-                        removeTabAt(draggedTabIndex);
+                        Component comp = getComponentAt(mDraggedTabIndex);
+                        String title = getTitleAt(mDraggedTabIndex);
+                        removeTabAt(mDraggedTabIndex);
                         insertTab(title, null, comp, null, tabNumber);
                     }
                 }
                 
-                dragging = false;
-                tabImage = null;
+                mDragging = false;
+                mTabImage = null;
             }
         });
     }
     
     public void addCheckList(CheckBoxes checkBoxes, String name) {
         super.addTab(name, checkBoxes);
-        boxes.put(name, checkBoxes);
+        mBoxes.put(name, checkBoxes);
         Productivity.repaintFrame();
     }
     
     public void removeChecklist(String name) {
-        super.remove(boxes.get(name));
-        boxes.remove(name);
+        super.remove(mBoxes.get(name));
+        mBoxes.remove(name);
         Productivity.repaintFrame();
     }
     
@@ -100,12 +100,12 @@ public class CustomCheckList extends JTabbedPane {
         super.paintComponent(g);
         
         // Are we dragging?
-        if(dragging && currentMouseLocation != null && tabImage != null) {
+        if(mDragging && mCurrentMouseLocation != null && mTabImage != null) {
             // Draw the dragged tab
-            g.drawImage(tabImage, currentMouseLocation.x, currentMouseLocation.y, this);
+            g.drawImage(mTabImage, mCurrentMouseLocation.x, mCurrentMouseLocation.y, this);
         }
     }
-
+    
     private static CustomCheckList mInstance = null;
     public synchronized static CustomCheckList getInstance() {
         if (mInstance == null) {

@@ -26,26 +26,22 @@ import com.productivity.Custom.AddCustomCheckList;
 
 public class SettingsPanel extends JTabbedPane {
     
-    private static HashMap<String, String> settings = new HashMap<String, String>();
-    private static File settingsFile;
-    private static File nameFile;
-    private static File stateFile;
-    private static File colorFile;
-    private static File reminderFile;
+    private static final String[] kTimeOptions = {"Seconds", "Minutes", "Hours"};
     
-    //private static File settingsFile = new File((!gui.debug)?"classes\\settings.TXT":gui.debugPath+"settings.TXT");
-    //private static File nameFile = new File((!gui.debug)?"classes\\daily.TXT":gui.debugPath+"daily.TXT");
-    //private static File stateFile = new File((!gui.debug)?"classes\\dailyCheck.TXT":gui.debugPath+"dailyCheck.TXT");
-    //private static File colorFile = new File((!gui.debug)?"classes\\dailyColor.TXT":gui.debugPath+"dailyColor.TXT");
-    //private static File reminderFile = new File((!gui.debug)?"classes\\reminder.TXT":gui.debugPath+"reminder.TXT");
-    private JPanel configPanel = new JPanel();
-    private Box configBox = Box.createVerticalBox();
-    private JPanel reminderPanel = new JPanel();
-    private BlockSites BlockSites = new BlockSites();
+    private static HashMap<String, String> mSettings = new HashMap<String, String>();
+    private static File mSettingsFile;
+    private static File mNameFile;
+    private static File mStateFile;
+    private static File mColorFile;
+    private static File mReminderFile;
+
+    private JPanel mConfigPanel = new JPanel();
+    private Box mConfigBox = Box.createVerticalBox();
+    private JPanel mReminderPanel = new JPanel();
+    private BlockSites mBlockSites = new BlockSites();
     
-    public static CheckBoxes dailyPanel;
-    private static String[] timeOptions = {"Seconds", "Minutes", "Hours"};
-    private static int timeMultiplier = 1;
+    private static CheckBoxes mDailyPanel;
+    private static int mTimeMultiplier = 1;
     
     private enum settingTypes {
         text,
@@ -58,9 +54,9 @@ public class SettingsPanel extends JTabbedPane {
     
     public SettingsPanel() {
         super.setFocusable(false);
-        dailyPanel = new CheckBoxes(Productivity.kHeight, Productivity.kLength, nameFile, stateFile, colorFile, true, true);
+        mDailyPanel = new CheckBoxes(Productivity.kHeight, Productivity.kLength, mNameFile, mStateFile, mColorFile, true, true);
         JLabel label = new JLabel("Press enter to confirm");
-        configBox.add(label);
+        mConfigBox.add(label);
         runBoolean allOnTop;
         if (Productivity.getUsingWindows()) { 
             allOnTop = (a) -> Productivity.setOnTop(a);
@@ -73,20 +69,20 @@ public class SettingsPanel extends JTabbedPane {
             boolean exists = false;
             Component[] comp = super.getComponents();
             for (Component c : comp) {
-                if (c.equals(reminderPanel)) {
+                if (c.equals(mReminderPanel)) {
                     exists = true;
                     break;
                 }
             }
             if (a) {
                 if (!exists) {
-                    super.insertTab("Reminder", null, reminderPanel, null, 1);
+                    super.insertTab("Reminder", null, mReminderPanel, null, 1);
                     reminder();
                 }
             }
             else {
                 if (exists) {
-                    super.remove(reminderPanel);
+                    super.remove(mReminderPanel);
                     stopTimer();
                 }
             }
@@ -101,36 +97,36 @@ public class SettingsPanel extends JTabbedPane {
                 boolean exists = false;
                 Component[] comp = super.getComponents();
                 for (Component c : comp) {
-                    if (c.equals(BlockSites)) {
+                    if (c.equals(mBlockSites)) {
                         exists = true;
                         break;
                     }
                 }
                 if (a) {
                     if (!exists) {
-                        super.insertTab("Block Sites", null, BlockSites, null, 2);
+                        super.insertTab("Block Sites", null, mBlockSites, null, 2);
                     }
                 }
                 else {
                     if (exists) {
-                        super.remove(BlockSites);
+                        super.remove(mBlockSites);
                     }
                 }
                 TimerPanel.setAllowBlock(a);
             };
             addSetting("Block Sites", "blockSites", "Allows you to block sites", settingTypes.checkbox, blockSitesActive, true, "Are you sure");
         }
-        configPanel.add(configBox);
-        super.addTab("Config", configPanel);
+        mConfigPanel.add(mConfigBox);
+        super.addTab("Config", mConfigPanel);
         if (Boolean.parseBoolean(getSetting("blockSites")) && Productivity.getUsingWindows()) {
-            super.addTab("Block Sites", BlockSites);
+            super.addTab("Block Sites", mBlockSites);
         }
         if (Boolean.parseBoolean(getSetting("reminderActive"))) {
-            super.addTab("Reminder", reminderPanel);
+            super.addTab("Reminder", mReminderPanel);
             reminder();
         }
         super.addTab("Custom Setup", new AddCustomCheckList());
-        super.addTab("Daily Setup", dailyPanel);
+        super.addTab("Daily Setup", mDailyPanel);
         super.addTab("Help", new HelpPanel());
     }
     
@@ -147,14 +143,14 @@ public class SettingsPanel extends JTabbedPane {
                         return;
                     }
                 }
-                settings.put(key, Boolean.toString(checkBox.isSelected()));
+                mSettings.put(key, Boolean.toString(checkBox.isSelected()));
                 if (rt != null) {
                     runOperation(checkBox.isSelected(), rt);
                 }
                 saveSettings();
             });
             try {
-                checkBox.setSelected(Boolean.parseBoolean(settings.get(key)));
+                checkBox.setSelected(Boolean.parseBoolean(mSettings.get(key)));
             }
             catch(Exception e) {
                 System.out.println("Setting does not exist");
@@ -162,7 +158,7 @@ public class SettingsPanel extends JTabbedPane {
             checkBox.setToolTipText(tooltip);
             Box horizontal = Box.createHorizontalBox();
             horizontal.add(checkBox);
-            configBox.add(horizontal);
+            mConfigBox.add(horizontal);
             break;
             case number:
             JLabel numLabel = new JLabel(name);
@@ -178,12 +174,12 @@ public class SettingsPanel extends JTabbedPane {
                     JOptionPane.showMessageDialog(this, "Enter valid positive number");
                 }
                 else {
-                    settings.put(key, numField.getText());
+                    mSettings.put(key, numField.getText());
                     saveSettings();
                 }
             });
             try {
-                numField.setText(settings.get(key));
+                numField.setText(mSettings.get(key));
             }
             catch(Exception e) {
                 System.out.println("Setting does not exist");
@@ -192,7 +188,7 @@ public class SettingsPanel extends JTabbedPane {
             Box numHorizontal = Box.createHorizontalBox();
             numHorizontal.add(numLabel);
             numHorizontal.add(numField);
-            configBox.add(numHorizontal);
+            mConfigBox.add(numHorizontal);
             break;
             case text:
             JLabel txtLabel = new JLabel(name);
@@ -202,12 +198,12 @@ public class SettingsPanel extends JTabbedPane {
                     JOptionPane.showMessageDialog(this, "Enter valid text");
                 }
                 else {
-                    settings.put(key, txtField.getText());
+                    mSettings.put(key, txtField.getText());
                     saveSettings();
                 }
             });
             try {
-                txtField.setText(settings.get(key));
+                txtField.setText(mSettings.get(key));
             }
             catch(Exception e) {
                 System.out.println("Setting does not exist");
@@ -216,7 +212,7 @@ public class SettingsPanel extends JTabbedPane {
             Box txtHorizontal = Box.createHorizontalBox();
             txtHorizontal.add(txtLabel);
             txtHorizontal.add(txtField);
-            configBox.add(txtHorizontal);
+            mConfigBox.add(txtHorizontal);
             break;
             default:
             break;
@@ -226,37 +222,37 @@ public class SettingsPanel extends JTabbedPane {
     }
     
     private static void loadFiles() {
-        settingsFile = new File(Productivity.getCurrentPath()+"Saves\\settings.TXT");
-        nameFile = new File(Productivity.getCurrentPath()+"Saves\\daily.TXT");
-        stateFile = new File(Productivity.getCurrentPath()+"Saves\\dailyCheck.TXT");
-        colorFile = new File(Productivity.getCurrentPath()+"Saves\\dailyColor.TXT");
-        reminderFile = new File(Productivity.getCurrentPath()+"Saves\\reminder.TXT");
+        mSettingsFile = new File(Productivity.getCurrentPath()+"Saves\\settings.TXT");
+        mNameFile = new File(Productivity.getCurrentPath()+"Saves\\daily.TXT");
+        mStateFile = new File(Productivity.getCurrentPath()+"Saves\\dailyCheck.TXT");
+        mColorFile = new File(Productivity.getCurrentPath()+"Saves\\dailyColor.TXT");
+        mReminderFile = new File(Productivity.getCurrentPath()+"Saves\\reminder.TXT");
     }
     
     private void reminder() {
         int[] data = loadTimer();
-        JComboBox<String> timeList = new JComboBox<>(timeOptions);
+        JComboBox<String> timeList = new JComboBox<>(kTimeOptions);
         timeList.setFocusable(false);
         timeList.addActionListener(e -> {
             switch(timeList.getSelectedIndex()) {
                 case 0:
-                timeMultiplier = 1;
+                mTimeMultiplier = 1;
                 break;
                 case 1:
-                timeMultiplier = 1 * 60;
+                mTimeMultiplier = 1 * 60;
                 break;
                 case 2:
-                timeMultiplier = 1 * 60 * 60;
+                mTimeMultiplier = 1 * 60 * 60;
                 break;
                 default:
-                timeMultiplier = 1;
+                mTimeMultiplier = 1;
                 break;
             }
         });
         timeList.setSelectedIndex(data[0]);
         JTextField textField = new JTextField();
         textField.setText(Integer.toString(data[1]));
-        JProgressBar progressBar = new JProgressBar(0, Integer.parseInt(textField.getText()) * timeMultiplier);
+        JProgressBar progressBar = new JProgressBar(0, Integer.parseInt(textField.getText()) * mTimeMultiplier);
         textField.addActionListener(e -> {
             boolean notInt = false;
             try {
@@ -271,7 +267,7 @@ public class SettingsPanel extends JTabbedPane {
                 JOptionPane.showMessageDialog(this, "Enter valid positive time");
             }
             else {
-                progressBar.setMaximum(Integer.parseInt(textField.getText()) * timeMultiplier);
+                progressBar.setMaximum(Integer.parseInt(textField.getText()) * mTimeMultiplier);
                 stopTimer();
                 startTimer(Integer.parseInt(textField.getText()), progressBar);
                 saveTimer(timeList, textField);
@@ -293,7 +289,7 @@ public class SettingsPanel extends JTabbedPane {
                 JOptionPane.showMessageDialog(this, "Enter valid positive time");
             }
             else {
-                progressBar.setMaximum(Integer.parseInt(textField.getText()) * timeMultiplier);
+                progressBar.setMaximum(Integer.parseInt(textField.getText()) * mTimeMultiplier);
                 stopTimer();
                 startTimer(Integer.parseInt(textField.getText()), progressBar);
                 saveTimer(timeList, textField);
@@ -306,19 +302,19 @@ public class SettingsPanel extends JTabbedPane {
         vertical.add(textField);
         vertical.add(save);
         vertical.add(progressBar);
-        reminderPanel.add(vertical);
+        mReminderPanel.add(vertical);
         startTimer(Integer.parseInt(textField.getText()), progressBar);
     }
     
     private void saveTimer(JComboBox<String> combo, JTextField field) {
         String[] data = {Integer.toString(combo.getSelectedIndex()), field.getText()};
-        writeData(data, reminderFile);
+        writeData(data, mReminderFile);
     }
     
     private void startTimer(int length, JProgressBar bar) {
         task = new TimerTask()
         {
-            int seconds = length * timeMultiplier;
+            int seconds = length * mTimeMultiplier;
             int i = 0;
             @Override
             public void run()
@@ -341,20 +337,20 @@ public class SettingsPanel extends JTabbedPane {
     }
     
     private int[] loadTimer() {
-        String[] data = readData(reminderFile);
+        String[] data = readData(mReminderFile);
         int[] results = new int[2];
         switch(Integer.parseInt(data[0])) {
             case 0:
-            timeMultiplier = 1;
+            mTimeMultiplier = 1;
             break;
             case 1:
-            timeMultiplier = 60;
+            mTimeMultiplier = 60;
             break;
             case 2:
-            timeMultiplier = 60 * 60;
+            mTimeMultiplier = 60 * 60;
             break;
             default:
-            timeMultiplier = 1;
+            mTimeMultiplier = 1;
             break;
         }
         results[0] = Integer.parseInt(data[0]);
@@ -367,14 +363,18 @@ public class SettingsPanel extends JTabbedPane {
         time.cancel();
         time.purge();
     }
+
+    public static void setDailySelected(boolean state, int index) {
+        mDailyPanel.setSelected(state, index);
+    }
     
     public static String getSetting(String key) {
-        return settings.get(key);
+        return mSettings.get(key);
     }
     
     public static void loadSettings() {
         loadFiles();
-        String[] data = readData(settingsFile);
+        String[] data = readData(mSettingsFile);
         String[] keys = new String[(data.length - 1)/2];
         String[] values = new String[(data.length - 1)/2];
         for (int i = 0; i < (data.length - 1)/2; i++) {
@@ -390,24 +390,24 @@ public class SettingsPanel extends JTabbedPane {
             j++;
         }
         for (int i = 0; i < keys.length; i++) {
-            settings.put(keys[i], values[i]);
+            mSettings.put(keys[i], values[i]);
         }
     }
     
     private void saveSettings() {
-        String[] data = new String[(settings.size() * 2) + 1];
+        String[] data = new String[(mSettings.size() * 2) + 1];
         int index = 0;
-        for (String setting : settings.keySet()) {
+        for (String setting : mSettings.keySet()) {
             data[index] = setting;
             index++;
         }
         data[index] = "*";
         index++;
-        for (String setting : settings.values()) {
+        for (String setting : mSettings.values()) {
             data[index] = setting;
             index++;
         }
-        writeData(data, settingsFile);
+        writeData(data, mSettingsFile);
     }
     
     public static void checkFile(File f) {

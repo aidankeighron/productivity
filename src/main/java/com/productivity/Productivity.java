@@ -14,22 +14,6 @@ import javax.swing.UIManager;
 import com.productivity.Custom.AddCustomCheckList;
 import com.productivity.Custom.CustomCheckList;
 
-/* To do
-HomePanel
-NotesPanel
-SettingPanel
-BlockSites
-AddCustomCheckList
-Popup
-DailyChecklist
-CheckBoxes
-TimerPanel
-CustomCheckList
-*/
-
-/* Done
-
-*/
 public class Productivity extends JFrame {
 	
 	private static final JFrame kFrame = new JFrame("Productivity");
@@ -42,6 +26,7 @@ public class Productivity extends JFrame {
 	private static final String kCustomDebugPath = "src\\main\\java\\com\\productivity\\Custom\\Saves\\";
 	private static final String kCustomJarPath = "classes\\com\\productivity\\Custom\\Saves\\";
 	private static final String kCustomExePath = "target\\classes\\com\\productivity\\Custom\\Saves\\";
+	
 	private static final JTabbedPane mTabbedPane = new JTabbedPane();
 	private static final CustomCheckList mCustomCheckList = new CustomCheckList();
 	
@@ -52,7 +37,7 @@ public class Productivity extends JFrame {
 	private static File mColorFile;
 	private static boolean mUsingWindows;
 	private static CheckBoxes mCheckBoxes;
-
+	
 	public static void main(String[] args) throws IOException {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
@@ -182,11 +167,11 @@ public class Productivity extends JFrame {
 	public static Boolean getUsingWindows() {
 		return mUsingWindows;
 	}
-
+	
 	public static JCheckBox[] getBoxes() {
 		return mCheckBoxes.getBoxes();
 	}
-
+	
 	public static void setSelected(boolean state, int index) {
 		mCheckBoxes.setSelected(state, index);
 	}

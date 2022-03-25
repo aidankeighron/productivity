@@ -14,12 +14,12 @@ import com.productivity.Custom.AddCustomCheckList;
 
 public class HomePanel extends JPanel {
     
-    JPanel checkPanel;
-    JPanel dailyPanel;
-    JPanel customPanel;
-    GridBagConstraints c = new GridBagConstraints();
+    private JPanel mCheckPanel;
+    private JPanel mDailyPanel;
+    private JPanel mCustomPanel;
+    private GridBagConstraints c = new GridBagConstraints();
     
-    enum BoxType {
+    private enum BoxType {
         check,
         daily,
         custom;
@@ -31,54 +31,52 @@ public class HomePanel extends JPanel {
     }
     
     public void reset() {
-
         c.fill = GridBagConstraints.HORIZONTAL;
         c.weightx = 1.0;
         c.weighty = 1.0;
         c.ipady = Productivity.kHeight;
-
-        if (checkPanel != null) 
-            super.remove(checkPanel);
-        if (dailyPanel != null) 
-            super.remove(dailyPanel);
-        if (customPanel != null) 
-            super.remove(customPanel);
         
-        checkPanel = makePanel(Productivity.getBoxes(), "Checklist", BoxType.check, c);
-        dailyPanel = makePanel(DailyChecklist.getCheckBoxes(), "Daily", BoxType.daily, c);
-        customPanel = makePanel(AddCustomCheckList.getRandomCheckBoxes(), "Custom", BoxType.custom, c);
-
-        if (customPanel != null) {
+        if (mCheckPanel != null) 
+        super.remove(mCheckPanel);
+        if (mDailyPanel != null) 
+        super.remove(mDailyPanel);
+        if (mCustomPanel != null) 
+        super.remove(mCustomPanel);
+        
+        mCheckPanel = makePanel(Productivity.getBoxes(), "Checklist", BoxType.check, c);
+        mDailyPanel = makePanel(DailyChecklist.getCheckBoxes(), "Daily", BoxType.daily, c);
+        mCustomPanel = makePanel(AddCustomCheckList.getRandomCheckBoxes(), "Custom", BoxType.custom, c);
+        
+        if (mCustomPanel != null) {
             c.gridx = 0;
             c.gridy = 0;
             c.gridheight = 2;
-            super.add(checkPanel, c);
-
+            super.add(mCheckPanel, c);
+            
             c.gridheight = 1;
             c.gridx = 1;
             c.gridy = 0;
-            super.add(dailyPanel, c);
-
+            super.add(mDailyPanel, c);
+            
             c.gridx = 1;
             c.gridy = 1;
-            super.add(customPanel, c);
+            super.add(mCustomPanel, c);
         }
         else {
             c.gridx = 0;
             c.gridy = 0;
-            super.add(checkPanel, c);
-
+            super.add(mCheckPanel, c);
+            
             c.gridx = 1;
             c.gridy = 0;
-            super.add(dailyPanel, c);
+            super.add(mDailyPanel, c);
         }
-
+        
         Productivity.repaintFrame();
         this.repaint();
     }
     
     private JPanel makePanel(JCheckBox[] boxes, String title, BoxType type, GridBagConstraints c) {
-        //JPanel panel = new JPanel(new GridLayout(gui.height/30, gui.length/200));
         JPanel panel = new JPanel(new GridBagLayout());
         Box vertical = Box.createVerticalBox();
         panel.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -104,10 +102,10 @@ public class HomePanel extends JPanel {
                         break;
                         case daily:
                         DailyChecklist.setCheckBoxes(checkBox.isSelected(), index);
-                        SettingsPanel.dailyPanel.setSelected(checkBox.isSelected(), index);
+                        SettingsPanel.setDailySelected(checkBox.isSelected(), index);
                         break;
                         case custom:
-                        //AddCustomCheckList.setCheckList(checkBox.isSelected(), index, name); TODO
+                        AddCustomCheckList.setCheckList(checkBox.isSelected(), index, checkBox.getText());
                         break;
                         default:
                         break;
@@ -120,7 +118,7 @@ public class HomePanel extends JPanel {
         }
         return null;
     }
-
+    
     private static HomePanel mInstance = null;
     public synchronized static HomePanel getInstance() {
         if (mInstance == null) {

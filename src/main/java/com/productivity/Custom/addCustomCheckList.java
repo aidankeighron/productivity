@@ -23,33 +23,33 @@ import com.productivity.Productivity;
 
 public class AddCustomCheckList extends JPanel {
     
-    private static ArrayList<String> names = new ArrayList<String>();
-    //private static String customPath = (!gui.debug)?"classes\\com\\productivity\\Custom\\Saves\\":"src\\main\\java\\com\\productivity\\Custom\\Saves\\";
-    private static String customPath = Productivity.getCurrentCustomPath();
-    private static File customNames = new File(Productivity.getCurrentCustomPath()+"customNames.TXT");
-    private static Box vertical = Box.createVerticalBox();
-    private static HashMap<String, CheckBoxes> checkBoxes = new HashMap<String, CheckBoxes>();
-    private static int charLimit = 10;
-    private static int maxCustomCheckLists = 8;
-    private static int currentNumCheckLists = 0;
-    private static boolean wantHome = false;
-    private static int randomIndex = -1;
+    private static final String kCustomPath = Productivity.getCurrentCustomPath();
+    private static final File kCustomNames = new File(Productivity.getCurrentCustomPath()+"customNames.TXT");
+    private static final int kCharLimit = 10;
+    private static final int kMaxCustomCheckLists = 8;
+    
+    private static Box mVertical = Box.createVerticalBox();
+    private static ArrayList<String> mNames = new ArrayList<String>();
+    private static HashMap<String, CheckBoxes> mCheckBoxes = new HashMap<String, CheckBoxes>();
+    private static int mCurrentNumCheckLists = 0;
+    private static boolean mWantHome = false;
+    private static int mRandomIndex = -1;
     
     public AddCustomCheckList() {
         JTextField name = new JTextField();
-        name.setDocument(new JTextFieldLimit(charLimit));
+        name.setDocument(new JTextFieldLimit(kCharLimit));
         name.addActionListener(e -> {
             if (!testValidFileName(name.getText())) {
                 JOptionPane.showMessageDialog(this, "Please enter valid name");
                 return;
             }
-            if (currentNumCheckLists > maxCustomCheckLists) {
+            if (mCurrentNumCheckLists > kMaxCustomCheckLists) {
                 JOptionPane.showMessageDialog(this, "Maximum custom checklists reached");
                 return;
             }
-            if (!names.contains(name.getText()) && !name.getText().equals("")) {
-                addCheckList(name.getText(), wantHome);
-                currentNumCheckLists++;
+            if (!mNames.contains(name.getText()) && !name.getText().equals("")) {
+                addCheckList(name.getText(), mWantHome);
+                mCurrentNumCheckLists++;
                 if (getNumberOfChecklists() == 1) {
                     Productivity.customCheckListVisibility(true);
                     Productivity.repaintFrame();
@@ -64,7 +64,7 @@ public class AddCustomCheckList extends JPanel {
         JCheckBox home = new JCheckBox("Home");
         home.setSelected(true);
         home.addActionListener(e -> {
-            wantHome = home.isSelected();
+            mWantHome = home.isSelected();
         });
         
         JLabel nameLbl = new JLabel("Name Of Custom Checklist:");
@@ -76,37 +76,13 @@ public class AddCustomCheckList extends JPanel {
         nameBox.add(inputBox);
         super.setLayout(new BorderLayout());
         super.add(BorderLayout.NORTH, nameBox);
-        super.add(BorderLayout.CENTER, vertical);
+        super.add(BorderLayout.CENTER, mVertical);
     }
     
     private boolean testValidFileName(String text) {
         return text.matches("^[a-zA-Z0-9._ ]+$");
     }
-    
-    public static int getNumberOfChecklists() {
-        return readData(customNames).length/2;
-    }
-    
-    public static void loadCheckLists() {
-        try {
-            String[] data = readData(customNames);
-            for (int i = 0; i < data.length; i += 2) {
-                names.add(data[i]);
-                addCheckList(data[i], Boolean.parseBoolean(data[i + 1]));
-                currentNumCheckLists++;
-            }
 
-        } catch (Exception e) {
-            File dir = new File(Productivity.getCurrentCustomPath());
-            purgeDirectory(dir);
-            try {
-                customNames.createNewFile();
-            } catch (Exception e1) {
-                e1.printStackTrace();
-            }
-        }
-    }
-    
     private static void purgeDirectory(File dir) {
         for (File file: dir.listFiles()) {
             if (file.isDirectory())
@@ -115,25 +91,49 @@ public class AddCustomCheckList extends JPanel {
         }
     }
     
+    public static int getNumberOfChecklists() {
+        return readData(kCustomNames).length/2;
+    }
+    
+    public static void loadCheckLists() {
+        try {
+            String[] data = readData(kCustomNames);
+            for (int i = 0; i < data.length; i += 2) {
+                mNames.add(data[i]);
+                addCheckList(data[i], Boolean.parseBoolean(data[i + 1]));
+                mCurrentNumCheckLists++;
+            }
+
+        } catch (Exception e) {
+            File dir = new File(Productivity.getCurrentCustomPath());
+            purgeDirectory(dir);
+            try {
+                kCustomNames.createNewFile();
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
+        }
+    }
+    
     public static JCheckBox[] getRandomCheckBoxes() {
-        if (names.size() <= 0) {
-            randomIndex = -1;
+        if (mNames.size() <= 0) {
+            mRandomIndex = -1;
             return null;
         }
-        int index = (int)(Math.random() * names.size());
+        int index = (int)(Math.random() * mNames.size());
         try {
-            if (!checkBoxes.get(names.get(index)).getHome()) {
-                if (index < checkBoxes.size()) {
-                    for (int i = index; i < checkBoxes.size(); i++) {
-                        if (checkBoxes.get(names.get(i)).getHome()) {
+            if (!mCheckBoxes.get(mNames.get(index)).getHome()) {
+                if (index < mCheckBoxes.size()) {
+                    for (int i = index; i < mCheckBoxes.size(); i++) {
+                        if (mCheckBoxes.get(mNames.get(i)).getHome()) {
                             index = i;
                             break;
                         }
                     }
                 }
-                if (!checkBoxes.get(names.get(index)).getHome()) {
+                if (!mCheckBoxes.get(mNames.get(index)).getHome()) {
                     for (int i = index; i >= 0; i--) {
-                        if (checkBoxes.get(names.get(i)).getHome()) {
+                        if (mCheckBoxes.get(mNames.get(i)).getHome()) {
                             index = i;
                             break;
                         }
@@ -144,27 +144,27 @@ public class AddCustomCheckList extends JPanel {
             System.out.println("Error getting random check box");
             e.printStackTrace();
         }
-        CheckBoxes checkBox = checkBoxes.get(names.get(index));
-        if (checkBox != null && checkBoxes.get(names.get(index)).getHome()) {
-            randomIndex = index;
+        CheckBoxes checkBox = mCheckBoxes.get(mNames.get(index));
+        if (checkBox != null && mCheckBoxes.get(mNames.get(index)).getHome()) {
+            mRandomIndex = index;
             return checkBox.getBoxes();
         }
-        randomIndex = -1;
+        mRandomIndex = -1;
         return null;
     }
 
     public static String getrandomName() {
-        return (randomIndex != -1) ? names.get(randomIndex) : "";
+        return (mRandomIndex != -1) ? mNames.get(mRandomIndex) : "";
     }
     
     public static void setCheckList(boolean state, int index, String name) {
-        checkBoxes.get(name).setSelected(state, index);
+        mCheckBoxes.get(name).setSelected(state, index);
     }
     
     private static void addCheckList(String n, boolean home) {
-        File name = new File(customPath + n + "Name.TXT");
-        File color = new File(customPath + n + "Color.TXT");
-        File check = new File(customPath + n + "Check.TXT");
+        File name = new File(kCustomPath + n + "Name.TXT");
+        File color = new File(kCustomPath + n + "Color.TXT");
+        File check = new File(kCustomPath + n + "Check.TXT");
         if (!name.exists() && !color.exists() && !check.exists()) {        
             try {
                 name.createNewFile();
@@ -174,48 +174,48 @@ public class AddCustomCheckList extends JPanel {
                 e.printStackTrace();
             }
         }
-        if (!names.contains(n)) {
-            names.add(n);
+        if (!mNames.contains(n)) {
+            mNames.add(n);
         }
         JButton button = new JButton(n);
         button.addActionListener(e -> {
-            vertical.remove(button);
+            mVertical.remove(button);
             Productivity.repaintFrame();
             deleteChecklist(n);
             saveChecklists();
             HomePanel.getInstance().reset();
         });
         button.setFocusPainted(false);
-        vertical.add(button);
+        mVertical.add(button);
         CheckBoxes checkBox = new CheckBoxes(Productivity.kHeight, Productivity.kLength, name, check, color, false, home);
-        checkBoxes.put(n, checkBox);
+        mCheckBoxes.put(n, checkBox);
         saveChecklists();
         CustomCheckList.getInstance().addCheckList(checkBox, n);
     }
     
     private static void deleteChecklist(String n) {
-        File name = new File(customPath + n + "Name.TXT");
-        File color = new File(customPath + n + "Color.TXT");
-        File check = new File(customPath + n + "Check.TXT");
+        File name = new File(kCustomPath + n + "Name.TXT");
+        File color = new File(kCustomPath + n + "Color.TXT");
+        File check = new File(kCustomPath + n + "Check.TXT");
         name.delete();
         color.delete();
         check.delete();
-        names.remove(n);
-        checkBoxes.remove(n);
+        mNames.remove(n);
+        mCheckBoxes.remove(n);
         CustomCheckList.getInstance().removeChecklist(n);
-        if (names.size() <= 0) {
+        if (mNames.size() <= 0) {
             Productivity.customCheckListVisibility(false);
         }
-        currentNumCheckLists--;
+        mCurrentNumCheckLists--;
     }
     
     private static void saveChecklists() {
-        String[] data = new String[names.size() * 2];
+        String[] data = new String[mNames.size() * 2];
         for (int i = 0; i < data.length; i += 2) {
-            data[i] = names.get(i/2);
-            data[i + 1] = Boolean.toString(checkBoxes.get(names.get(i/2)).getHome());
+            data[i] = mNames.get(i/2);
+            data[i + 1] = Boolean.toString(mCheckBoxes.get(mNames.get(i/2)).getHome());
         }
-        writeData(data, customNames);
+        writeData(data, kCustomNames);
     }
     
     private static String[] readData(File file) {

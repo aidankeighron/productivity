@@ -6,32 +6,32 @@ import javax.swing.JPopupMenu;
 import javax.swing.JMenuItem;
 
 public class Popup {
-
-    JMenuItem[] items;
-
+    
+    private JMenuItem[] mItems;
+    
     public Popup(JMenuItem[] items) {
-        this.items = items;
+        this.mItems = items;
     }
     
     class PopUpDemo extends JPopupMenu {
         public PopUpDemo() {
-            for (int i = 0; i < items.length; i++) {
-                add(items[i]);
+            for (int i = 0; i < mItems.length; i++) {
+                add(mItems[i]);
             }
         }
     }
-
+    
     class PopClickListener extends MouseAdapter {
         public void mousePressed(MouseEvent e) {
             if (e.isPopupTrigger())
-                doPop(e);
+            doPop(e);
         }
-    
+        
         public void mouseReleased(MouseEvent e) {
             if (e.isPopupTrigger())
-                doPop(e);
+            doPop(e);
         }
-    
+        
         private void doPop(MouseEvent e) {
             PopUpDemo menu = new PopUpDemo();
             menu.show(e.getComponent(), e.getX(), e.getY());

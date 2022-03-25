@@ -25,21 +25,23 @@ import java.awt.Toolkit;
 
 public class TimerPanel extends JPanel {
 
-    private final Box progressBars = Box.createVerticalBox();
-    private final Box names = Box.createVerticalBox();
-    private final ArrayList<JProgressBar> bars = new ArrayList<JProgressBar>();
-    private final ArrayList<JButton> buttons = new ArrayList<JButton>();
-    private final String[] timeOptions = {"Seconds", "Minutes", "Hours"};
-    private static int timeMultiplier = 1;
-    private static int numTimers = 0;
-    private final static int maxTimers = 20;
-    private static boolean alarm;
-    private static boolean isBlocked = false;
-    private static boolean wantSitesBlocked = false;
-    private static boolean blockedTimerActive = false;
-    private static Box block;
-    private JCheckBox blockBox = new JCheckBox();
-    private static Box vertical = Box.createVerticalBox();
+    private static final String[] kTimeOptions = {"Seconds", "Minutes", "Hours"};
+    private static final int kMaxTimers = 20;
+
+    private final Box mProgressBars = Box.createVerticalBox();
+    private final Box mNames = Box.createVerticalBox();
+    private ArrayList<JProgressBar> mBars = new ArrayList<JProgressBar>();
+    private ArrayList<JButton> mButtons = new ArrayList<JButton>();
+    private int mTimeMultiplier = 1;
+    private int mNumTimers = 0;
+    private boolean mAlarm;
+    private boolean mIsBlocked = false;
+    private boolean mWantSitesBlocked = false;
+    private boolean mBlockedTimerActive = false;
+    private JCheckBox mBlockBox = new JCheckBox();
+
+    private static Box mBlock;
+    private static Box mVertical = Box.createVerticalBox();
     
     public TimerPanel() {
         JLabel timeLbl = new JLabel("Length:");
@@ -60,7 +62,7 @@ public class TimerPanel extends JPanel {
                 JOptionPane.showMessageDialog(this, "Enter valid positive time");
             }
             else {
-                if (numTimers < maxTimers) {
+                if (mNumTimers < kMaxTimers) {
                     addProgressBar(nameFelid.getText(), Integer.parseInt(timeField.getText()));
                     timeField.setText("");
                     nameFelid.setText("");
@@ -84,7 +86,7 @@ public class TimerPanel extends JPanel {
                 JOptionPane.showMessageDialog(this, "Enter valid positive time");
             }
             else {
-                if (numTimers < maxTimers) {
+                if (mNumTimers < kMaxTimers) {
                     addProgressBar(nameFelid.getText(), Integer.parseInt(timeField.getText()));
                     timeField.setText("");
                     nameFelid.setText("");
@@ -96,15 +98,15 @@ public class TimerPanel extends JPanel {
         });
         JCheckBox alarmBox = new JCheckBox();
         alarmBox.addActionListener(e -> {
-            alarm = alarmBox.isSelected();
+            mAlarm = alarmBox.isSelected();
         });
         JLabel blockLbl = new JLabel("Block: ");
-        blockBox.addActionListener(e -> {
-            if (!blockedTimerActive) {
-                wantSitesBlocked = blockBox.isSelected();
+        mBlockBox.addActionListener(e -> {
+            if (!mBlockedTimerActive) {
+                mWantSitesBlocked = mBlockBox.isSelected();
             }
             else {
-                blockBox.setSelected(false);
+                mBlockBox.setSelected(false);
             }
         });
         JLabel alarmLbl = new JLabel("Alarm: ");
@@ -124,7 +126,7 @@ public class TimerPanel extends JPanel {
                 JOptionPane.showMessageDialog(this, "Enter valid positive time");
             }
             else {
-                if (numTimers < maxTimers) {
+                if (mNumTimers < kMaxTimers) {
                     addProgressBar(nameFelid.getText(), Integer.parseInt(timeField.getText()));
                     timeField.setText("");
                     nameFelid.setText("");
@@ -134,20 +136,20 @@ public class TimerPanel extends JPanel {
                 }
             }
         });
-        JComboBox<String> timeList = new JComboBox<>(timeOptions);
+        JComboBox<String> timeList = new JComboBox<>(kTimeOptions);
         timeList.addActionListener(e -> {
             switch(timeList.getSelectedIndex()) {
                 case 0:
-                timeMultiplier = 1;
+                mTimeMultiplier = 1;
                 break;
                 case 1:
-                timeMultiplier = 60;
+                mTimeMultiplier = 60;
                 break;
                 case 2:
-                timeMultiplier = 60 * 60;
+                mTimeMultiplier = 60 * 60;
                 break;
                 default:
-                timeMultiplier = 1;
+                mTimeMultiplier = 1;
                 break;
             }
         });
@@ -162,26 +164,26 @@ public class TimerPanel extends JPanel {
         Box check = Box.createHorizontalBox();
         check.add(alarmLbl);
         check.add(alarmBox);
-        block = Box.createHorizontalBox();
-        block.add(blockLbl);
-        block.add(blockBox);
+        mBlock = Box.createHorizontalBox();
+        mBlock.add(blockLbl);
+        mBlock.add(mBlockBox);
         Box button = Box.createHorizontalBox();
         button.add(addBtn);
-        addBlank(vertical, 2);
-        vertical.add(timeList);
-        vertical.add(time);
-        vertical.add(name);
-        vertical.add(check);
+        addBlank(mVertical, 2);
+        mVertical.add(timeList);
+        mVertical.add(time);
+        mVertical.add(name);
+        mVertical.add(check);
         if (Boolean.parseBoolean(SettingsPanel.getSetting("blockSites"))) {
-            vertical.add(block);         
+            mVertical.add(mBlock);         
         }
-        vertical.add(button);
-        config.add(vertical);
+        mVertical.add(button);
+        config.add(mVertical);
         
         JPanel progressBarsPanel = new JPanel();
-        progressBarsPanel.add(progressBars);
+        progressBarsPanel.add(mProgressBars);
         JPanel namesPanel = new JPanel();
-        namesPanel.add(names);
+        namesPanel.add(mNames);
         
         JPanel scrollPanel = new JPanel();
         scrollPanel.setLayout(new BorderLayout());
@@ -196,18 +198,18 @@ public class TimerPanel extends JPanel {
     
     public static void setAllowBlock(boolean value) {
         if (value) {
-            vertical.add(block);
+            mVertical.add(mBlock);
         }
         else {
-            vertical.remove(block);
+            mVertical.remove(mBlock);
         }
     }
     
     private void addProgressBar(String name, int length) {
-        boolean isBlockedTimer = !blockedTimerActive && wantSitesBlocked && !isBlocked;
-        blockedTimerActive = isBlockedTimer;
-        numTimers++;
-        JProgressBar progressBar = new JProgressBar(0, length * timeMultiplier);
+        boolean isBlockedTimer = !mBlockedTimerActive && mWantSitesBlocked && !mIsBlocked;
+        mBlockedTimerActive = isBlockedTimer;
+        mNumTimers++;
+        JProgressBar progressBar = new JProgressBar(0, length * mTimeMultiplier);
         progressBar.setValue(0);
         progressBar.setStringPainted(true);
         String title = (name.equals("")) ? Integer.toString(length) : name;
@@ -220,24 +222,24 @@ public class TimerPanel extends JPanel {
         Timer time = new Timer();
         TimerTask task = new TimerTask()
         {
-            int seconds = length * timeMultiplier;
+            int seconds = length * mTimeMultiplier;
             int i = 0;
             int alarmNum = 3;
             @Override
             public void run()
             {
-                if(i == seconds && i != 0 && !alarm) {
+                if(i == seconds && i != 0 && !mAlarm) {
                     progressBar.setValue(i);
                     Toolkit.getDefaultToolkit().beep();
                     i++;
                     time.cancel();
                     time.purge();
-                    if (isBlocked && isBlockedTimer) {
+                    if (mIsBlocked && isBlockedTimer) {
                         BlockSites.unBlockSites();
-                        isBlocked = false;
+                        mIsBlocked = false;
                     }
                 }
-                else if (i >= seconds && i != 0 && alarm) {
+                else if (i >= seconds && i != 0 && mAlarm) {
                     alarmNum--;
                     progressBar.setValue(i);
                     Toolkit.getDefaultToolkit().beep();
@@ -245,9 +247,9 @@ public class TimerPanel extends JPanel {
                     if (alarmNum <= 0) {
                         time.cancel();
                         time.purge();
-                        if (isBlocked && isBlockedTimer) {
+                        if (mIsBlocked && isBlockedTimer) {
                             BlockSites.unBlockSites();
-                            isBlocked = false;
+                            mIsBlocked = false;
                         }
                     }
                 }
@@ -260,48 +262,48 @@ public class TimerPanel extends JPanel {
             }
         };
         time.schedule(task, 0, 1000);
-        if (wantSitesBlocked && !isBlocked && isBlockedTimer) {
+        if (mWantSitesBlocked && !mIsBlocked && isBlockedTimer) {
             BlockSites.reBlockSites();
-            isBlocked = true;
+            mIsBlocked = true;
         }
         Component progressBox = Box.createRigidArea(new Dimension(0, 8));
         Component nameBox = Box.createRigidArea(new Dimension(0, 2));
         button.addActionListener(e -> {
             removeProgressBar(button, progressBar, task, time, isBlockedTimer, progressBox, nameBox);
-            numTimers--;
+            mNumTimers--;
         });
         
-        bars.add(progressBar);
-        buttons.add(button);
+        mBars.add(progressBar);
+        mButtons.add(button);
         Border barBorder = BorderFactory.createEmptyBorder(4, 0, 0, 0);
-        progressBars.setBorder(barBorder);
-        progressBars.add(progressBar);
-        progressBars.add(progressBox);
+        mProgressBars.setBorder(barBorder);
+        mProgressBars.add(progressBar);
+        mProgressBars.add(progressBox);
         Border nameBorder = BorderFactory.createEmptyBorder(2, 0, 0, 0);
-        names.setBorder(nameBorder);
-        names.add(button);
-        names.add(nameBox);
+        mNames.setBorder(nameBorder);
+        mNames.add(button);
+        mNames.add(nameBox);
         if (isBlockedTimer) {
-            blockBox.setSelected(false);
+            mBlockBox.setSelected(false);
         }
         Productivity.repaintFrame();
     }
     
     private void removeProgressBar(JButton button, JProgressBar progressBar, TimerTask task, Timer time, Boolean isBlockedTimer, Component progBox, Component nameBox) {
-        if (isBlocked && blockedTimerActive && isBlockedTimer) {
+        if (mIsBlocked && mBlockedTimerActive && isBlockedTimer) {
             BlockSites.unBlockSites();
-            blockedTimerActive = false;
-            isBlocked = false;
+            mBlockedTimerActive = false;
+            mIsBlocked = false;
         }
         task.cancel();
         time.cancel();
         time.purge();
-        progressBars.remove(progressBar);
-        progressBars.remove(progBox);
-        names.remove(button);
-        names.remove(nameBox);
-        bars.remove(progressBar);
-        buttons.remove(button);
+        mProgressBars.remove(progressBar);
+        mProgressBars.remove(progBox);
+        mNames.remove(button);
+        mNames.remove(nameBox);
+        mBars.remove(progressBar);
+        mButtons.remove(button);
         Productivity.repaintFrame();
     }
     
