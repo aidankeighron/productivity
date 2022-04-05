@@ -52,10 +52,10 @@ public class Productivity extends JFrame {
 		mNameFile = new File(mCurrentPath+"Saves\\list.TXT");
 		mStateFile = new File(mCurrentPath+"Saves\\listCheck.TXT");
 		mColorFile = new File(mCurrentPath+"Saves\\listColor.TXT");
-		start();
 		String os = System.getProperty("os.name");
 		if (os.contains("Windows")) mUsingWindows = true;
 		else mUsingWindows = false;
+		start();
 		if (mUsingWindows) {
 			Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
 				public void run() {

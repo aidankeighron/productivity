@@ -28,8 +28,8 @@ public class TimerPanel extends JPanel {
     private static final String[] kTimeOptions = {"Seconds", "Minutes", "Hours"};
     private static final int kMaxTimers = 20;
 
-    private final Box mProgressBars = Box.createVerticalBox();
-    private final Box mNames = Box.createVerticalBox();
+    private Box mProgressBars = Box.createVerticalBox();
+    private Box mNames = Box.createVerticalBox();
     private ArrayList<JProgressBar> mBars = new ArrayList<JProgressBar>();
     private ArrayList<JButton> mButtons = new ArrayList<JButton>();
     private int mTimeMultiplier = 1;

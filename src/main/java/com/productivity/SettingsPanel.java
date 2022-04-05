@@ -55,8 +55,6 @@ public class SettingsPanel extends JTabbedPane {
     public SettingsPanel() {
         super.setFocusable(false);
         mDailyPanel = new CheckBoxes(Productivity.kHeight, Productivity.kLength, mNameFile, mStateFile, mColorFile, true, true);
-        JLabel label = new JLabel("Press enter to confirm");
-        mConfigBox.add(label);
         runBoolean allOnTop;
         if (Productivity.getUsingWindows()) { 
             allOnTop = (a) -> Productivity.setOnTop(a);
