@@ -36,12 +36,18 @@ public class HomePanel extends JPanel {
         c.weighty = 1.0;
         c.ipady = Productivity.kHeight;
         
-        if (mCheckPanel != null) 
-        super.remove(mCheckPanel);
-        if (mDailyPanel != null) 
-        super.remove(mDailyPanel);
-        if (mCustomPanel != null) 
-        super.remove(mCustomPanel);
+        if (mCheckPanel != null) {
+            mCheckPanel.removeAll();
+            super.remove(mCheckPanel);
+        }
+        if (mDailyPanel != null) {
+            mDailyPanel.removeAll();
+            super.remove(mDailyPanel);
+        }
+        if (mCustomPanel != null) {
+            mCustomPanel.removeAll();
+            super.remove(mCustomPanel);
+        }
         
         mCheckPanel = makePanel(Productivity.getBoxes(), "Checklist", BoxType.check, c);
         mDailyPanel = makePanel(DailyChecklist.getCheckBoxes(), "Daily", BoxType.daily, c);

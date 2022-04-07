@@ -188,6 +188,7 @@ public class CheckBoxes extends JPanel {
 		writeData("", mColorFile);
 		Productivity.repaintFrame();
 		mNumCheckBox = 0;
+		HomePanel.getInstance().reset();
 	}
 	
 	private void loadCheckBoxes() {

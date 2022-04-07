@@ -41,7 +41,8 @@ public class SettingsPanel extends JTabbedPane {
     private BlockSites mBlockSites = new BlockSites();
     
     private static CheckBoxes mDailyPanel;
-    private static int mTimeMultiplier = 1;
+    private static int mTimeMultiplier = -1;
+    private static boolean mStopSound = false;
     
     private enum settingTypes {
         text,
@@ -49,8 +50,8 @@ public class SettingsPanel extends JTabbedPane {
         number
     }
     
-    Timer time;
-    TimerTask task;
+    Timer mTime;
+    TimerTask mTask;
     
     public SettingsPanel() {
         super.setFocusable(false);
@@ -64,24 +65,35 @@ public class SettingsPanel extends JTabbedPane {
         }
         addSetting("Always on top", "onTop", "Makes window always on your screen unless you minimize it", settingTypes.checkbox, allOnTop, false, null);
         runBoolean reminderActive = (a) -> {
-            boolean exists = false;
+            boolean reminderExists = false;
+            boolean blockExists = false;
             Component[] comp = super.getComponents();
             for (Component c : comp) {
                 if (c.equals(mReminderPanel)) {
-                    exists = true;
+                    reminderExists = true;
+                }
+                else if (c.equals(mBlockSites)) {
+                    blockExists = true;
+                }
+                else if (reminderExists && blockExists) {
                     break;
                 }
             }
             if (a) {
-                if (!exists) {
-                    super.insertTab("Reminder", null, mReminderPanel, null, 1);
-                    reminder();
+                if (!reminderExists) {
+                    if (blockExists) {
+                        super.insertTab("Reminder", null, mReminderPanel, null, 2);
+                    }
+                    else {
+                        super.insertTab("Reminder", null, mReminderPanel, null, 1);
+                    }
+                    mStopSound = false;
                 }
             }
             else {
-                if (exists) {
+                if (reminderExists) {
                     super.remove(mReminderPanel);
-                    stopTimer();
+                    mStopSound = true;
                 }
             }
         };
@@ -119,9 +131,13 @@ public class SettingsPanel extends JTabbedPane {
         if (Boolean.parseBoolean(getSetting("blockSites")) && Productivity.getUsingWindows()) {
             super.addTab("Block Sites", mBlockSites);
         }
+        reminder();
         if (Boolean.parseBoolean(getSetting("reminderActive"))) {
             super.addTab("Reminder", mReminderPanel);
-            reminder();
+            mStopSound = false;
+        }
+        else {
+            mStopSound = true;
         }
         super.addTab("Custom Setup", new AddCustomCheckList());
         super.addTab("Daily Setup", mDailyPanel);
@@ -310,7 +326,7 @@ public class SettingsPanel extends JTabbedPane {
     }
     
     private void startTimer(int length, JProgressBar bar) {
-        task = new TimerTask()
+        mTask = new TimerTask()
         {
             int seconds = length * mTimeMultiplier;
             int i = 0;
@@ -318,7 +334,8 @@ public class SettingsPanel extends JTabbedPane {
             public void run()
             {
                 if(i == seconds && i != 0) {
-                    Toolkit.getDefaultToolkit().beep();
+                    if (!mStopSound)
+                        Toolkit.getDefaultToolkit().beep();
                     bar.setValue(i);
                     i = -1;
                 }
@@ -330,8 +347,8 @@ public class SettingsPanel extends JTabbedPane {
                 }
             }
         };
-        time = new Timer();
-        time.schedule(task, 0, 1000);
+        mTime = new Timer();
+        mTime.schedule(mTask, 0, 1000);
     }
     
     private int[] loadTimer() {
@@ -357,9 +374,9 @@ public class SettingsPanel extends JTabbedPane {
     }
     
     private void stopTimer() {
-        task.cancel();
-        time.cancel();
-        time.purge();
+        mTask.cancel();
+        mTime.cancel();
+        mTime.purge();
     }
 
     public static void setDailySelected(boolean state, int index) {

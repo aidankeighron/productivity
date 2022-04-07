@@ -39,12 +39,13 @@ public class TimerPanel extends JPanel {
     private boolean mWantSitesBlocked = false;
     private boolean mBlockedTimerActive = false;
     private JCheckBox mBlockBox = new JCheckBox();
+    private static Box mButton = Box.createHorizontalBox();
 
     private static Box mBlock;
     private static Box mVertical = Box.createVerticalBox();
     
     public TimerPanel() {
-        JLabel timeLbl = new JLabel("Length:");
+        JLabel timeLbl = new JLabel("Duration:");
         JTextField timeField = new JTextField();
         JLabel nameLbl = new JLabel("Name:");
         JTextField nameFelid = new JTextField();
@@ -59,6 +60,7 @@ public class TimerPanel extends JPanel {
                 notInt = true;
             }
             if (timeField.getText().equals("") || notInt || (!notInt) && Integer.parseInt(timeField.getText()) > 1000 || nameFelid.getText().length() > 10) {
+                timeField.setText("");
                 JOptionPane.showMessageDialog(this, "Enter valid positive time");
             }
             else {
@@ -83,6 +85,7 @@ public class TimerPanel extends JPanel {
                 notInt = true;
             }
             if (timeField.getText().equals("") || notInt || (!notInt) && Integer.parseInt(timeField.getText()) > 1000 || nameFelid.getText().length() > 10) {
+                timeField.setText("");
                 JOptionPane.showMessageDialog(this, "Enter valid positive time");
             }
             else {
@@ -123,6 +126,7 @@ public class TimerPanel extends JPanel {
                 notInt = true;
             }
             if (timeField.getText().equals("") || notInt) {
+                timeField.setText("");
                 JOptionPane.showMessageDialog(this, "Enter valid positive time");
             }
             else {
@@ -167,8 +171,8 @@ public class TimerPanel extends JPanel {
         mBlock = Box.createHorizontalBox();
         mBlock.add(blockLbl);
         mBlock.add(mBlockBox);
-        Box button = Box.createHorizontalBox();
-        button.add(addBtn);
+        mButton = Box.createHorizontalBox();
+        mButton.add(addBtn);
         addBlank(mVertical, 2);
         mVertical.add(timeList);
         mVertical.add(time);
@@ -177,7 +181,7 @@ public class TimerPanel extends JPanel {
         if (Boolean.parseBoolean(SettingsPanel.getSetting("blockSites"))) {
             mVertical.add(mBlock);         
         }
-        mVertical.add(button);
+        mVertical.add(mButton);
         config.add(mVertical);
         
         JPanel progressBarsPanel = new JPanel();
@@ -198,7 +202,9 @@ public class TimerPanel extends JPanel {
     
     public static void setAllowBlock(boolean value) {
         if (value) {
+            mVertical.remove(mButton);
             mVertical.add(mBlock);
+            mVertical.add(mButton);
         }
         else {
             mVertical.remove(mBlock);
