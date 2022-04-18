@@ -116,7 +116,6 @@ public class CheckBoxes extends JPanel {
 			if (mDaily) {
 				DailyChecklist.resetBoxes(false);
 			}
-			
 		});
 		checkBox.setForeground(color);
 		checkBox.setSelected(state);

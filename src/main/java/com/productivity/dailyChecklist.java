@@ -67,6 +67,7 @@ public class DailyChecklist extends JPanel {
 				writeData("", mColorFile);
 				return;
 			}
+			mCheckBoxes = new ArrayList<JCheckBox>();
 			for (int i = 0; i < names.length; i++) {
 				if (!reset) {
 					addCheckBox(names[i], new Color(Integer.parseInt(color[i])), Boolean.parseBoolean(checked[i]), i);
