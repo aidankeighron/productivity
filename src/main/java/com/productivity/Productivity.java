@@ -28,7 +28,7 @@ public class Productivity extends JFrame {
 	private static final String kCustomExePath = "target\\classes\\com\\productivity\\Custom\\Saves\\";
 	
 	private static final JTabbedPane mTabbedPane = new JTabbedPane();
-	private static final CustomCheckList mCustomCheckList = new CustomCheckList();
+	private static final CustomCheckList mCustomCheckList = CustomCheckList.getInstance();
 	
 	private static String mCurrentPath;
 	private static String mCurrentCustomPath;

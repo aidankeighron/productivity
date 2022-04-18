@@ -51,7 +51,7 @@ public class HomePanel extends JPanel {
         
         mCheckPanel = makePanel(Productivity.getBoxes(), "Checklist", BoxType.check, c);
         mDailyPanel = makePanel(DailyChecklist.getCheckBoxes(), "Daily", BoxType.daily, c);
-        mCustomPanel = makePanel(AddCustomCheckList.getRandomCheckBoxes(), "Custom", BoxType.custom, c);
+        mCustomPanel = makePanel(AddCustomCheckList.getRandomCheckBoxes(), "", BoxType.custom, c);
         
         if (mCustomPanel != null) {
             c.gridx = 0;
@@ -94,7 +94,7 @@ public class HomePanel extends JPanel {
         c.gridx = 0;
         c.gridy = 0;
         vertical.add(label);
-        if (boxes != null) {
+        if (boxes != null && (boxes.length > 0 || !type.equals(BoxType.custom))) {
             for (int i = 0; i < boxes.length; i++) {
                 JCheckBox checkBox = new JCheckBox(boxes[i].getText());
                 checkBox.setSelected(boxes[i].isSelected());

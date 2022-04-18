@@ -85,7 +85,7 @@ public class BlockSites extends JPanel {
         String result = "";
         try {
             String[] data = readData(mBlockedSites);
-            if (data.length > 1) {
+            if (data.length >= 1) {
                 for (int i = 0; i < data.length; i++) {
                     if (data[i].equals("*")) {
                         continue;

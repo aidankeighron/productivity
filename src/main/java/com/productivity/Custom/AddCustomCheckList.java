@@ -32,7 +32,7 @@ public class AddCustomCheckList extends JPanel {
     private static ArrayList<String> mNames = new ArrayList<String>();
     private static HashMap<String, CheckBoxes> mCheckBoxes = new HashMap<String, CheckBoxes>();
     private static int mCurrentNumCheckLists = 0;
-    private static boolean mWantHome = false;
+    private static boolean mWantHome = true;
     private static int mRandomIndex = -1;
     
     public AddCustomCheckList() {
@@ -122,18 +122,18 @@ public class AddCustomCheckList extends JPanel {
         }
         int index = (int)(Math.random() * mNames.size());
         try {
-            if (!mCheckBoxes.get(mNames.get(index)).getHome()) {
+            if (!mCheckBoxes.get(mNames.get(index)).getHome() || mCheckBoxes.get(mNames.get(index)).getBoxes().length <= 0) {
                 if (index < mCheckBoxes.size()) {
                     for (int i = index; i < mCheckBoxes.size(); i++) {
-                        if (mCheckBoxes.get(mNames.get(i)).getHome()) {
+                        if (mCheckBoxes.get(mNames.get(i)).getHome() && mCheckBoxes.get(mNames.get(index)).getBoxes().length > 0) {
                             index = i;
                             break;
                         }
                     }
                 }
-                if (!mCheckBoxes.get(mNames.get(index)).getHome()) {
+                if (!mCheckBoxes.get(mNames.get(index)).getHome() || mCheckBoxes.get(mNames.get(index)).getBoxes().length <= 0) {
                     for (int i = index; i >= 0; i--) {
-                        if (mCheckBoxes.get(mNames.get(i)).getHome()) {
+                        if (mCheckBoxes.get(mNames.get(i)).getHome() && mCheckBoxes.get(mNames.get(index)).getBoxes().length > 0) {
                             index = i;
                             break;
                         }
@@ -145,7 +145,7 @@ public class AddCustomCheckList extends JPanel {
             e.printStackTrace();
         }
         CheckBoxes checkBox = mCheckBoxes.get(mNames.get(index));
-        if (checkBox != null && mCheckBoxes.get(mNames.get(index)).getHome()) {
+        if (checkBox != null && mCheckBoxes.get(mNames.get(index)).getHome() && mCheckBoxes.get(mNames.get(index)).getBoxes().length > 0) {
             mRandomIndex = index;
             return checkBox.getBoxes();
         }
