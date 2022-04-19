@@ -34,6 +34,7 @@ public class DailyChecklist extends JPanel {
 			}
 			writeData(dtf.format(now), mTimeFile);
 		} catch (Exception e) {
+			e.printStackTrace();
 			writeData("11/11/2020", mTimeFile);
 		}
 		
@@ -78,6 +79,7 @@ public class DailyChecklist extends JPanel {
 			}
 			HomePanel.getInstance().reset();
 		} catch (Exception e) {
+			e.printStackTrace();
 			writeData("", mNameFile);
 			writeData("", mStateFile);
 			writeData("", mColorFile);

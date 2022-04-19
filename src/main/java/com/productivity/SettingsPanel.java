@@ -317,7 +317,9 @@ public class SettingsPanel extends JTabbedPane {
         });
         progressBar.setValue(0);
         progressBar.setStringPainted(true);
+        JLabel info = new JLabel("Causes a beep to be played every:");
         Box vertical = Box.createVerticalBox();
+        vertical.add(info);
         vertical.add(timeList);
         vertical.add(textField);
         vertical.add(save);

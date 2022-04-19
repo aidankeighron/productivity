@@ -44,6 +44,7 @@ public class BlockSites extends JPanel {
         reset.addActionListener(e -> reset(site));
         
         JLabel label = new JLabel("You will need to run program as admin for this feature to work");
+        JLabel info = new JLabel("Type websites here then press \"Apply\"");
         
         Box buttons = Box.createHorizontalBox();
         buttons.add(apply);
@@ -53,6 +54,7 @@ public class BlockSites extends JPanel {
         vertical.add(buttons);
         
         super.setLayout(new BorderLayout());
+        super.add(BorderLayout.NORTH, info);
         super.add(BorderLayout.CENTER, site);
         super.add(BorderLayout.SOUTH, vertical);
     }

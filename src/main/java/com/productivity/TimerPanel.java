@@ -115,6 +115,12 @@ public class TimerPanel extends JPanel {
             }
         });
         JLabel alarmLbl = new JLabel("Alarm: ");
+        String alarmInfo = "Causes beep to happen 3 times";
+        alarmBox.setToolTipText(alarmInfo);
+        alarmLbl.setToolTipText(alarmInfo);
+        String blockInfo = "Blocks websites specified in \"Block sites\" for durration of timer";
+        mBlockBox.setToolTipText(blockInfo);
+        blockLbl.setToolTipText(blockInfo);
         JButton addBtn = new JButton("           Add           ");
         addBtn.setFocusPainted(false);
         addBtn.addActionListener(e -> {
