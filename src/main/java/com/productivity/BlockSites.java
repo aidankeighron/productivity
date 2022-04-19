@@ -63,6 +63,7 @@ public class BlockSites extends JPanel {
                 String[] data = readData(mNewHosts);
                 writeData(data, kHostsFile);
             } catch (Exception e) {
+                e.printStackTrace();
                 String[] data = readData(mBackupFile);
                 writeData(data, mNewHosts);
             }
@@ -94,6 +95,7 @@ public class BlockSites extends JPanel {
                 }
             }
         } catch (Exception e) {
+            e.printStackTrace();
             writeData("", mBlockedSites);
         }
         
@@ -106,6 +108,7 @@ public class BlockSites extends JPanel {
             Matcher matcher = patt.matcher(s);
             return matcher.matches();
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
     }

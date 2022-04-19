@@ -169,6 +169,7 @@ public class Productivity extends JFrame {
 	}
 	
 	public static JCheckBox[] getBoxes() {
+		if (mCheckBoxes == null) return null;
 		return mCheckBoxes.getBoxes();
 	}
 	

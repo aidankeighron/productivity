@@ -105,6 +105,7 @@ public class AddCustomCheckList extends JPanel {
             }
 
         } catch (Exception e) {
+            e.printStackTrace();
             File dir = new File(Productivity.getCurrentCustomPath());
             purgeDirectory(dir);
             try {
@@ -141,8 +142,8 @@ public class AddCustomCheckList extends JPanel {
                 }
             }
         } catch (Exception e) {
-            System.out.println("Error getting random check box");
             e.printStackTrace();
+            System.out.println("Error getting random check box");
         }
         CheckBoxes checkBox = mCheckBoxes.get(mNames.get(index));
         if (checkBox != null && mCheckBoxes.get(mNames.get(index)).getHome() && mCheckBoxes.get(mNames.get(index)).getBoxes().length > 0) {

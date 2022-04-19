@@ -167,6 +167,7 @@ public class SettingsPanel extends JTabbedPane {
                 checkBox.setSelected(Boolean.parseBoolean(mSettings.get(key)));
             }
             catch(Exception e) {
+                e.printStackTrace();
                 System.out.println("Setting does not exist");
             }
             checkBox.setToolTipText(tooltip);
@@ -182,6 +183,7 @@ public class SettingsPanel extends JTabbedPane {
                 try {
                     Integer.parseInt(numField.getText());
                 } catch (Exception ex) {
+                    ex.printStackTrace();
                     notInt = true;
                 }
                 if (notInt || Integer.parseInt(numField.getText()) <= 0) {
@@ -196,6 +198,7 @@ public class SettingsPanel extends JTabbedPane {
                 numField.setText(mSettings.get(key));
             }
             catch(Exception e) {
+                e.printStackTrace();
                 System.out.println("Setting does not exist");
             }
             numField.setToolTipText(tooltip);
@@ -220,6 +223,7 @@ public class SettingsPanel extends JTabbedPane {
                 txtField.setText(mSettings.get(key));
             }
             catch(Exception e) {
+                e.printStackTrace();
                 System.out.println("Setting does not exist");
             }
             txtField.setToolTipText(tooltip);
@@ -275,6 +279,7 @@ public class SettingsPanel extends JTabbedPane {
                     notInt = true;
                 }
             } catch (Exception ex) {
+                ex.printStackTrace();
                 notInt = true;
             }
             if (textField.getText().equals("") || notInt) {
@@ -297,6 +302,7 @@ public class SettingsPanel extends JTabbedPane {
                     notInt = true;
                 }
             } catch (Exception ex) {
+                ex.printStackTrace();
                 notInt = true;
             }
             if (textField.getText().equals("") || notInt) {

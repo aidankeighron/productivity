@@ -17,6 +17,8 @@ import java.util.Scanner;
 import java.io.File;
 import java.io.FileWriter;
 import java.nio.file.Files;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class CheckBoxes extends JPanel {
 	
@@ -202,12 +204,25 @@ public class CheckBoxes extends JPanel {
 				return;
 			}
 			for (int i = 0; i < name.length; i++) {
-				addCheckBox(name[i], new Color(Integer.parseInt(color[i])), Boolean.parseBoolean(states[i]));
+				if (mDaily) {
+					boolean reset = false; 
+					try {
+						if (!DateTimeFormatter.ofPattern("dd/MM/yyyy").format(LocalDateTime.now()).equals(readData(new File(Productivity.getCurrentPath()+"Saves\\time.TXT"))[0])) {
+							reset = true;
+						}
+					} catch (Exception e) { e.printStackTrace(); }
+					if (!reset) addCheckBox(name[i], new Color(Integer.parseInt(color[i])), false);
+					else addCheckBox(name[i], new Color(Integer.parseInt(color[i])), Boolean.parseBoolean(states[i]));
+				}
+				else {
+					addCheckBox(name[i], new Color(Integer.parseInt(color[i])), Boolean.parseBoolean(states[i]));
+				}
 			}
 		} catch (Exception e) {
-			writeData("", mNameFile);
-			writeData("", mCheckFile);
-			writeData("", mColorFile);
+			e.printStackTrace();
+			writeData("2", mNameFile);
+			writeData("2", mCheckFile);
+			writeData("2", mColorFile);
 		}
 		
 	}
@@ -232,6 +247,7 @@ public class CheckBoxes extends JPanel {
 			writeData(state, mCheckFile);
 			writeData(color, mColorFile);
 		} catch (Exception e) {
+			e.printStackTrace();
 			writeData("", mNameFile);
 			writeData("", mCheckFile);
 			writeData("", mColorFile);
@@ -250,6 +266,7 @@ public class CheckBoxes extends JPanel {
 			try {
 				writeData(name, mNameFile);
 			} catch (Exception e) {
+				e.printStackTrace();
 				writeData("", mNameFile);
 			}
 			break;
@@ -261,6 +278,7 @@ public class CheckBoxes extends JPanel {
 			try {
 				writeData(check, mCheckFile);
 			} catch (Exception e) {
+				e.printStackTrace();
 				writeData("", mCheckFile);
 			}
 			break;
@@ -272,6 +290,7 @@ public class CheckBoxes extends JPanel {
 			try {
 				writeData(color, mColorFile);
 			} catch (Exception e) {
+				e.printStackTrace();
 				writeData("", mColorFile);
 			}
 			break;

@@ -122,6 +122,7 @@ public class HomePanel extends JPanel {
             panel.add(vertical, c);
             return panel;
         }
+        if (!type.equals(BoxType.custom)) return panel;
         return null;
     }
     

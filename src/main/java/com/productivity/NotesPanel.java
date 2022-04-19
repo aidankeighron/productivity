@@ -57,11 +57,12 @@ public class NotesPanel extends JDesktopPane {
 			try {
 				data = readData(file);
 			} catch (Exception ex) {
+				ex.printStackTrace();
 				JOptionPane.showMessageDialog(this, "Error when loading file");
 				file.delete();
 				try {
 					file.createNewFile();
-				} catch (IOException e1) {}
+				} catch (IOException e1) { e1.printStackTrace(); }
 				return;
 			}
 			if (data.length > 0) {
@@ -81,11 +82,12 @@ public class NotesPanel extends JDesktopPane {
 		try {
 			data = readData(file);
 		} catch (Exception ex) {
+			ex.printStackTrace();
 			JOptionPane.showMessageDialog(this, "Error when loading file");
 			file.delete();
 			try {
 				file.createNewFile();
-			} catch (IOException e1) {}
+			} catch (IOException e1) { e1.printStackTrace(); }
 			return;
 		}
 		if (data.length > 0) {
