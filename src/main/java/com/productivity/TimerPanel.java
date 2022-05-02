@@ -301,7 +301,7 @@ public class TimerPanel extends JPanel {
         if (isBlockedTimer) {
             mBlockBox.setSelected(false);
         }
-        Productivity.repaintFrame();
+        Productivity.getInstance().repaintFrame();
     }
     
     private void removeProgressBar(JButton button, JProgressBar progressBar, TimerTask task, Timer time, Boolean isBlockedTimer, Component progBox, Component nameBox) {
@@ -319,7 +319,7 @@ public class TimerPanel extends JPanel {
         mNames.remove(nameBox);
         mBars.remove(progressBar);
         mButtons.remove(button);
-        Productivity.repaintFrame();
+        Productivity.getInstance().repaintFrame();
     }
     
     private void addBlank(Box panel, int amount) {

@@ -158,13 +158,13 @@ public class CheckBoxes extends JPanel {
 			mChecklistPanel.remove(checkBox);
 			mNumCheckBox--;
 			saveCheckBoxes();
-			Productivity.repaintFrame();
+			Productivity.getInstance().repaintFrame();
 		});
 		Popup pop = new Popup(items);
 		checkBox.addMouseListener(pop.new PopClickListener());
 		mChecklistPanel.add(checkBox);
 		saveCheckBoxes();
-		Productivity.repaintFrame();
+		Productivity.getInstance().repaintFrame();
 	}
 	
 	private void clearSelected() {
@@ -176,7 +176,7 @@ public class CheckBoxes extends JPanel {
 			}
 		}
 		saveCheckBoxes();
-		Productivity.repaintFrame();
+		Productivity.getInstance().repaintFrame();
 	}
 	
 	private void removeCheckBoxes() {
@@ -187,7 +187,7 @@ public class CheckBoxes extends JPanel {
 		writeData("", mNameFile);
 		writeData("", mCheckFile);
 		writeData("", mColorFile);
-		Productivity.repaintFrame();
+		Productivity.getInstance().repaintFrame();
 		mNumCheckBox = 0;
 		HomePanel.getInstance().reset();
 	}
@@ -207,7 +207,7 @@ public class CheckBoxes extends JPanel {
 				if (mDaily) {
 					boolean reset = false; 
 					try {
-						if (!DateTimeFormatter.ofPattern("dd/MM/yyyy").format(LocalDateTime.now()).equals(readData(new File(Productivity.getCurrentPath()+"Saves\\time.TXT"))[0])) {
+						if (!DateTimeFormatter.ofPattern("dd/MM/yyyy").format(LocalDateTime.now()).equals(readData(new File(Productivity.getInstance().getCurrentPath()+"Saves\\time.TXT"))[0])) {
 							reset = true;
 						}
 					} catch (Exception e) { e.printStackTrace(); }

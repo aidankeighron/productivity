@@ -4,9 +4,12 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -16,7 +19,6 @@ import com.productivity.Custom.CustomCheckList;
 
 public class Productivity extends JFrame {
 	
-	private static final JFrame kFrame = new JFrame("Productivity");
 	public static final int kLength = 400;
 	public static final int kHeight = 300;
 	private static final Boolean kDebug = true;
@@ -37,18 +39,31 @@ public class Productivity extends JFrame {
 	private static File mColorFile;
 	private static boolean mUsingWindows;
 	private static CheckBoxes mCheckBoxes;
-	
+
+	private static Icon confettiHigh;
+	private static Icon confettiLow;
+
+	private static Productivity mInstance = null;
+    public synchronized static Productivity getInstance() {
+        if (mInstance == null) {
+            mInstance = new Productivity();
+        }
+        return mInstance;
+    }
 	public static void main(String[] args) throws IOException {
+		new Productivity();
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				mCurrentPath = (kDebug)?kDebugPath: (args.length>0)?kExePath:kJarPath;
 				mCurrentCustomPath = (kDebug)?kCustomDebugPath: (args.length>0)?kCustomExePath:kCustomJarPath;
-				createAndShowGUI();
+				Productivity.getInstance().createAndShowGUI();
 			}
 		});
 	}
 	
-	private static void createAndShowGUI() {
+	private void createAndShowGUI() {
+		confettiHigh = new ImageIcon(this.getClass().getResource("Confetti\\high.gif"));
+		confettiLow = new ImageIcon(this.getClass().getResource("Confetti\\low.gif"));
 		mNameFile = new File(mCurrentPath+"Saves\\list.TXT");
 		mStateFile = new File(mCurrentPath+"Saves\\listCheck.TXT");
 		mColorFile = new File(mCurrentPath+"Saves\\listColor.TXT");
@@ -67,7 +82,7 @@ public class Productivity extends JFrame {
 		}
 	}
 	
-	private static void start() {
+	private void start() {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 			//UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
@@ -89,16 +104,21 @@ public class Productivity extends JFrame {
 		mTabbedPane.addTab("Settings", new SettingsPanel());
 		mTabbedPane.insertTab("Home", null, HomePanel.getInstance(), null, 0);
 		ImageIcon img = new ImageIcon("src\\main\\java\\com\\productivity\\icon.png");
-		kFrame.setIconImage(img.getImage());
-		kFrame.add(mTabbedPane);
-		kFrame.setAlwaysOnTop(Boolean.parseBoolean(SettingsPanel.getSetting("onTop")));
-		kFrame.setLocationByPlatform(true);
-		kFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		kFrame.setSize(kLength, kHeight);
-		kFrame.setVisible(true);
+		super.setTitle("Productivity");
+		super.setIconImage(img.getImage());
+		super.add(mTabbedPane);
+		//JLayeredPane pane = new JLayeredPane();
+		//pane.add(mTabbedPane, 2, 0);
+		//pane.add(new JLabel(confettiHigh), 1, 0);
+		//super.getContentPane().add(pane);
+		super.setAlwaysOnTop(Boolean.parseBoolean(SettingsPanel.getSetting("onTop")));
+		super.setLocationByPlatform(true);
+		super.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		super.setSize(kLength, kHeight);
+		super.setVisible(true);
 	}
 	
-	private static void writeData(String data, File file) {
+	private void writeData(String data, File file) {
 		try  {
 			FileWriter writer = new FileWriter(file);
 			writer.write(data);
@@ -109,7 +129,7 @@ public class Productivity extends JFrame {
 		}
 	}
 	
-	public static void customCheckListVisibility(boolean value) {
+	public void customCheckListVisibility(boolean value) {
 		if (value && mTabbedPane.indexOfComponent(mCustomCheckList) == -1) {
 			mTabbedPane.insertTab("Custom", null, mCustomCheckList, null, mTabbedPane.getTabCount()-2);
 			repaintFrame();
@@ -120,7 +140,7 @@ public class Productivity extends JFrame {
 		}
 	}
 	
-	public static void runOnStartup(Boolean value) {
+	public void runOnStartup(Boolean value) {
 		String path = System.getenv("APPDATA") + "\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\productivity.bat";
 		
 		if (value) {
@@ -148,32 +168,36 @@ public class Productivity extends JFrame {
 		}
 	}
 	
-	public static void setOnTop(boolean top) {
-		kFrame.setAlwaysOnTop(top);
+	public void setOnTop(boolean top) {
+		super.setAlwaysOnTop(top);
 	}
 	
-	public static void repaintFrame() {
-		kFrame.repaint();
+	public void repaintFrame() {
+		super.repaint();
 	}
 	
-	public static String getCurrentPath() {
+	public String getCurrentPath() {
 		return mCurrentPath;
 	}
 	
-	public static String getCurrentCustomPath() {
+	public String getCurrentCustomPath() {
 		return mCurrentCustomPath;
 	}
 	
-	public static Boolean getUsingWindows() {
+	public Boolean getUsingWindows() {
 		return mUsingWindows;
 	}
 	
-	public static JCheckBox[] getBoxes() {
+	public JCheckBox[] getBoxes() {
 		if (mCheckBoxes == null) return null;
 		return mCheckBoxes.getBoxes();
 	}
 	
-	public static void setSelected(boolean state, int index) {
+	public void setSelected(boolean state, int index) {
 		mCheckBoxes.setSelected(state, index);
+	}
+
+	public void setConfetti(boolean value) {
+
 	}
 }

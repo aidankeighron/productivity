@@ -87,10 +87,10 @@ public class DailyChecklist extends JPanel {
 	}
 	
 	private void loadFiles() {
-		mNameFile = new File(Productivity.getCurrentPath()+"Saves\\daily.TXT");
-		mStateFile = new File(Productivity.getCurrentPath()+"Saves\\dailyCheck.TXT");
-		mColorFile = new File(Productivity.getCurrentPath()+"Saves\\dailyColor.TXT");
-		mTimeFile = new File(Productivity.getCurrentPath()+"Saves\\time.TXT");
+		mNameFile = new File(Productivity.getInstance().getCurrentPath()+"Saves\\daily.TXT");
+		mStateFile = new File(Productivity.getInstance().getCurrentPath()+"Saves\\dailyCheck.TXT");
+		mColorFile = new File(Productivity.getInstance().getCurrentPath()+"Saves\\dailyColor.TXT");
+		mTimeFile = new File(Productivity.getInstance().getCurrentPath()+"Saves\\time.TXT");
 	}
 	
 	private static void addCheckBox(String name, Color color, Boolean checked, int index) {
@@ -104,7 +104,7 @@ public class DailyChecklist extends JPanel {
 		checkBox.setSelected(checked);
 		mCheckBoxes.add(checkBox);
 		mCheckListPanel.add(checkBox);
-		Productivity.repaintFrame();
+		Productivity.getInstance().repaintFrame();
 	}
 	
 	private static void saveCheckBoxes() {

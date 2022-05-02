@@ -16,8 +16,8 @@ import java.io.IOException;
 
 public class NotesPanel extends JDesktopPane {
 	
-	private static final File kNamesFile = new File(Productivity.getCurrentPath() + "Notes\\names.TXT");
-	private static final String kFilePath = Productivity.getCurrentPath() + "Notes\\";
+	private static final File kNamesFile = new File(Productivity.getInstance().getCurrentPath() + "Notes\\names.TXT");
+	private static final String kFilePath = Productivity.getInstance().getCurrentPath() + "Notes\\";
 	private static final int kTextLimit = 10;
 	
 	public NotesPanel() {

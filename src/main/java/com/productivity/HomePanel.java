@@ -49,7 +49,7 @@ public class HomePanel extends JPanel {
             super.remove(mCustomPanel);
         }
         
-        mCheckPanel = makePanel(Productivity.getBoxes(), "Checklist", BoxType.check, c);
+        mCheckPanel = makePanel(Productivity.getInstance().getBoxes(), "Checklist", BoxType.check, c);
         mDailyPanel = makePanel(DailyChecklist.getCheckBoxes(), "Daily", BoxType.daily, c);
         mCustomPanel = makePanel(AddCustomCheckList.getRandomCheckBoxes(), "", BoxType.custom, c);
         
@@ -78,7 +78,7 @@ public class HomePanel extends JPanel {
             super.add(mDailyPanel, c);
         }
         
-        Productivity.repaintFrame();
+        Productivity.getInstance().repaintFrame();
         this.repaint();
     }
     
@@ -105,7 +105,7 @@ public class HomePanel extends JPanel {
                 checkBox.addActionListener(e -> {
                     switch (type) {
                         case check:
-                        Productivity.setSelected(checkBox.isSelected(), index);
+                        Productivity.getInstance().setSelected(checkBox.isSelected(), index);
                         break;
                         case daily:
                         DailyChecklist.setCheckBoxes(checkBox.isSelected(), index);

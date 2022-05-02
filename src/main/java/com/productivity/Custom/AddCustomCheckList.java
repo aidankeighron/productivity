@@ -23,8 +23,8 @@ import com.productivity.Productivity;
 
 public class AddCustomCheckList extends JPanel {
     
-    private static final String kCustomPath = Productivity.getCurrentCustomPath();
-    private static final File kCustomNames = new File(Productivity.getCurrentCustomPath()+"customNames.TXT");
+    private static final String kCustomPath = Productivity.getInstance().getCurrentCustomPath();
+    private static final File kCustomNames = new File(Productivity.getInstance().getCurrentCustomPath()+"customNames.TXT");
     private static final int kCharLimit = 10;
     private static final int kMaxCustomCheckLists = 8;
     
@@ -51,8 +51,8 @@ public class AddCustomCheckList extends JPanel {
                 addCheckList(name.getText(), mWantHome);
                 mCurrentNumCheckLists++;
                 if (getNumberOfChecklists() == 1) {
-                    Productivity.customCheckListVisibility(true);
-                    Productivity.repaintFrame();
+                    Productivity.getInstance().customCheckListVisibility(true);
+                    Productivity.getInstance().repaintFrame();
                 }
                 name.setText("");
                 HomePanel.getInstance().reset();
@@ -106,7 +106,7 @@ public class AddCustomCheckList extends JPanel {
 
         } catch (Exception e) {
             e.printStackTrace();
-            File dir = new File(Productivity.getCurrentCustomPath());
+            File dir = new File(Productivity.getInstance().getCurrentCustomPath());
             purgeDirectory(dir);
             try {
                 kCustomNames.createNewFile();
@@ -181,7 +181,7 @@ public class AddCustomCheckList extends JPanel {
         JButton button = new JButton(n);
         button.addActionListener(e -> {
             mVertical.remove(button);
-            Productivity.repaintFrame();
+            Productivity.getInstance().repaintFrame();
             deleteChecklist(n);
             saveChecklists();
             HomePanel.getInstance().reset();
@@ -206,7 +206,7 @@ public class AddCustomCheckList extends JPanel {
         mCheckBoxes.remove(n);
         CustomCheckList.getInstance().removeChecklist(n);
         if (mNames.size() <= 0) {
-            Productivity.customCheckListVisibility(false);
+            Productivity.getInstance().customCheckListVisibility(false);
         }
         mCurrentNumCheckLists--;
     }

@@ -57,8 +57,8 @@ public class SettingsPanel extends JTabbedPane {
         super.setFocusable(false);
         mDailyPanel = new CheckBoxes(Productivity.kHeight, Productivity.kLength, mNameFile, mStateFile, mColorFile, true, true);
         runBoolean allOnTop;
-        if (Productivity.getUsingWindows()) { 
-            allOnTop = (a) -> Productivity.setOnTop(a);
+        if (Productivity.getInstance().getUsingWindows()) { 
+            allOnTop = (a) -> Productivity.getInstance().setOnTop(a);
         }
         else {
             allOnTop = null;
@@ -98,11 +98,11 @@ public class SettingsPanel extends JTabbedPane {
             }
         };
         addSetting("Reminder", "reminderActive", "Activates reminder tab", settingTypes.checkbox, reminderActive, false, null);
-        if (Productivity.getUsingWindows()) {
-            runBoolean runOnStartup = (a) -> Productivity.runOnStartup(a);
+        if (Productivity.getInstance().getUsingWindows()) {
+            runBoolean runOnStartup = (a) -> Productivity.getInstance().runOnStartup(a);
             addSetting("Run on startup", "runOnStartup", "Runs program when your computer starts", settingTypes.checkbox, runOnStartup, true, "Are you sure");
         }
-        if (Productivity.getUsingWindows()) {
+        if (Productivity.getInstance().getUsingWindows()) {
             runBoolean blockSitesActive = (a) -> {
                 boolean exists = false;
                 Component[] comp = super.getComponents();
@@ -128,7 +128,7 @@ public class SettingsPanel extends JTabbedPane {
         }
         mConfigPanel.add(mConfigBox);
         super.addTab("Config", mConfigPanel);
-        if (Boolean.parseBoolean(getSetting("blockSites")) && Productivity.getUsingWindows()) {
+        if (Boolean.parseBoolean(getSetting("blockSites")) && Productivity.getInstance().getUsingWindows()) {
             super.addTab("Block Sites", mBlockSites);
         }
         reminder();
@@ -240,11 +240,11 @@ public class SettingsPanel extends JTabbedPane {
     }
     
     private static void loadFiles() {
-        mSettingsFile = new File(Productivity.getCurrentPath()+"Saves\\settings.TXT");
-        mNameFile = new File(Productivity.getCurrentPath()+"Saves\\daily.TXT");
-        mStateFile = new File(Productivity.getCurrentPath()+"Saves\\dailyCheck.TXT");
-        mColorFile = new File(Productivity.getCurrentPath()+"Saves\\dailyColor.TXT");
-        mReminderFile = new File(Productivity.getCurrentPath()+"Saves\\reminder.TXT");
+        mSettingsFile = new File(Productivity.getInstance().getCurrentPath()+"Saves\\settings.TXT");
+        mNameFile = new File(Productivity.getInstance().getCurrentPath()+"Saves\\daily.TXT");
+        mStateFile = new File(Productivity.getInstance().getCurrentPath()+"Saves\\dailyCheck.TXT");
+        mColorFile = new File(Productivity.getInstance().getCurrentPath()+"Saves\\dailyColor.TXT");
+        mReminderFile = new File(Productivity.getInstance().getCurrentPath()+"Saves\\reminder.TXT");
     }
     
     private void reminder() {

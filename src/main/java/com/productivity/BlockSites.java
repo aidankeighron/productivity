@@ -24,9 +24,9 @@ public class BlockSites extends JPanel {
     private static File mBlockedSites;
     
     public BlockSites() {
-        mNewHosts = new File(Productivity.getCurrentPath()+"Saves\\Newhosts");
-        mBackupFile = new File(Productivity.getCurrentPath()+"Saves\\hosts");
-        mBlockedSites = new File(Productivity.getCurrentPath()+"Saves\\blockedSites.TXT");
+        mNewHosts = new File(Productivity.getInstance().getCurrentPath()+"Saves\\Newhosts");
+        mBackupFile = new File(Productivity.getInstance().getCurrentPath()+"Saves\\hosts");
+        mBlockedSites = new File(Productivity.getInstance().getCurrentPath()+"Saves\\blockedSites.TXT");
         JTextArea site = new JTextArea();
         site.setDocument(new JTextFieldLimit(50));
         site.setText(load());
@@ -36,7 +36,7 @@ public class BlockSites extends JPanel {
         apply.addActionListener(e -> {
             blockSite(site);
             site.setText(load());
-            Productivity.repaintFrame();
+            Productivity.getInstance().repaintFrame();
         });
         
         JButton reset = new JButton("Reset");
@@ -60,7 +60,7 @@ public class BlockSites extends JPanel {
     }
     
     public static void reBlockSites() {
-        if (Files.isWritable(Paths.get(kHostsFile.getAbsolutePath())) && Productivity.getUsingWindows()) {
+        if (Files.isWritable(Paths.get(kHostsFile.getAbsolutePath())) && Productivity.getInstance().getUsingWindows()) {
             try {
                 String[] data = readData(mNewHosts);
                 writeData(data, kHostsFile);
@@ -73,7 +73,7 @@ public class BlockSites extends JPanel {
     }
     
     public static void unBlockSites() {
-        if (Files.isWritable(Paths.get(kHostsFile.getAbsolutePath())) && Productivity.getUsingWindows()) {
+        if (Files.isWritable(Paths.get(kHostsFile.getAbsolutePath())) && Productivity.getInstance().getUsingWindows()) {
             try {
                 String[] data = readData(mBackupFile);
                 writeData(data, kHostsFile);
@@ -158,7 +158,7 @@ public class BlockSites extends JPanel {
     
     private void reset(JTextArea area) {
         String[] data = readData(mBackupFile);
-        if (Files.isWritable(Paths.get(kHostsFile.getAbsolutePath())) && Productivity.getUsingWindows()) {
+        if (Files.isWritable(Paths.get(kHostsFile.getAbsolutePath())) && Productivity.getInstance().getUsingWindows()) {
             writeData(data, kHostsFile);
         }
         writeData(data, mNewHosts);
