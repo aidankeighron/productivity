@@ -44,8 +44,8 @@ public class CheckBoxes extends JPanel {
 	}
 	
 	public CheckBoxes(int height, int length, File name, File check, File color, boolean daily, boolean home) {
-		this.mHome = home;
-		this.mDaily = daily;
+		mHome = home;
+		mDaily = daily;
 		mNameFile = name;
 		mCheckFile = check;
 		mColorFile = color;

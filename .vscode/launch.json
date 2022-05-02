@@ -10,12 +10,6 @@
             "request": "launch",
             "mainClass": "com.productivity.Productivity",
             "projectName": "Productivity"
-        },
-        {
-            "type": "java",
-            "name": "Launch Current File",
-            "request": "launch",
-            "mainClass": "${file}"
         }
     ]
 }

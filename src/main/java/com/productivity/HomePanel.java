@@ -93,6 +93,7 @@ public class HomePanel extends JPanel {
         c.weighty = 1.0;
         c.gridx = 0;
         c.gridy = 0;
+        c.gridwidth = 1;
         vertical.add(label);
         if (boxes != null && (boxes.length > 0 || !type.equals(BoxType.custom))) {
             for (int i = 0; i < boxes.length; i++) {

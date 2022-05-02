@@ -117,7 +117,7 @@ public class AddCustomCheckList extends JPanel {
     }
     
     public static JCheckBox[] getRandomCheckBoxes() {
-        if (mNames.size() <= 0) {
+        if (mNames.size() <= 0 || mCheckBoxes.size() <= 0) {
             mRandomIndex = -1;
             return null;
         }
@@ -192,6 +192,7 @@ public class AddCustomCheckList extends JPanel {
         mCheckBoxes.put(n, checkBox);
         saveChecklists();
         CustomCheckList.getInstance().addCheckList(checkBox, n);
+        HomePanel.getInstance().reset();
     }
     
     private static void deleteChecklist(String n) {
