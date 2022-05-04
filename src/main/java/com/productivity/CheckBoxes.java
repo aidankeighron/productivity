@@ -114,6 +114,8 @@ public class CheckBoxes extends JPanel {
 		}
 		JCheckBox checkBox = new JCheckBox(name);
 		checkBox.addActionListener(e -> {
+			if (checkBox.isSelected())
+				Productivity.showConfetti();
 			saveCheckBoxes(fileType.check);
 			if (mDaily) {
 				DailyChecklist.resetBoxes(false);

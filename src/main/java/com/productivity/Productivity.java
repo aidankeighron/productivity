@@ -3,8 +3,9 @@ package com.productivity;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Timer;
+import java.util.TimerTask;
 
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
@@ -30,6 +31,7 @@ public class Productivity extends JFrame {
 	private static final String kCustomExePath = "target\\classes\\com\\productivity\\Custom\\Saves\\";
 	
 	private static final JTabbedPane mTabbedPane = new JTabbedPane();
+	private static final JLayeredPane mLayeredPane = new JLayeredPane();
 	private static final CustomCheckList mCustomCheckList = CustomCheckList.getInstance();
 	
 	private static String mCurrentPath;
@@ -40,8 +42,9 @@ public class Productivity extends JFrame {
 	private static boolean mUsingWindows;
 	private static CheckBoxes mCheckBoxes;
 
-	private static Icon confettiHigh;
-	private static Icon confettiLow;
+	private static JLabel mConfettiHigh;
+	private static JLabel mConfettiLow;
+	private static final double kConfettiTime = 1;
 
 	private static Productivity mInstance = null;
     public synchronized static Productivity getInstance() {
@@ -62,8 +65,11 @@ public class Productivity extends JFrame {
 	}
 	
 	private void createAndShowGUI() {
-		confettiHigh = new ImageIcon(this.getClass().getResource("Confetti\\high.gif"));
-		confettiLow = new ImageIcon(this.getClass().getResource("Confetti\\low.gif"));
+		mConfettiHigh = new JLabel(new ImageIcon(this.getClass().getResource("Confetti\\high.gif")));
+		mConfettiLow = new JLabel(new ImageIcon(this.getClass().getResource("Confetti\\low.gif")));
+		mConfettiHigh.setBounds(0, 0, kLength, kHeight);
+		mConfettiLow.setBounds(0, 0, kLength, kHeight);
+		mTabbedPane.setBounds(0, 0, kLength, kHeight);
 		mNameFile = new File(mCurrentPath+"Saves\\list.TXT");
 		mStateFile = new File(mCurrentPath+"Saves\\listCheck.TXT");
 		mColorFile = new File(mCurrentPath+"Saves\\listColor.TXT");
@@ -104,13 +110,12 @@ public class Productivity extends JFrame {
 		mTabbedPane.addTab("Settings", new SettingsPanel());
 		mTabbedPane.insertTab("Home", null, HomePanel.getInstance(), null, 0);
 		ImageIcon img = new ImageIcon("src\\main\\java\\com\\productivity\\icon.png");
+
+		mLayeredPane.add(mTabbedPane, new Integer(0));
+
 		super.setTitle("Productivity");
 		super.setIconImage(img.getImage());
-		super.add(mTabbedPane);
-		//JLayeredPane pane = new JLayeredPane();
-		//pane.add(mTabbedPane, 2, 0);
-		//pane.add(new JLabel(confettiHigh), 1, 0);
-		//super.getContentPane().add(pane);
+		super.add(mLayeredPane);
 		super.setAlwaysOnTop(Boolean.parseBoolean(SettingsPanel.getSetting("onTop")));
 		super.setLocationByPlatform(true);
 		super.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -197,7 +202,29 @@ public class Productivity extends JFrame {
 		mCheckBoxes.setSelected(state, index);
 	}
 
-	public void setConfetti(boolean value) {
-
+	static Timer time;
+	static TimerTask task;
+	public static void showConfetti() {
+		time = new Timer();
+        task = new TimerTask()
+        {
+            int i = 0;
+            @Override
+            public void run()
+            {
+				if (i == 0) {
+					mLayeredPane.add(mConfettiHigh, new Integer(1));
+				}
+				if (i >= kConfettiTime) {
+					mLayeredPane.remove(mConfettiHigh);
+					Productivity.getInstance().repaintFrame();
+					task.cancel();
+					time.cancel();
+					time.purge();
+				}
+				i++;
+            }
+        };
+        time.schedule(task, 0, 1000);
 	}
 }

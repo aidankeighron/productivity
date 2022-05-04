@@ -97,6 +97,8 @@ public class DailyChecklist extends JPanel {
 		JCheckBox checkBox = new JCheckBox(name);
 		checkBox.setFocusPainted(false);
 		checkBox.addActionListener(e -> {
+			if (checkBox.isSelected())
+				Productivity.showConfetti();
 			saveCheckBoxes();
 			SettingsPanel.setDailySelected(checkBox.isSelected(), index);
 		});

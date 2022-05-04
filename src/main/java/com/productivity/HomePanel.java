@@ -103,6 +103,8 @@ public class HomePanel extends JPanel {
                 checkBox.setFocusPainted(false);
                 int index = i;
                 checkBox.addActionListener(e -> {
+                    if (checkBox.isSelected())
+                        Productivity.showConfetti();
                     switch (type) {
                         case check:
                         Productivity.getInstance().setSelected(checkBox.isSelected(), index);
