@@ -47,7 +47,8 @@ public class SettingsPanel extends JTabbedPane {
     private enum settingTypes {
         text,
         checkbox,
-        number
+        number,
+        confetti
     }
     
     Timer mTime;
@@ -126,6 +127,8 @@ public class SettingsPanel extends JTabbedPane {
             };
             addSetting("Block Sites", "blockSites", "Allows you to block sites", settingTypes.checkbox, blockSitesActive, true, "Are you sure");
         }
+        addSetting("Confetti", "wantConfetti", "Enable/Disable Confetti", settingTypes.checkbox, null, false, null);
+        addSetting("Selected Confetti: ", "currentConfetti", "", settingTypes.confetti, null, false, null);
         mConfigPanel.add(mConfigBox);
         super.addTab("Config", mConfigPanel);
         if (Boolean.parseBoolean(getSetting("blockSites")) && Productivity.getInstance().getUsingWindows()) {
@@ -231,6 +234,29 @@ public class SettingsPanel extends JTabbedPane {
             txtHorizontal.add(txtLabel);
             txtHorizontal.add(txtField);
             mConfigBox.add(txtHorizontal);
+            break;
+            case confetti:
+            JLabel confettiLabel = new JLabel(name);
+            String[] typesOfConfetti = {"High", "Low"};
+            JComboBox<String> confettiField = new JComboBox<String>(typesOfConfetti);
+            confettiField.setFocusable(false);
+            confettiField.addActionListener(e -> {
+                mSettings.put(key, Integer.toString(confettiField.getSelectedIndex()));
+                saveSettings();
+                Productivity.getInstance().setConfetti(confettiField.getSelectedIndex());
+            });
+            try {
+                confettiField.setSelectedIndex(Integer.parseInt(mSettings.get(key)));
+            }
+            catch(Exception e) {
+                e.printStackTrace();
+                System.out.println("Setting does not exist");
+            }
+            confettiField.setToolTipText(tooltip);
+            Box confettiHorizontal = Box.createHorizontalBox();
+            confettiHorizontal.add(confettiLabel);
+            confettiHorizontal.add(confettiField);
+            mConfigBox.add(confettiHorizontal);
             break;
             default:
             break;

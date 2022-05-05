@@ -15,6 +15,12 @@ import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
+import java.awt.AlphaComposite;
+import java.awt.image.BufferedImage;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Dimension;
+
 import com.productivity.Custom.AddCustomCheckList;
 import com.productivity.Custom.CustomCheckList;
 
@@ -42,8 +48,8 @@ public class Productivity extends JFrame {
 	private static boolean mUsingWindows;
 	private static CheckBoxes mCheckBoxes;
 
-	private static JLabel mConfettiHigh;
-	private static JLabel mConfettiLow;
+	private static JLabel[] mConfetti = new JLabel[2];
+	private static JLabel mCurrentConfetti;
 	private static final double kConfettiTime = 1;
 
 	private static Productivity mInstance = null;
@@ -65,10 +71,10 @@ public class Productivity extends JFrame {
 	}
 	
 	private void createAndShowGUI() {
-		mConfettiHigh = new JLabel(new ImageIcon(this.getClass().getResource("Confetti\\high.gif")));
-		mConfettiLow = new JLabel(new ImageIcon(this.getClass().getResource("Confetti\\low.gif")));
-		mConfettiHigh.setBounds(0, 0, kLength, kHeight);
-		mConfettiLow.setBounds(0, 0, kLength, kHeight);
+		mConfetti[0] = new JLabel(new ImageIcon(this.getClass().getResource("Confetti\\high.gif")));
+		mConfetti[0].setBounds(0, 0, kLength, kHeight);
+		mConfetti[1] = new JLabel(new ImageIcon(this.getClass().getResource("Confetti\\low.gif")));
+		mConfetti[1].setBounds(0, 0, kLength, kHeight);
 		mTabbedPane.setBounds(0, 0, kLength, kHeight);
 		mNameFile = new File(mCurrentPath+"Saves\\list.TXT");
 		mStateFile = new File(mCurrentPath+"Saves\\listCheck.TXT");
@@ -98,6 +104,7 @@ public class Productivity extends JFrame {
 		}
 		SettingsPanel.loadSettings();
 		AddCustomCheckList.loadCheckLists();
+		setConfetti(Integer.parseInt(SettingsPanel.getSetting("currentConfetti")));
 		mTabbedPane.setFocusable(false);
 		mCheckBoxes = new CheckBoxes(kHeight, kLength, mNameFile, mStateFile, mColorFile, false, true);
 		mTabbedPane.addTab("Checklist", mCheckBoxes);
@@ -111,7 +118,7 @@ public class Productivity extends JFrame {
 		mTabbedPane.insertTab("Home", null, HomePanel.getInstance(), null, 0);
 		ImageIcon img = new ImageIcon("src\\main\\java\\com\\productivity\\icon.png");
 
-		mLayeredPane.add(mTabbedPane, new Integer(0));
+		mLayeredPane.add(mTabbedPane, 0);
 
 		super.setTitle("Productivity");
 		super.setIconImage(img.getImage());
@@ -202,9 +209,18 @@ public class Productivity extends JFrame {
 		mCheckBoxes.setSelected(state, index);
 	}
 
+	public void setConfetti(int index) {
+		mCurrentConfetti = mConfetti[index];
+	}
+
 	static Timer time;
 	static TimerTask task;
+	static final int kScale = 10;
 	public static void showConfetti() {
+		if (!Boolean.parseBoolean(SettingsPanel.getSetting("wantConfetti"))) return;
+		FadeLabel label = new FadeLabel();
+		label.setBounds(0, 0, kLength, kHeight);
+		label.add(mCurrentConfetti);
 		time = new Timer();
         task = new TimerTask()
         {
@@ -213,18 +229,73 @@ public class Productivity extends JFrame {
             public void run()
             {
 				if (i == 0) {
-					mLayeredPane.add(mConfettiHigh, new Integer(1));
+					mLayeredPane.add(label, 0);
 				}
-				if (i >= kConfettiTime) {
-					mLayeredPane.remove(mConfettiHigh);
+				if (i >= kConfettiTime*kScale) {
+					mLayeredPane.remove(label);
 					Productivity.getInstance().repaintFrame();
 					task.cancel();
 					time.cancel();
 					time.purge();
 				}
+				if (i <= kConfettiTime*kScale/2)
+					label.setAlpha((float)(i/(kConfettiTime*kScale)));
+				else
+					label.setAlpha((float)(kConfettiTime-i/(kConfettiTime*kScale)));
 				i++;
             }
         };
-        time.schedule(task, 0, 1000);
+        time.schedule(task, 0, 1000/kScale);
 	}
+
+	public static class FadeLabel extends JLabel {
+
+        private float alpha;
+        private BufferedImage background;
+
+        public FadeLabel() {
+            setAlpha(1f);
+        }
+
+        public void setAlpha(float value) {
+            if (alpha != value) {
+                float old = alpha;
+                alpha = value;
+                firePropertyChange("alpha", old, alpha);
+                repaint();
+            }
+        }
+
+        public float getAlpha() {
+            return alpha;
+        }
+
+        @Override
+        public Dimension getPreferredSize() {
+            return background == null ? super.getPreferredSize() : new Dimension(background.getWidth(), background.getHeight());
+        }
+
+        @Override
+        public void paint(Graphics g) {
+            // This is one of the few times I would directly override paint
+            // This makes sure that the entire paint chain is now using
+            // the alpha composite, including borders and child components
+            Graphics2D g2d = (Graphics2D) g.create();
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, getAlpha()));
+            super.paint(g2d);
+            g2d.dispose();
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            // This is one of the few times that doing this before the super call
+            // will work...
+            if (background != null) {
+                int x = (getWidth() - background.getWidth()) / 2;
+                int y = (getHeight() - background.getHeight()) / 2;
+                g.drawImage(background, x, y, this);
+            }
+            super.paintComponent(g);
+        }
+    }
 }
