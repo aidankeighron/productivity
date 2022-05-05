@@ -56,7 +56,7 @@ public class SettingsPanel extends JTabbedPane {
     
     public SettingsPanel() {
         super.setFocusable(false);
-        mDailyPanel = new CheckBoxes(Productivity.kHeight, Productivity.kLength, mNameFile, mStateFile, mColorFile, true, true);
+        mDailyPanel = new CheckBoxes(mNameFile, mStateFile, mColorFile, true, true);
         runBoolean allOnTop;
         if (Productivity.getInstance().getUsingWindows()) { 
             allOnTop = (a) -> Productivity.getInstance().setOnTop(a);

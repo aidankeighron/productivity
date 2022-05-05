@@ -26,7 +26,7 @@ import com.productivity.Custom.CustomCheckList;
 
 public class Productivity extends JFrame {
 	
-	public static final int kLength = 400;
+	public static final int kWidth = 400;
 	public static final int kHeight = 300;
 	private static final Boolean kDebug = true;
 	private static final String kDebugPath = "src\\main\\java\\com\\productivity\\";
@@ -72,10 +72,10 @@ public class Productivity extends JFrame {
 	
 	private void createAndShowGUI() {
 		mConfetti[0] = new JLabel(new ImageIcon(this.getClass().getResource("Confetti\\high.gif")));
-		mConfetti[0].setBounds(0, 0, kLength, kHeight);
+		mConfetti[0].setBounds(0, 0, kWidth, kHeight);
 		mConfetti[1] = new JLabel(new ImageIcon(this.getClass().getResource("Confetti\\low.gif")));
-		mConfetti[1].setBounds(0, 0, kLength, kHeight);
-		mTabbedPane.setBounds(0, 0, kLength, kHeight);
+		mConfetti[1].setBounds(0, 0, kWidth, kHeight);
+		mTabbedPane.setBounds(0, 0, kWidth, kHeight-30);
 		mNameFile = new File(mCurrentPath+"Saves\\list.TXT");
 		mStateFile = new File(mCurrentPath+"Saves\\listCheck.TXT");
 		mColorFile = new File(mCurrentPath+"Saves\\listColor.TXT");
@@ -106,7 +106,7 @@ public class Productivity extends JFrame {
 		AddCustomCheckList.loadCheckLists();
 		setConfetti(Integer.parseInt(SettingsPanel.getSetting("currentConfetti")));
 		mTabbedPane.setFocusable(false);
-		mCheckBoxes = new CheckBoxes(kHeight, kLength, mNameFile, mStateFile, mColorFile, false, true);
+		mCheckBoxes = new CheckBoxes(mNameFile, mStateFile, mColorFile, false, true);
 		mTabbedPane.addTab("Checklist", mCheckBoxes);
 		mTabbedPane.addTab("Daily", new DailyChecklist());
 		mTabbedPane.addTab("Timers", new TimerPanel());
@@ -126,7 +126,8 @@ public class Productivity extends JFrame {
 		super.setAlwaysOnTop(Boolean.parseBoolean(SettingsPanel.getSetting("onTop")));
 		super.setLocationByPlatform(true);
 		super.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		super.setSize(kLength, kHeight);
+		super.setSize(kWidth, kHeight);
+		super.setResizable(false);
 		super.setVisible(true);
 	}
 	
@@ -219,7 +220,7 @@ public class Productivity extends JFrame {
 	public static void showConfetti() {
 		if (!Boolean.parseBoolean(SettingsPanel.getSetting("wantConfetti"))) return;
 		FadeLabel label = new FadeLabel();
-		label.setBounds(0, 0, kLength, kHeight);
+		label.setBounds(0, 0, kWidth, kHeight);
 		label.add(mCurrentConfetti);
 		time = new Timer();
         task = new TimerTask()

@@ -20,7 +20,7 @@ public class DailyChecklist extends JPanel {
 	private static File mStateFile;
 	private static File mColorFile;
 	private static File mTimeFile;
-	private static JPanel mCheckListPanel = new JPanel(new GridLayout(Productivity.kHeight/30, Productivity.kLength/200));
+	private static JPanel mCheckListPanel = new JPanel(new GridLayout(Productivity.kHeight/30, Productivity.kWidth/200));
 	private static ArrayList<JCheckBox> mCheckBoxes = new ArrayList<JCheckBox>();
 	
 	public DailyChecklist() {

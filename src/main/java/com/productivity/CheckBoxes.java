@@ -43,15 +43,13 @@ public class CheckBoxes extends JPanel {
 		color
 	}
 	
-	public CheckBoxes(int height, int length, File name, File check, File color, boolean daily, boolean home) {
+	public CheckBoxes(File name, File check, File color, boolean daily, boolean home) {
 		mHome = home;
 		mDaily = daily;
 		mNameFile = name;
 		mCheckFile = check;
 		mColorFile = color;
-		height = (height/30 == 0) ? 0 : height/30;
-		length = (length/200 == 0) ? 1 : length/200;
-		mChecklistPanel = new JPanel(new GridLayout(height, length));
+		mChecklistPanel = new JPanel(new GridLayout(Productivity.kHeight/30, Productivity.kWidth/200));
 		JTextField input = new JTextField();
 		input.setDocument(new JTextFieldLimit(kCharLimit));
 		input.addActionListener(e -> {

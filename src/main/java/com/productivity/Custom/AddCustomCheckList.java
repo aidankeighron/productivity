@@ -188,7 +188,7 @@ public class AddCustomCheckList extends JPanel {
         });
         button.setFocusPainted(false);
         mVertical.add(button);
-        CheckBoxes checkBox = new CheckBoxes(Productivity.kHeight, Productivity.kLength, name, check, color, false, home);
+        CheckBoxes checkBox = new CheckBoxes(name, check, color, false, home);
         mCheckBoxes.put(n, checkBox);
         saveChecklists();
         CustomCheckList.getInstance().addCheckList(checkBox, n);
