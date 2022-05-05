@@ -85,6 +85,8 @@ public class HomePanel extends JPanel {
     private JPanel makePanel(JCheckBox[] boxes, String title, BoxType type, GridBagConstraints c) {
         JPanel panel = new JPanel(new GridBagLayout());
         Box vertical = Box.createVerticalBox();
+        Box vertical2 = Box.createVerticalBox();
+        Box horizontal = Box.createHorizontalBox();
         panel.setBorder(BorderFactory.createLineBorder(Color.black));
         if (type == BoxType.custom) {
             title += AddCustomCheckList.getrandomName();
@@ -93,7 +95,6 @@ public class HomePanel extends JPanel {
         c.weighty = 1.0;
         c.gridx = 0;
         c.gridy = 0;
-        c.gridwidth = 1;
         vertical.add(label);
         if (boxes != null && (boxes.length > 0 || !type.equals(BoxType.custom))) {
             for (int i = 0; i < boxes.length; i++) {
@@ -120,9 +121,14 @@ public class HomePanel extends JPanel {
                         break;
                     }
                 });
-                vertical.add(checkBox);
+                if ((boxes.length > 10 && i > boxes.length/2 && type == BoxType.check) || (boxes.length > 5 && i >= 5 && i < 10 && type != BoxType.check))
+                    vertical2.add(checkBox);
+                else if (i < 10)
+                    vertical.add(checkBox);
             }
-            panel.add(vertical, c);
+            horizontal.add(vertical);
+            horizontal.add(vertical2);
+            panel.add(horizontal, c);
             return panel;
         }
         if (!type.equals(BoxType.custom)) return panel;
