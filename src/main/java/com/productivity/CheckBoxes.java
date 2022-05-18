@@ -131,6 +131,9 @@ public class CheckBoxes extends JPanel {
 				checkBox.setText(input);
 			}
 			saveCheckBoxes(fileType.name);
+			if (mDaily) {
+				DailyChecklist.resetBoxes(false);
+			}
 		});
 		items[1] = new JMenuItem("Change color");
 		items[1].addActionListener(e -> {
@@ -151,6 +154,9 @@ public class CheckBoxes extends JPanel {
 			}
 			checkBox.setForeground(newColor);
 			saveCheckBoxes(fileType.color);
+			if (mDaily) {
+				DailyChecklist.resetBoxes(false);
+			}
 		});
 		items[2] = new JMenuItem("Remove");
 		items[2].addActionListener(e -> {
@@ -159,6 +165,9 @@ public class CheckBoxes extends JPanel {
 			mNumCheckBox--;
 			saveCheckBoxes();
 			Productivity.getInstance().repaintFrame();
+			if (mDaily) {
+				DailyChecklist.resetBoxes(false);
+			}
 		});
 		Popup pop = new Popup(items);
 		checkBox.addMouseListener(pop.new PopClickListener());

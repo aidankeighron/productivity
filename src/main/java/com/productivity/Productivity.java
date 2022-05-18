@@ -75,7 +75,7 @@ public class Productivity extends JFrame {
 		mConfetti[0].setBounds(0, 0, kWidth, kHeight);
 		mConfetti[1] = new JLabel(new ImageIcon(this.getClass().getResource("Confetti\\low.gif")));
 		mConfetti[1].setBounds(0, 0, kWidth, kHeight);
-		mTabbedPane.setBounds(0, 0, kWidth, kHeight-30);
+		mTabbedPane.setBounds(0, 0, kWidth-15, kHeight-30);
 		mNameFile = new File(mCurrentPath+"Saves\\list.TXT");
 		mStateFile = new File(mCurrentPath+"Saves\\listCheck.TXT");
 		mColorFile = new File(mCurrentPath+"Saves\\listColor.TXT");
@@ -219,6 +219,11 @@ public class Productivity extends JFrame {
 	static final int kScale = 10;
 	public static void showConfetti() {
 		if (!Boolean.parseBoolean(SettingsPanel.getSetting("wantConfetti"))) return;
+		if (time != null) {
+			time.cancel();
+			time.purge();
+		}
+		if (task != null) task.cancel();
 		FadeLabel label = new FadeLabel();
 		label.setBounds(0, 0, kWidth, kHeight);
 		label.add(mCurrentConfetti);
