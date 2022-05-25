@@ -121,7 +121,7 @@ public class AddCustomCheckList extends JPanel {
             mRandomIndex = -1;
             return null;
         }
-        int index = (int)(Math.random() * mNames.size());
+        int index = (int)(Math.random() * mCheckBoxes.size());
         try {
             if (!mCheckBoxes.get(mNames.get(index)).getHome() || mCheckBoxes.get(mNames.get(index)).getBoxes().length <= 0) {
                 if (index < mCheckBoxes.size()) {
