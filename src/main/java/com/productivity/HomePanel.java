@@ -115,7 +115,8 @@ public class HomePanel extends JPanel {
                         SettingsPanel.setDailySelected(checkBox.isSelected(), index);
                         break;
                         case custom:
-                        AddCustomCheckList.setCheckList(checkBox.isSelected(), index, checkBox.getText());
+                        String customTitle = AddCustomCheckList.getrandomName();
+                        AddCustomCheckList.setCheckList(checkBox.isSelected(), index, customTitle);
                         break;
                         default:
                         break;
