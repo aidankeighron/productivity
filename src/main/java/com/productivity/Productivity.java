@@ -116,8 +116,7 @@ public class Productivity extends JFrame {
 		}
 		mTabbedPane.addTab("Settings", new SettingsPanel());
 		mTabbedPane.insertTab("Home", null, HomePanel.getInstance(), null, 0);
-		ImageIcon img = new ImageIcon("src\\main\\java\\com\\productivity\\icon.png");
-
+		ImageIcon img = new ImageIcon(getClass().getResource("icon.png"));
 		mLayeredPane.add(mTabbedPane, 0);
 
 		super.setTitle("Productivity");
