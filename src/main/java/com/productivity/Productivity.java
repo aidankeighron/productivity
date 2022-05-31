@@ -28,7 +28,7 @@ public class Productivity extends JFrame {
 	
 	public static final int kWidth = 400;
 	public static final int kHeight = 300;
-	private static final Boolean kDebug = true;
+	private static final Boolean kDebug = false;
 	private static final String kDebugPath = "src\\main\\java\\com\\productivity\\";
 	private static final String kJarPath = "classes\\com\\productivity\\";
 	private static final String kExePath = "target\\classes\\com\\productivity\\";
@@ -63,7 +63,7 @@ public class Productivity extends JFrame {
 		new Productivity();
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				mCurrentPath = (kDebug)?kDebugPath: (args.length>0)?kExePath:kJarPath;
+				mCurrentPath = (kDebug)?kDebugPath:(args.length>0)?kExePath:kJarPath;
 				mCurrentCustomPath = (kDebug)?kCustomDebugPath: (args.length>0)?kCustomExePath:kCustomJarPath;
 				Productivity.getInstance().createAndShowGUI();
 			}
@@ -71,9 +71,9 @@ public class Productivity extends JFrame {
 	}
 	
 	private void createAndShowGUI() {
-		mConfetti[0] = new JLabel(new ImageIcon(this.getClass().getResource("Confetti\\high.gif")));
+		mConfetti[0] = new JLabel(new ImageIcon(getClass().getResource("Confetti/high.gif")));
 		mConfetti[0].setBounds(0, 0, kWidth, kHeight);
-		mConfetti[1] = new JLabel(new ImageIcon(this.getClass().getResource("Confetti\\low.gif")));
+		mConfetti[1] = new JLabel(new ImageIcon(getClass().getResource("Confetti/low.gif")));
 		mConfetti[1].setBounds(0, 0, kWidth, kHeight);
 		mTabbedPane.setBounds(0, 0, kWidth-15, kHeight-30);
 		mNameFile = new File(mCurrentPath+"Saves\\list.TXT");
