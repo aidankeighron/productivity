@@ -71,9 +71,9 @@ public class Productivity extends JFrame {
 	}
 	
 	private void createAndShowGUI() {
-		mConfetti[0] = new JLabel(new ImageIcon(this.getClass().getResource("Confetti\\high.gif")));
+		mConfetti[0] = new JLabel(new ImageIcon(getClass().getResource("Confetti/high.gif")));
 		mConfetti[0].setBounds(0, 0, kWidth, kHeight);
-		mConfetti[1] = new JLabel(new ImageIcon(this.getClass().getResource("Confetti\\low.gif")));
+		mConfetti[1] = new JLabel(new ImageIcon(getClass().getResource("Confetti/low.gif")));
 		mConfetti[1].setBounds(0, 0, kWidth, kHeight);
 		mTabbedPane.setBounds(0, 0, kWidth-15, kHeight-30);
 		mNameFile = new File(mCurrentPath+"Saves\\list.TXT");
