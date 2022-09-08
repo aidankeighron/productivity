@@ -24,6 +24,9 @@ import java.awt.Dimension;
 import com.productivity.Custom.AddCustomCheckList;
 import com.productivity.Custom.CustomCheckList;
 
+import com.formdev.flatlaf.FlatDarkLaf;
+import com.formdev.flatlaf.FlatDarculaLaf;
+
 public class Productivity extends JFrame {
 	
 	public static final int kWidth = 400;
@@ -96,8 +99,14 @@ public class Productivity extends JFrame {
 	
 	private void start() {
 		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-			//UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+			try {
+				//UIManager.setLookAndFeel(new FlatDarkLaf());
+				UIManager.setLookAndFeel(new FlatDarculaLaf()); // TODO which one is better
+			}
+			catch (Exception ex) {
+				System.out.print("Failed to initialize theme. Using fallback.");
+				UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+			}
 			SwingUtilities.updateComponentTreeUI(mTabbedPane);
 		} catch (Exception e) {
 			e.printStackTrace();
