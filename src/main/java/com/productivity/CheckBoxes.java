@@ -11,6 +11,7 @@ import javax.swing.JTextField;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -77,6 +78,7 @@ public class CheckBoxes extends JPanel {
 			}
 		});
 		reset.setFocusPainted(false);
+		// reset.setMargin(new Insets(0, 0, 0, 0));
 		JButton clear = new JButton("Clear Selected");
 		clear.addActionListener(e -> {
 			clearSelected();

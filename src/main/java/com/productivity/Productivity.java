@@ -7,10 +7,13 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -20,7 +23,8 @@ import java.awt.image.BufferedImage;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Dimension;
-import java.awt.Toolkit;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowAdapter;
 
 import com.productivity.Custom.AddCustomCheckList;
 import com.productivity.Custom.CustomCheckList;
@@ -30,8 +34,8 @@ import com.formdev.flatlaf.FlatDarculaLaf;
 
 public class Productivity extends JFrame {
 	
-	public static final int kWidth = 400;
-	public static final int kHeight = 300;
+	public static final int kWidth = 400; // 400
+	public static final int kHeight = 300; // 300
 	private static final Boolean kDebug = true;
 	private static final String kDebugPath = "src\\main\\java\\com\\productivity\\";
 	private static final String kJarPath = "classes\\com\\productivity\\";
@@ -127,18 +131,36 @@ public class Productivity extends JFrame {
 		}
 		mTabbedPane.addTab("Settings", new SettingsPanel());
 		mTabbedPane.insertTab("Home", null, HomePanel.getInstance(), null, 0);
+
+		JButton close = new JButton("X");
+		close.addActionListener(e -> close());
+		int index = mTabbedPane.getTabCount();
+		mTabbedPane.insertTab("", null, null, "", index);
+        mTabbedPane.setTabComponentAt(index, close);
+
 		ImageIcon img = new ImageIcon(getClass().getResource("icon.png"));
 		mLayeredPane.add(mTabbedPane, 0);
-
 		super.setTitle("Productivity");
 		super.setIconImage(img.getImage());
 		super.add(mLayeredPane);
 		super.setAlwaysOnTop(Boolean.parseBoolean(SettingsPanel.getSetting("onTop")));
 		super.setLocationByPlatform(true);
-		super.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		super.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		super.setSize(kWidth, kHeight);
 		super.setResizable(false);
+		super.setUndecorated(true);
 		super.setVisible(true);
+	}
+
+	private void close() {
+		String ObjButtons[] = {"Yes","No"};
+		int PromptResult = JOptionPane.showOptionDialog(Productivity.this, 
+			"Are you sure you want to exit?", "Close", 
+			JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, 
+			ObjButtons,ObjButtons[1]);
+		if (PromptResult == 0) {
+			System.exit(0);          
+		}
 	}
 	
 	private void writeData(String data, File file) {
