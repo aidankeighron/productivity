@@ -13,7 +13,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -23,18 +22,15 @@ import java.awt.image.BufferedImage;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Dimension;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowAdapter;
 
 import com.productivity.Custom.AddCustomCheckList;
 import com.productivity.Custom.CustomCheckList;
 
-import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatDarculaLaf;
 
 public class Productivity extends JFrame {
 	
-	public static final int kWidth = 400; // 400
+	public static final int kWidth = 408; // 400
 	public static final int kHeight = 300; // 300
 	private static final Boolean kDebug = true;
 	private static final String kDebugPath = "src\\main\\java\\com\\productivity\\";
@@ -83,7 +79,7 @@ public class Productivity extends JFrame {
 		mConfetti[0].setBounds(0, 0, kWidth, kHeight);
 		mConfetti[1] = new JLabel(new ImageIcon(getClass().getResource("Confetti/low.gif")));
 		mConfetti[1].setBounds(0, 0, kWidth, kHeight);
-		mTabbedPane.setBounds(0, 0, kWidth-15, kHeight-30);
+		mTabbedPane.setBounds(0, 0, kWidth, kHeight); // kWidth-15, kHeight-30
 		mNameFile = new File(mCurrentPath+"Saves\\list.TXT");
 		mStateFile = new File(mCurrentPath+"Saves\\listCheck.TXT");
 		mColorFile = new File(mCurrentPath+"Saves\\listColor.TXT");
@@ -105,8 +101,7 @@ public class Productivity extends JFrame {
 	private void start() {
 		try {
 			try {
-				//UIManager.setLookAndFeel(new FlatDarkLaf());
-				UIManager.setLookAndFeel(new FlatDarculaLaf()); // TODO which one is better
+				UIManager.setLookAndFeel(new FlatDarculaLaf());
 				//setIconImage(Toolkit.getDefaultToolkit().getImage("C:/Users/aidan/OneDrive/Documents/Programms/Productivity/src/main/java/com/productivity/icon.png"));
 			}
 			catch (Exception ex) {
