@@ -20,6 +20,7 @@ import java.awt.image.BufferedImage;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Dimension;
+import java.awt.Toolkit;
 
 import com.productivity.Custom.AddCustomCheckList;
 import com.productivity.Custom.CustomCheckList;
@@ -102,6 +103,7 @@ public class Productivity extends JFrame {
 			try {
 				//UIManager.setLookAndFeel(new FlatDarkLaf());
 				UIManager.setLookAndFeel(new FlatDarculaLaf()); // TODO which one is better
+				//setIconImage(Toolkit.getDefaultToolkit().getImage("C:/Users/aidan/OneDrive/Documents/Programms/Productivity/src/main/java/com/productivity/icon.png"));
 			}
 			catch (Exception ex) {
 				System.out.print("Failed to initialize theme. Using fallback.");

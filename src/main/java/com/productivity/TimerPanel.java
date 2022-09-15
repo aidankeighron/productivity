@@ -253,11 +253,21 @@ public class TimerPanel extends JPanel {
                         BlockSites.unBlockSites();
                         mIsBlocked = false;
                     }
+                    try {
+                        Notification.displayTray("Timer Done", title);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
                 else if (i >= seconds && i != 0 && mAlarm) {
                     alarmNum--;
                     progressBar.setValue(i);
                     Toolkit.getDefaultToolkit().beep();
+                    try {
+                        Notification.displayTray("Timer Done", title);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     i++;
                     if (alarmNum <= 0) {
                         time.cancel();

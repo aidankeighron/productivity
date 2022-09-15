@@ -11,6 +11,7 @@ import javax.swing.JProgressBar;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
+import java.awt.AWTException;
 import java.awt.Component;
 import java.io.File;
 import java.io.FileWriter;
@@ -370,6 +371,11 @@ public class SettingsPanel extends JTabbedPane {
                 if(i == seconds && i != 0) {
                     if (!mStopSound)
                         Toolkit.getDefaultToolkit().beep();
+                        try {
+                            Notification.displayTray("Reminder", "");
+                        } catch (AWTException e) {
+                            e.printStackTrace();
+                        }
                     bar.setValue(i);
                     i = -1;
                 }
