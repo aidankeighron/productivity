@@ -12,3 +12,4 @@
 .gradle
 .classpath
 .project
+.vscode/settings.json

@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.prefs.Preferences;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -22,6 +23,8 @@ import java.awt.image.BufferedImage;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Dimension;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
 import com.productivity.Custom.AddCustomCheckList;
 import com.productivity.Custom.CustomCheckList;
@@ -133,6 +136,21 @@ public class Productivity extends JFrame {
 		mTabbedPane.insertTab("", null, null, "", index);
         mTabbedPane.setTabComponentAt(index, close);
 
+		Preferences prefs = Preferences.userRoot().node(this.getClass().getName());
+		String xLast = "xPos";
+		String yLast = "yPos";
+		int xPos = prefs.getInt(xLast, 0);
+		int yPos = prefs.getInt(yLast, 0);
+
+		super.addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentMoved(ComponentEvent e) {
+				prefs.putInt(xLast, Productivity.super.getX());
+				prefs.putInt(yLast, Productivity.super.getY());
+			}
+		});
+		
+
 		ImageIcon img = new ImageIcon(getClass().getResource("icon.png"));
 		mLayeredPane.add(mTabbedPane, 0);
 		super.setTitle("Productivity");
@@ -142,6 +160,7 @@ public class Productivity extends JFrame {
 		super.setLocationByPlatform(true);
 		super.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		super.setSize(kWidth, kHeight);
+		super.setLocation(xPos, yPos);
 		super.setResizable(false);
 		super.setUndecorated(true);
 		super.setVisible(true);
