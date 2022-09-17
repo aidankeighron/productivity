@@ -150,9 +150,12 @@ public class Productivity extends JFrame {
 			}
 		});
 		
-
 		ImageIcon img = new ImageIcon(getClass().getResource("icon.png"));
 		mLayeredPane.add(mTabbedPane, 0);
+
+		ComponentMover cm = new ComponentMover(this, mTabbedPane);
+		cm.setChangeCursor(true);
+
 		super.setTitle("Productivity");
 		super.setIconImage(img.getImage());
 		super.add(mLayeredPane);
