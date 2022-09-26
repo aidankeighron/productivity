@@ -28,7 +28,12 @@ import java.awt.event.ComponentEvent;
 
 import com.productivity.Custom.AddCustomCheckList;
 import com.productivity.Custom.CustomCheckList;
-
+import com.productivity.Panels.DailyChecklist;
+import com.productivity.Panels.HomePanel;
+import com.productivity.Panels.NotesPanel;
+import com.productivity.Panels.SettingsPanel;
+import com.productivity.Panels.TimerPanel;
+import com.productivity.Util.ComponentMover;
 import com.formdev.flatlaf.FlatDarculaLaf;
 
 public class Productivity extends JFrame {

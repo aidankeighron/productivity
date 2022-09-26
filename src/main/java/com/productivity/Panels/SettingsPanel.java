@@ -1,4 +1,4 @@
-package com.productivity;
+package com.productivity.Panels;
 
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -23,7 +23,11 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.awt.Toolkit;
 
+import com.productivity.BlockSites;
+import com.productivity.CheckBoxes;
+import com.productivity.Productivity;
 import com.productivity.Custom.AddCustomCheckList;
+import com.productivity.Util.Notification;
 
 public class SettingsPanel extends JTabbedPane {
     

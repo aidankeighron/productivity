@@ -1,7 +1,9 @@
-package com.productivity;
+package com.productivity.Panels;
 
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
+
+import com.productivity.Productivity;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;

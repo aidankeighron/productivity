@@ -1,4 +1,4 @@
-package com.productivity;
+package com.productivity.Panels;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -10,6 +10,7 @@ import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Color;
 
+import com.productivity.Productivity;
 import com.productivity.Custom.AddCustomCheckList;
 
 public class HomePanel extends JPanel {

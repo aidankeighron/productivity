@@ -1,4 +1,4 @@
-package com.productivity;
+package com.productivity.Panels;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -12,6 +12,10 @@ import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
+
+import com.productivity.BlockSites;
+import com.productivity.Productivity;
+import com.productivity.Util.Notification;
 
 import java.awt.BorderLayout;
 import java.awt.Color;

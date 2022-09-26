@@ -1,4 +1,4 @@
-package com.productivity;
+package com.productivity.Util;
 
 import javax.swing.text.PlainDocument;
 import javax.swing.text.AttributeSet;

@@ -1,4 +1,4 @@
-package com.productivity;
+package com.productivity.Util;
 
 import java.awt.*;
 import java.awt.TrayIcon.MessageType;

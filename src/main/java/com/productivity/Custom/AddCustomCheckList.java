@@ -17,9 +17,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import com.productivity.CheckBoxes;
-import com.productivity.HomePanel;
-import com.productivity.JTextFieldLimit;
 import com.productivity.Productivity;
+import com.productivity.Panels.HomePanel;
+import com.productivity.Util.JTextFieldLimit;
 
 public class AddCustomCheckList extends JPanel {
     

@@ -1,4 +1,4 @@
-package com.productivity;
+package com.productivity.Panels;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;

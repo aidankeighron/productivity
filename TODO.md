@@ -1,24 +1,29 @@
-- Group checklist items
+- Version 4 UI Update
+# Remove Mac?
 - MiG Layout
-- Remove Mac?
-- Exception
 - Clean up ui
-- Notes optional
-- Better exe
-- Scheduled Notifications
-- Regex on website
 - Expand limits for char count and checkbox count
 - Fix home
 - Overhaul home ui
-- Add more settings options
-- Package .txt in jar
 - Clean up codebase and put into folders
 - Explode SettingsPanel
 - Adapt ui to different tab sizes
 - Remove whitespace from small tab amounts
-- More color options (color wheel?)
+- Minimize
+
+- Version 4.1 Checklist Update
+- Group checklist items
+- Backlog
+- Exception
+- Notes optional
 - Non static notes amount
+- Scheduled Notifications
+- Regex on website
+- Add more settings options
+- More color options (color wheel?)
+
+- Version 5 Exe improvements
+- Better exe
+- Package .txt in jar
 - Age for checklist items
 - Discord API (in-between)
-- Backlog
-- Minimize

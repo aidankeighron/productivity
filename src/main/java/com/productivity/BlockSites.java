@@ -6,6 +6,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
+import com.productivity.Util.JTextFieldLimit;
+
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Scanner;

@@ -9,6 +9,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import com.productivity.Panels.DailyChecklist;
+import com.productivity.Panels.HomePanel;
+import com.productivity.Util.JTextFieldLimit;
+import com.productivity.Util.Popup;
+
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.Color;

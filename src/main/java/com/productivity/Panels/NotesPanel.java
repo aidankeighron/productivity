@@ -1,4 +1,4 @@
-package com.productivity;
+package com.productivity.Panels;
 
 import javax.swing.Box;
 import javax.swing.JComboBox;
@@ -6,6 +6,9 @@ import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+
+import com.productivity.Productivity;
+import com.productivity.Util.JTextFieldLimit;
 
 import java.nio.file.Files;
 import java.util.Scanner;

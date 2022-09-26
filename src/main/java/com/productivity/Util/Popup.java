@@ -1,4 +1,4 @@
-package com.productivity;
+package com.productivity.Util;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -21,7 +21,7 @@ public class Popup {
         }
     }
     
-    class PopClickListener extends MouseAdapter {
+    public class PopClickListener extends MouseAdapter {
         public void mousePressed(MouseEvent e) {
             if (e.isPopupTrigger())
             doPop(e);
