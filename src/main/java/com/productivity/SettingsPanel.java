@@ -58,13 +58,7 @@ public class SettingsPanel extends JTabbedPane {
     public SettingsPanel() {
         super.setFocusable(false);
         mDailyPanel = new CheckBoxes(mNameFile, mStateFile, mColorFile, true, true);
-        runBoolean allOnTop;
-        if (Productivity.getInstance().getUsingWindows()) { 
-            allOnTop = (a) -> Productivity.getInstance().setOnTop(a);
-        }
-        else {
-            allOnTop = null;
-        }
+        runBoolean allOnTop = (a) -> Productivity.getInstance().setOnTop(a);
         addSetting("Always on top", "onTop", "Makes window always on your screen unless you minimize it", settingTypes.checkbox, allOnTop, false, null);
         runBoolean reminderActive = (a) -> {
             boolean reminderExists = false;
@@ -100,39 +94,35 @@ public class SettingsPanel extends JTabbedPane {
             }
         };
         addSetting("Reminder", "reminderActive", "Activates reminder tab", settingTypes.checkbox, reminderActive, false, null);
-        if (Productivity.getInstance().getUsingWindows()) {
-            runBoolean runOnStartup = (a) -> Productivity.getInstance().runOnStartup(a);
-            addSetting("Run on startup", "runOnStartup", "Runs program when your computer starts", settingTypes.checkbox, runOnStartup, true, "Are you sure");
-        }
-        if (Productivity.getInstance().getUsingWindows()) {
-            runBoolean blockSitesActive = (a) -> {
-                boolean exists = false;
-                Component[] comp = super.getComponents();
-                for (Component c : comp) {
-                    if (c.equals(mBlockSites)) {
-                        exists = true;
-                        break;
-                    }
+        runBoolean runOnStartup = (a) -> Productivity.getInstance().runOnStartup(a);
+        addSetting("Run on startup", "runOnStartup", "Runs program when your computer starts", settingTypes.checkbox, runOnStartup, true, "Are you sure");
+        runBoolean blockSitesActive = (a) -> {
+            boolean exists = false;
+            Component[] comp = super.getComponents();
+            for (Component c : comp) {
+                if (c.equals(mBlockSites)) {
+                    exists = true;
+                    break;
                 }
-                if (a) {
-                    if (!exists) {
-                        super.insertTab("Block Sites", null, mBlockSites, null, 2);
-                    }
+            }
+            if (a) {
+                if (!exists) {
+                    super.insertTab("Block Sites", null, mBlockSites, null, 2);
                 }
-                else {
-                    if (exists) {
-                        super.remove(mBlockSites);
-                    }
+            }
+            else {
+                if (exists) {
+                    super.remove(mBlockSites);
                 }
-                TimerPanel.setAllowBlock(a);
-            };
-            addSetting("Block Sites", "blockSites", "Allows you to block sites", settingTypes.checkbox, blockSitesActive, true, "Are you sure");
-        }
+            }
+            TimerPanel.setAllowBlock(a);
+        };
+        addSetting("Block Sites", "blockSites", "Allows you to block sites", settingTypes.checkbox, blockSitesActive, true, "Are you sure");
         addSetting("Confetti", "wantConfetti", "Enable/Disable Confetti", settingTypes.checkbox, null, false, null);
         addSetting("Selected Confetti: ", "currentConfetti", "", settingTypes.confetti, null, false, null);
         mConfigPanel.add(mConfigBox);
         super.addTab("Config", mConfigPanel);
-        if (Boolean.parseBoolean(getSetting("blockSites")) && Productivity.getInstance().getUsingWindows()) {
+        if (Boolean.parseBoolean(getSetting("blockSites"))) {
             super.addTab("Block Sites", mBlockSites);
         }
         reminder();

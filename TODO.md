@@ -19,3 +19,6 @@
 - More color options (color wheel?)
 - Non static notes amount
 - Age for checklist items
+- Discord API (in-between)
+- Backlog
+- Minimize

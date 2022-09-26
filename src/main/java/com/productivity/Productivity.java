@@ -52,7 +52,6 @@ public class Productivity extends JFrame {
 	private static File mNameFile;
 	private static File mStateFile;
 	private static File mColorFile;
-	private static boolean mUsingWindows;
 	private static CheckBoxes mCheckBoxes;
 
 	private static JLabel[] mConfetti = new JLabel[2];
@@ -86,19 +85,14 @@ public class Productivity extends JFrame {
 		mNameFile = new File(mCurrentPath+"Saves\\list.TXT");
 		mStateFile = new File(mCurrentPath+"Saves\\listCheck.TXT");
 		mColorFile = new File(mCurrentPath+"Saves\\listColor.TXT");
-		String os = System.getProperty("os.name");
-		if (os.contains("Windows")) mUsingWindows = true;
-		else mUsingWindows = false;
 		start();
-		if (mUsingWindows) {
-			Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-				public void run() {
-					BlockSites.unBlockSites();
-				}
-			}, 
-			"Shutdown-thread"
-			));
-		}
+		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+			public void run() {
+				BlockSites.unBlockSites();
+			}
+		}, 
+		"Shutdown-thread"
+		));
 	}
 	
 	private void start() {
@@ -244,10 +238,6 @@ public class Productivity extends JFrame {
 	
 	public String getCurrentCustomPath() {
 		return mCurrentCustomPath;
-	}
-	
-	public Boolean getUsingWindows() {
-		return mUsingWindows;
 	}
 	
 	public JCheckBox[] getBoxes() {

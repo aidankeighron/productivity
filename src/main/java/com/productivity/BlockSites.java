@@ -60,7 +60,7 @@ public class BlockSites extends JPanel {
     }
     
     public static void reBlockSites() {
-        if (Files.isWritable(Paths.get(kHostsFile.getAbsolutePath())) && Productivity.getInstance().getUsingWindows()) {
+        if (Files.isWritable(Paths.get(kHostsFile.getAbsolutePath()))) {
             try {
                 String[] data = readData(mNewHosts);
                 writeData(data, kHostsFile);
@@ -73,7 +73,7 @@ public class BlockSites extends JPanel {
     }
     
     public static void unBlockSites() {
-        if (Files.isWritable(Paths.get(kHostsFile.getAbsolutePath())) && Productivity.getInstance().getUsingWindows()) {
+        if (Files.isWritable(Paths.get(kHostsFile.getAbsolutePath()))) {
             try {
                 String[] data = readData(mBackupFile);
                 writeData(data, kHostsFile);
@@ -158,7 +158,7 @@ public class BlockSites extends JPanel {
     
     private void reset(JTextArea area) {
         String[] data = readData(mBackupFile);
-        if (Files.isWritable(Paths.get(kHostsFile.getAbsolutePath())) && Productivity.getInstance().getUsingWindows()) {
+        if (Files.isWritable(Paths.get(kHostsFile.getAbsolutePath()))) {
             writeData(data, kHostsFile);
         }
         writeData(data, mNewHosts);
