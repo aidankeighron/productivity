@@ -14,6 +14,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -23,6 +24,7 @@ import java.awt.image.BufferedImage;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
@@ -130,10 +132,15 @@ public class Productivity extends JFrame {
 		mTabbedPane.insertTab("Home", null, HomePanel.getInstance(), null, 0);
 
 		JButton close = new JButton("X");
+		JButton minimize = new JButton("-");
+
 		close.addActionListener(e -> close());
+		minimize.addActionListener(e -> setState(Frame.ICONIFIED));
+		JPanel taskBar = new JPanel();
+		taskBar.add(close); taskBar.add(minimize);
 		int index = mTabbedPane.getTabCount();
 		mTabbedPane.insertTab("", null, null, "", index);
-        mTabbedPane.setTabComponentAt(index, close);
+        mTabbedPane.setTabComponentAt(index, taskBar);
 
 		Preferences prefs = Preferences.userRoot().node(this.getClass().getName());
 		String xLast = "xPos";

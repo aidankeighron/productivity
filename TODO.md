@@ -5,11 +5,11 @@
 - Expand limits for char count and checkbox count
 - Fix home
 - Overhaul home ui
-- Clean up codebase and put into folders
+# Clean up codebase and put into folders
 - Explode SettingsPanel
 - Adapt ui to different tab sizes
 - Remove whitespace from small tab amounts
-- Minimize
+# Minimize
 
 - Version 4.1 Checklist Update
 - Group checklist items

@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Launch test",
+            "request": "launch",
+            "mainClass": "com.productivity.test",
+            "projectName": "Productivity"
+        },
+        {
+            "type": "java",
             "name": "Launch ArrayListTest",
             "request": "launch",
             "mainClass": "ArrayListTest",

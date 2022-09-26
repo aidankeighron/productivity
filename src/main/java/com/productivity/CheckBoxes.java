@@ -27,9 +27,9 @@ import java.time.format.DateTimeFormatter;
 
 public class CheckBoxes extends JPanel {
 	
-	private static final String[] kColorNames = {"Black", "Red", "Blue", "Green"};
-	private static final Color[] kColors = {Color.BLACK, new Color(250, 0, 0), new Color(0, 0, 230), new Color(0, 220, 0)};
-	private static final int kCharLimit = 20;
+	private static final String[] kColorNames = {"White", "Red", "Blue", "Green"};
+	private static final Color[] kColors = {Color.WHITE, new Color(250, 0, 0), new Color(0, 0, 230), new Color(0, 220, 0)};
+	private static final int kCharLimit = 35;
 	private static final int kCheckBoxLimit = 20;
 	
 	private ArrayList<JCheckBox> mCheckBoxes = new ArrayList<JCheckBox>();
@@ -37,7 +37,7 @@ public class CheckBoxes extends JPanel {
 	private File mNameFile;
 	private File mCheckFile;
 	private File mColorFile;
-	private Color mSelectedColor = Color.BLACK;
+	private Color mSelectedColor = kColors[0];
 	private int mNumCheckBox = 0;
 	private boolean mHome;
 	private boolean mDaily;
