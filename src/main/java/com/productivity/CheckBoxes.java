@@ -1,6 +1,5 @@
 package com.productivity;
 
-import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -14,8 +13,8 @@ import com.productivity.Panels.HomePanel;
 import com.productivity.Util.JTextFieldLimit;
 import com.productivity.Util.Popup;
 
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
+import net.miginfocom.swing.MigLayout;
+
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -54,8 +53,8 @@ public class CheckBoxes extends JPanel {
 		mNameFile = name;
 		mCheckFile = check;
 		mColorFile = color;
-		mChecklistPanel = new JPanel(new GridLayout(Productivity.kHeight/30, Productivity.kWidth/200));
-		JTextField input = new JTextField();
+		mChecklistPanel = new JPanel(new MigLayout("wrap 3, fill, gap 0px 0px, ins 0, aligny top, alignx left"));
+		JTextField input = new JTextField(kCharLimit);
 		input.setDocument(new JTextFieldLimit(kCharLimit));
 		input.addActionListener(e -> {
 			String text  = input.getText();
@@ -91,18 +90,14 @@ public class CheckBoxes extends JPanel {
 			}
 		});
 		clear.setFocusPainted(false);
-		JPanel buttonPanel = new JPanel();
-		buttonPanel.add(reset);
-		buttonPanel.add(clear);
 		loadCheckBoxes();
 		
-		super.setLayout(new BorderLayout());
-		Box inputBox = Box.createHorizontalBox();
-		inputBox.add(input);
-		inputBox.add(colorChooser);
-		super.add(inputBox, BorderLayout.NORTH);
-		super.add(mChecklistPanel, BorderLayout.CENTER);
-		super.add(buttonPanel, BorderLayout.SOUTH);
+		super.setLayout(new MigLayout((Productivity.kMigDebug)?"debug, gap 0px 0px, ins 0":""));
+		super.add(input, "growx");
+		super.add(colorChooser, "wrap");
+		super.add(mChecklistPanel, "hmax 120, wmax 400, gap 0px 0px, grow, push, span, wrap");
+		super.add(reset, "span, center, split 2");
+		super.add(clear, "");
 	}
 	
 	private boolean testValidFileName(String text) {

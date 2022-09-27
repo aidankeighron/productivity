@@ -42,6 +42,7 @@ public class Productivity extends JFrame {
 	
 	public static final int kWidth = 408; // 400
 	public static final int kHeight = 300; // 300
+	public static final Boolean kMigDebug = true;
 	private static final Boolean kDebug = true;
 	private static final String kDebugPath = "src\\main\\java\\com\\productivity\\";
 	private static final String kJarPath = "classes\\com\\productivity\\";
