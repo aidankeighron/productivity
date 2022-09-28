@@ -29,7 +29,7 @@ public class CheckBoxes extends JPanel {
 	private static final String[] kColorNames = {"White", "Red", "Blue", "Green"};
 	private static final Color[] kColors = {Color.WHITE, new Color(250, 0, 0), new Color(0, 0, 230), new Color(0, 220, 0)};
 	private static final int kCharLimit = 35;
-	private static final int kCheckBoxLimit = 20;
+	private static final int kCheckBoxLimit = 50;
 	
 	private ArrayList<JCheckBox> mCheckBoxes = new ArrayList<JCheckBox>();
 	private JPanel mChecklistPanel;
@@ -53,7 +53,7 @@ public class CheckBoxes extends JPanel {
 		mNameFile = name;
 		mCheckFile = check;
 		mColorFile = color;
-		mChecklistPanel = new JPanel(new MigLayout("wrap 3, fill, gap 0px 0px, ins 0, aligny top, alignx left"));
+		mChecklistPanel = new JPanel(new MigLayout("wrap 7, gap 0px 0px, ins 0, aligny top, alignx left, flowy"));
 		JTextField input = new JTextField(kCharLimit);
 		input.setDocument(new JTextFieldLimit(kCharLimit));
 		input.addActionListener(e -> {
@@ -172,7 +172,7 @@ public class CheckBoxes extends JPanel {
 		});
 		Popup pop = new Popup(items);
 		checkBox.addMouseListener(pop.new PopClickListener());
-		mChecklistPanel.add(checkBox);
+		mChecklistPanel.add(checkBox, "wmax 150");
 		saveCheckBoxes();
 		Productivity.getInstance().repaintFrame();
 	}
