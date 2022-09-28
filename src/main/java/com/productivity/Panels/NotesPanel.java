@@ -1,6 +1,5 @@
 package com.productivity.Panels;
 
-import javax.swing.Box;
 import javax.swing.JComboBox;
 import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
@@ -12,10 +11,11 @@ import com.productivity.Util.JTextFieldLimit;
 
 import java.nio.file.Files;
 import java.util.Scanner;
-import java.awt.BorderLayout;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+
+import net.miginfocom.swing.MigLayout;
 
 public class NotesPanel extends JDesktopPane {
 	
@@ -104,12 +104,11 @@ public class NotesPanel extends JDesktopPane {
 		}
 		nameField.setText((String)noteChoose.getSelectedItem());
 		
-		super.setLayout(new BorderLayout());
-		Box top = Box.createHorizontalBox();
-		top.add(noteChoose);
-		top.add(nameField);
-		super.add(BorderLayout.NORTH, top);
-		super.add(BorderLayout.CENTER, textArea);
+		super.setLayout(new MigLayout((Productivity.kMigDebug?"debug":"")));
+
+		super.add(noteChoose, "split 2");
+		super.add(nameField, "wrap");
+		super.add(textArea, "grow, push, span");
 	}
 	
 	private boolean testValidFileName(String text) {

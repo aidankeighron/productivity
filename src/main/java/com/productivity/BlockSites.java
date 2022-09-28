@@ -1,6 +1,5 @@
 package com.productivity;
 
-import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -48,13 +47,6 @@ public class BlockSites extends JPanel {
         
         JLabel label = new JLabel("You will need to run program as admin for this feature to work");
         JLabel info = new JLabel("Type websites here then press \"Apply\"");
-        
-        // Box buttons = Box.createHorizontalBox();
-        // buttons.add(apply);
-        // buttons.add(reset);
-        // Box vertical = Box.createVerticalBox();
-        // vertical.add(label);
-        // vertical.add(buttons);
         
         super.setLayout(new MigLayout((Productivity.kMigDebug?"debug":"")));
         super.add(info, "dock north, wrap");
