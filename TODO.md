@@ -2,7 +2,7 @@
 # Remove Mac?
 - MiG Layout
 - Clean up ui
-- Expand limits for char count and checkbox count
+# Expand limits for char count and checkbox count
 - Fix home
 - Overhaul home ui
 # Clean up codebase and put into folders
@@ -10,6 +10,8 @@
 - Adapt ui to different tab sizes
 - Remove whitespace from small tab amounts
 # Minimize
+- inc and borders
+- Adapt Help Size
 
 - Version 4.1 Checklist Update
 - Group checklist items
