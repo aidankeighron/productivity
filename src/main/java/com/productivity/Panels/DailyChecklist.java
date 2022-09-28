@@ -2,11 +2,11 @@ package com.productivity.Panels;
 
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
+import com.productivity.CheckBoxes;
 import com.productivity.Productivity;
 
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -16,33 +16,36 @@ import java.nio.file.Files;
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDateTime;
 
+import net.miginfocom.swing.MigLayout;
+
 public class DailyChecklist extends JPanel {
 	
 	private static File mNameFile;
 	private static File mStateFile;
 	private static File mColorFile;
 	private static File mTimeFile;
-	private static JPanel mCheckListPanel = new JPanel(new GridLayout(Productivity.kHeight/30, Productivity.kWidth/200));
+	private static JPanel mChecklistPanel = new JPanel(new MigLayout("gap 0px 0px, ins 0, flowy")); //new GridLayout(Productivity.kHeight/30, Productivity.kWidth/200));
 	private static ArrayList<JCheckBox> mCheckBoxes = new ArrayList<JCheckBox>();
 	
 	public DailyChecklist() {
 		loadFiles();
-		boolean reset = false;
-		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");  
-		LocalDateTime now = LocalDateTime.now();
-		try {
-			if (!dtf.format(now).equals(readData(mTimeFile)[0])) {
-				reset = true;
+		super.setLayout(new MigLayout("gap 0px 0px, ins 0" + ((Productivity.kMigDebug)?",debug":"")));
+		super.add(mChecklistPanel, "wmax "+ Productivity.kWidth +", grow, push, span");
+
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");  
+				LocalDateTime now = LocalDateTime.now();
+				try {
+					writeData(dtf.format(now), mTimeFile);
+				} catch (Exception e) {
+					e.printStackTrace();
+					writeData("11/11/2020", mTimeFile);
+				}
+				resetBoxes(!dtf.format(now).equals(readData(mTimeFile)[0]));
 			}
-			writeData(dtf.format(now), mTimeFile);
-		} catch (Exception e) {
-			e.printStackTrace();
-			writeData("11/11/2020", mTimeFile);
 		}
-		
-		resetBoxes(reset);
-		super.setLayout(new BorderLayout());
-		super.add(BorderLayout.WEST, mCheckListPanel);
+		);
 	}
 
 	public static JCheckBox[] getCheckBoxes() {
@@ -58,7 +61,7 @@ public class DailyChecklist extends JPanel {
 	
 	public static void resetBoxes(boolean reset) {
 		for (int i = 0; i < mCheckBoxes.size(); i++) {
-			mCheckListPanel.remove(mCheckBoxes.get(i));
+			mChecklistPanel.remove(mCheckBoxes.get(i));
 		}
 		try {
 			String[] names = readData(mNameFile);
@@ -107,7 +110,9 @@ public class DailyChecklist extends JPanel {
 		checkBox.setForeground(color);
 		checkBox.setSelected(checked);
 		mCheckBoxes.add(checkBox);
-		mCheckListPanel.add(checkBox);
+		int rows = (int)(mChecklistPanel.getHeight() / checkBox.getPreferredSize().getHeight());
+		if (rows <= 0) rows = 1;
+		mChecklistPanel.add(checkBox, "width "+ (int)(Productivity.kWidth/CheckBoxes.kColumns) +", wmax " + (int)(Productivity.kWidth/CheckBoxes.kColumns) + (((mChecklistPanel.getComponentCount()+1) % rows == 0)?", wrap":""));
 		Productivity.getInstance().repaintFrame();
 	}
 	

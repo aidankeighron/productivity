@@ -7,13 +7,12 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 
 import com.productivity.Panels.DailyChecklist;
 import com.productivity.Panels.HomePanel;
 import com.productivity.Util.JTextFieldLimit;
 import com.productivity.Util.Popup;
-
-import net.miginfocom.swing.MigLayout;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -24,17 +23,19 @@ import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import net.miginfocom.swing.MigLayout;
+
 public class CheckBoxes extends JPanel {
 	
+	public static final int kColumns = 3;
+
 	private static final String[] kColorNames = {"White", "Red", "Blue", "Green"};
 	private static final Color[] kColors = {Color.WHITE, new Color(250, 0, 0), new Color(0, 0, 230), new Color(0, 220, 0)};
-	private static final int kRows = 7;
-	private static final int kColumns = 3;
 	private static final int kCharLimit = 35;
-	private static final int kCheckBoxLimit = kRows * kColumns;
 	
+	private int mCheckBoxLimit = 20;
 	private ArrayList<JCheckBox> mCheckBoxes = new ArrayList<JCheckBox>();
-	private JPanel mChecklistPanel;
+	private JPanel mChecklistPanel = new JPanel(new MigLayout("gap 0px 0px, ins 0, flowy"));
 	private File mNameFile;
 	private File mCheckFile;
 	private File mColorFile;
@@ -55,7 +56,6 @@ public class CheckBoxes extends JPanel {
 		mNameFile = name;
 		mCheckFile = check;
 		mColorFile = color;
-		mChecklistPanel = new JPanel(new MigLayout("wrap "+ kRows +", gap 0px 0px, ins 0, flowy"));
 		JTextField input = new JTextField(kCharLimit);
 		input.setDocument(new JTextFieldLimit(kCharLimit));
 		input.addActionListener(e -> {
@@ -92,7 +92,12 @@ public class CheckBoxes extends JPanel {
 			}
 		});
 		clear.setFocusPainted(false);
-		loadCheckBoxes();
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				loadCheckBoxes();
+			}
+		}
+		);
 		
 		super.setLayout(new MigLayout("gap 0px 0px, ins 0" + ((Productivity.kMigDebug)?",debug":"")));
 		super.add(input, "");
@@ -107,7 +112,7 @@ public class CheckBoxes extends JPanel {
 	}
 	
 	private void addCheckBox(String name, Color color, Boolean state) {
-		if (mNumCheckBox < kCheckBoxLimit) {
+		if (mNumCheckBox < mCheckBoxLimit) {
 			mNumCheckBox++;
 		}
 		else {
@@ -174,7 +179,10 @@ public class CheckBoxes extends JPanel {
 		});
 		Popup pop = new Popup(items);
 		checkBox.addMouseListener(pop.new PopClickListener());
-		mChecklistPanel.add(checkBox, "width "+ (int)(Productivity.kWidth/kColumns) +", wmax " + (int)(Productivity.kWidth/kColumns));
+		int rows = (int)(mChecklistPanel.getHeight() / checkBox.getPreferredSize().getHeight());
+		mCheckBoxLimit = rows * kColumns;
+		if (rows <= 0) rows = 1;
+		mChecklistPanel.add(checkBox, "width "+ (int)(Productivity.kWidth/kColumns) +", wmax " + (int)(Productivity.kWidth/kColumns) + (((mChecklistPanel.getComponentCount()+1) % rows == 0)?", wrap":""));
 		saveCheckBoxes();
 		Productivity.getInstance().repaintFrame();
 	}
