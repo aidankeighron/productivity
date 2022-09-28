@@ -13,9 +13,10 @@ import java.nio.file.Paths;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.awt.BorderLayout;
 import java.io.File;
 import java.io.FileWriter;
+
+import net.miginfocom.swing.MigLayout;
 
 public class BlockSites extends JPanel {
     
@@ -48,17 +49,19 @@ public class BlockSites extends JPanel {
         JLabel label = new JLabel("You will need to run program as admin for this feature to work");
         JLabel info = new JLabel("Type websites here then press \"Apply\"");
         
-        Box buttons = Box.createHorizontalBox();
-        buttons.add(apply);
-        buttons.add(reset);
-        Box vertical = Box.createVerticalBox();
-        vertical.add(label);
-        vertical.add(buttons);
+        // Box buttons = Box.createHorizontalBox();
+        // buttons.add(apply);
+        // buttons.add(reset);
+        // Box vertical = Box.createVerticalBox();
+        // vertical.add(label);
+        // vertical.add(buttons);
         
-        super.setLayout(new BorderLayout());
-        super.add(BorderLayout.NORTH, info);
-        super.add(BorderLayout.CENTER, site);
-        super.add(BorderLayout.SOUTH, vertical);
+        super.setLayout(new MigLayout((Productivity.kMigDebug?"debug":"")));
+        super.add(info, "dock north, wrap");
+        super.add(site, "grow, push, span, wrap");
+        super.add(label, "align left, wrap");
+        super.add(apply, "split 2");
+        super.add(reset, "");
     }
     
     public static void reBlockSites() {
