@@ -28,8 +28,10 @@ public class CheckBoxes extends JPanel {
 	
 	private static final String[] kColorNames = {"White", "Red", "Blue", "Green"};
 	private static final Color[] kColors = {Color.WHITE, new Color(250, 0, 0), new Color(0, 0, 230), new Color(0, 220, 0)};
+	private static final int kRows = 7;
+	private static final int kColumns = 3;
 	private static final int kCharLimit = 35;
-	private static final int kCheckBoxLimit = 50;
+	private static final int kCheckBoxLimit = kRows * kColumns;
 	
 	private ArrayList<JCheckBox> mCheckBoxes = new ArrayList<JCheckBox>();
 	private JPanel mChecklistPanel;
@@ -53,7 +55,7 @@ public class CheckBoxes extends JPanel {
 		mNameFile = name;
 		mCheckFile = check;
 		mColorFile = color;
-		mChecklistPanel = new JPanel(new MigLayout("wrap 7, gap 0px 0px, ins 0, aligny top, alignx left, flowy"));
+		mChecklistPanel = new JPanel(new MigLayout("wrap "+ kRows +", gap 0px 0px, ins 0, flowy"));
 		JTextField input = new JTextField(kCharLimit);
 		input.setDocument(new JTextFieldLimit(kCharLimit));
 		input.addActionListener(e -> {
@@ -95,7 +97,7 @@ public class CheckBoxes extends JPanel {
 		super.setLayout(new MigLayout("gap 0px 0px, ins 0" + ((Productivity.kMigDebug)?",debug":"")));
 		super.add(input, "");
 		super.add(colorChooser, "wrap");
-		super.add(mChecklistPanel, "hmax 158, wmax " + /*408*/ Productivity.kWidth +", grow, push, span, wrap");
+		super.add(mChecklistPanel, "hmax 158, wmax "+ Productivity.kWidth +", grow, push, span, wrap");
 		super.add(reset, "span, center, split 2");
 		super.add(clear, "");
 	}
@@ -172,7 +174,7 @@ public class CheckBoxes extends JPanel {
 		});
 		Popup pop = new Popup(items);
 		checkBox.addMouseListener(pop.new PopClickListener());
-		mChecklistPanel.add(checkBox, "wmax 150");
+		mChecklistPanel.add(checkBox, "width "+ (int)(Productivity.kWidth/kColumns) +", wmax " + (int)(Productivity.kWidth/kColumns));
 		saveCheckBoxes();
 		Productivity.getInstance().repaintFrame();
 	}
