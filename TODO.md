@@ -1,25 +1,22 @@
 - Version 4 UI Update
 # Remove Mac?
-- MiG Layout
-- Clean up ui
 # Expand limits for char count and checkbox count
-- Fix home
-- Overhaul home ui
 # Clean up codebase and put into folders
+# Minimize
+# MiG Layout
+- Clean up ui
+- Fix home
 - Explode SettingsPanel
 - Adapt ui to different tab sizes
 - Remove whitespace from small tab amounts
-# Minimize
 - inc and borders
+- Regex on website
 
 - Version 4.1 Checklist Update
+- Scheduled Notifications
 - Group checklist items
 - Backlog
 - Exception
-- Notes optional
-- Non static notes amount
-- Scheduled Notifications
-- Regex on website
 - Add more settings options
 - More color options (color wheel?)
 
