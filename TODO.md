@@ -11,7 +11,6 @@
 - Remove whitespace from small tab amounts
 # Minimize
 - inc and borders
-- Adapt Help Size
 
 - Version 4.1 Checklist Update
 - Group checklist items

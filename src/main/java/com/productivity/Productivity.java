@@ -32,7 +32,6 @@ import com.productivity.Custom.AddCustomCheckList;
 import com.productivity.Custom.CustomCheckList;
 import com.productivity.Panels.DailyChecklist;
 import com.productivity.Panels.HomePanel;
-import com.productivity.Panels.NotesPanel;
 import com.productivity.Panels.SettingsPanel;
 import com.productivity.Panels.TimerPanel;
 import com.productivity.Util.ComponentMover;
@@ -126,7 +125,6 @@ public class Productivity extends JFrame {
 		mTabbedPane.addTab("Checklist", mCheckBoxes);
 		mTabbedPane.addTab("Daily", new DailyChecklist());
 		mTabbedPane.addTab("Timers", new TimerPanel());
-		mTabbedPane.addTab("Notes", new NotesPanel());
 		if (AddCustomCheckList.getNumberOfChecklists() > 0) {
 			mTabbedPane.addTab("Custom", mCustomCheckList);
 		}
