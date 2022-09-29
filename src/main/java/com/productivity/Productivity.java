@@ -53,7 +53,7 @@ public class Productivity extends JFrame {
 	
 	private static final JTabbedPane mTabbedPane = new JTabbedPane();
 	private static final JLayeredPane mLayeredPane = new JLayeredPane();
-	private static final CustomCheckList mCustomCheckList = CustomCheckList.getInstance();
+	private static CustomCheckList mCustomCheckList;
 	
 	private static String mCurrentPath;
 	private static String mCurrentCustomPath;
@@ -120,6 +120,7 @@ public class Productivity extends JFrame {
 		SettingsPanel.loadSettings();
 		AddCustomCheckList.loadCheckLists();
 		setConfetti(Integer.parseInt(SettingsPanel.getSetting("currentConfetti")));
+		mCustomCheckList = CustomCheckList.getInstance();
 		mTabbedPane.setFocusable(false);
 		mCheckBoxes = new CheckBoxes(mNameFile, mStateFile, mColorFile, false, true);
 		mTabbedPane.addTab("Checklist", mCheckBoxes);
