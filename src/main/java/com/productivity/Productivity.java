@@ -27,6 +27,7 @@ import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.Color;
 
 import com.productivity.Custom.AddCustomCheckList;
 import com.productivity.Custom.CustomCheckList;
@@ -35,6 +36,7 @@ import com.productivity.Panels.HomePanel;
 import com.productivity.Panels.SettingsPanel;
 import com.productivity.Panels.TimerPanel;
 import com.productivity.Util.ComponentMover;
+import com.productivity.Util.CustomTabbedUI;
 import com.formdev.flatlaf.FlatDarculaLaf;
 
 public class Productivity extends JFrame {
@@ -120,8 +122,9 @@ public class Productivity extends JFrame {
 		AddCustomCheckList.loadCheckLists();
 		setConfetti(Integer.parseInt(SettingsPanel.getSetting("currentConfetti")));
 		mCustomCheckList = CustomCheckList.getInstance();
-		mTabbedPane.setFocusable(false);
 		mCheckBoxes = new CheckBoxes(mNameFile, mStateFile, mColorFile, false, true);
+		mTabbedPane.setUI(new CustomTabbedUI(new Color(64, 60, 68)));
+		mTabbedPane.setFocusable(false);
 		mTabbedPane.addTab("Checklist", mCheckBoxes);
 		mTabbedPane.addTab("Daily", new DailyChecklist());
 		mTabbedPane.addTab("Timers", new TimerPanel());

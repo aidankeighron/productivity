@@ -21,12 +21,15 @@ import java.util.HashMap;
 import java.util.Scanner;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import java.awt.Color;
 import java.awt.Toolkit;
 
 import com.productivity.BlockSites;
 import com.productivity.CheckBoxes;
 import com.productivity.Productivity;
 import com.productivity.Custom.AddCustomCheckList;
+import com.productivity.Util.CustomTabbedUI;
 import com.productivity.Util.Notification;
 
 public class SettingsPanel extends JTabbedPane {
@@ -125,6 +128,7 @@ public class SettingsPanel extends JTabbedPane {
         addSetting("Confetti", "wantConfetti", "Enable/Disable Confetti", settingTypes.checkbox, null, false, null);
         addSetting("Selected Confetti: ", "currentConfetti", "", settingTypes.confetti, null, false, null);
         mConfigPanel.add(mConfigBox);
+        super.setUI(new CustomTabbedUI(new Color(64, 60, 68)));
         super.addTab("Config", mConfigPanel);
         if (Boolean.parseBoolean(getSetting("blockSites"))) {
             super.addTab("Block Sites", mBlockSites);

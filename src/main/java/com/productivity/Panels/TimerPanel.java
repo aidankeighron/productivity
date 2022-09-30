@@ -1,7 +1,5 @@
 package com.productivity.Panels;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -11,29 +9,24 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.border.Border;
 
 import com.productivity.BlockSites;
 import com.productivity.Productivity;
 import com.productivity.Util.Notification;
 
-import java.awt.BorderLayout;
+import net.miginfocom.swing.MigLayout;
+
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.awt.Toolkit;
-
 
 public class TimerPanel extends JPanel {
 
     private static final String[] kTimeOptions = {"Seconds", "Minutes", "Hours"};
     private static final int kMaxTimers = 20;
 
-    private Box mProgressBars = Box.createVerticalBox();
-    private Box mNames = Box.createVerticalBox();
     private ArrayList<JProgressBar> mBars = new ArrayList<JProgressBar>();
     private ArrayList<JButton> mButtons = new ArrayList<JButton>();
     private int mTimeMultiplier = 1;
@@ -43,10 +36,7 @@ public class TimerPanel extends JPanel {
     private boolean mWantSitesBlocked = false;
     private boolean mBlockedTimerActive = false;
     private JCheckBox mBlockBox = new JCheckBox();
-    private static Box mButton = Box.createHorizontalBox();
-
-    private static Box mBlock;
-    private static Box mVertical = Box.createVerticalBox();
+    private JPanel mScrollPanel = new JPanel();
     
     public TimerPanel() {
         JLabel timeLbl = new JLabel("Duration:");
@@ -171,57 +161,27 @@ public class TimerPanel extends JPanel {
             }
         });
         timeList.setFocusable(false);
-        JPanel config = new JPanel();
-        Box time = Box.createHorizontalBox();
-        time.add(timeLbl);
-        time.add(timeField);
-        Box name = Box.createHorizontalBox();
-        name.add(nameLbl);
-        name.add(nameFelid);
-        Box check = Box.createHorizontalBox();
-        check.add(alarmLbl);
-        check.add(alarmBox);
-        mBlock = Box.createHorizontalBox();
-        mBlock.add(blockLbl);
-        mBlock.add(mBlockBox);
-        mButton = Box.createHorizontalBox();
-        mButton.add(addBtn);
-        addBlank(mVertical, 2);
-        mVertical.add(timeList);
-        mVertical.add(time);
-        mVertical.add(name);
-        mVertical.add(check);
-        if (Boolean.parseBoolean(SettingsPanel.getSetting("blockSites"))) {
-            mVertical.add(mBlock);         
-        }
-        mVertical.add(mButton);
-        config.add(mVertical);
-        
-        JPanel progressBarsPanel = new JPanel();
-        progressBarsPanel.add(mProgressBars);
-        JPanel namesPanel = new JPanel();
-        namesPanel.add(mNames);
-        
-        JPanel scrollPanel = new JPanel();
-        scrollPanel.setLayout(new BorderLayout());
-        scrollPanel.add(BorderLayout.WEST, progressBarsPanel);
-        scrollPanel.add(BorderLayout.EAST, namesPanel);
-        JScrollPane scroll = new JScrollPane(scrollPanel);
-        
-        super.setLayout(new BorderLayout());
-        super.add(BorderLayout.EAST, config);
-        super.add(BorderLayout.WEST, scroll);
+
+        mScrollPanel.setLayout(new MigLayout());
+        JScrollPane scroll = new JScrollPane(mScrollPanel);
+        scroll.add(new JTextField());
+        scroll.add(new JButton());
+        super.setLayout(new MigLayout(((Productivity.kMigDebug)?"debug, ":"")+"flowy"));
+        super.add(timeList, "spanx 2, center");
+        super.add(timeLbl, "");
+        super.add(nameLbl, "");
+        super.add(alarmLbl, "");
+        super.add(blockLbl, "");
+        super.add(addBtn, "spanx 2, wrap");
+        super.add(timeField, "");
+        super.add(nameFelid, "");
+        super.add(mBlockBox, "");
+        super.add(alarmBox, "wrap");
+        super.add(scroll, "spany 6, grow, push");
     }
     
     public static void setAllowBlock(boolean value) {
-        if (value) {
-            mVertical.remove(mButton);
-            mVertical.add(mBlock);
-            mVertical.add(mButton);
-        }
-        else {
-            mVertical.remove(mBlock);
-        }
+        
     }
     
     private void addProgressBar(String name, int length) {
@@ -295,30 +255,24 @@ public class TimerPanel extends JPanel {
             BlockSites.reBlockSites();
             mIsBlocked = true;
         }
-        Component progressBox = Box.createRigidArea(new Dimension(0, 8));
-        Component nameBox = Box.createRigidArea(new Dimension(0, 2));
         button.addActionListener(e -> {
-            removeProgressBar(button, progressBar, task, time, isBlockedTimer, progressBox, nameBox);
+            removeProgressBar(button, progressBar, task, time, isBlockedTimer);
             mNumTimers--;
         });
         
         mBars.add(progressBar);
         mButtons.add(button);
-        Border barBorder = BorderFactory.createEmptyBorder(4, 0, 0, 0);
-        mProgressBars.setBorder(barBorder);
-        mProgressBars.add(progressBar);
-        mProgressBars.add(progressBox);
-        Border nameBorder = BorderFactory.createEmptyBorder(2, 0, 0, 0);
-        mNames.setBorder(nameBorder);
-        mNames.add(button);
-        mNames.add(nameBox);
+
+        mScrollPanel.add(progressBar, "grow, pushx");
+        mScrollPanel.add(button, "grow, pushx, wrap");
+        //mNames.add(nameBox);
         if (isBlockedTimer) {
             mBlockBox.setSelected(false);
         }
         Productivity.getInstance().repaintFrame();
     }
     
-    private void removeProgressBar(JButton button, JProgressBar progressBar, TimerTask task, Timer time, Boolean isBlockedTimer, Component progBox, Component nameBox) {
+    private void removeProgressBar(JButton button, JProgressBar progressBar, TimerTask task, Timer time, Boolean isBlockedTimer) {
         if (mIsBlocked && mBlockedTimerActive && isBlockedTimer) {
             BlockSites.unBlockSites();
             mBlockedTimerActive = false;
@@ -327,19 +281,8 @@ public class TimerPanel extends JPanel {
         task.cancel();
         time.cancel();
         time.purge();
-        mProgressBars.remove(progressBar);
-        mProgressBars.remove(progBox);
-        mNames.remove(button);
-        mNames.remove(nameBox);
-        mBars.remove(progressBar);
-        mButtons.remove(button);
+        mScrollPanel.remove(progressBar);
+        mScrollPanel.remove(button);
         Productivity.getInstance().repaintFrame();
-    }
-    
-    private void addBlank(Box panel, int amount) {
-        for (int i = 0; i < amount; i++) {
-            JLabel blank = new JLabel();
-            panel.add(blank);
-        }
     }
 }

@@ -4,6 +4,7 @@
 # Clean up codebase and put into folders
 # Minimize
 # MiG Layout
+- setAllowBlock
 - Clean up ui
 - Fix home
 - Explode SettingsPanel
