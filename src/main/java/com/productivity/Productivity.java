@@ -37,6 +37,9 @@ import com.productivity.Panels.SettingsPanel;
 import com.productivity.Panels.TimerPanel;
 import com.productivity.Util.ComponentMover;
 import com.productivity.Util.CustomTabbedUI;
+
+import net.miginfocom.swing.MigLayout;
+
 import com.formdev.flatlaf.FlatDarculaLaf;
 
 public class Productivity extends JFrame {
@@ -139,7 +142,7 @@ public class Productivity extends JFrame {
 
 		close.addActionListener(e -> close());
 		minimize.addActionListener(e -> setState(Frame.ICONIFIED));
-		JPanel taskBar = new JPanel();
+		JPanel taskBar = new JPanel(new MigLayout((kMigDebug?"debug, ":"")+"gap 0px 0px, ins 0"));
 		taskBar.add(close); taskBar.add(minimize);
 		int index = mTabbedPane.getTabCount();
 		mTabbedPane.insertTab("", null, null, "", index);

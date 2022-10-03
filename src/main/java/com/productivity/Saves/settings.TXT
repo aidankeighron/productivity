@@ -7,7 +7,7 @@ blockSites
 *
 false
 true
-true
+false
 true
 0
-true
+false
