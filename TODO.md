@@ -7,9 +7,9 @@
 - setAllowBlock
 - Clean up ui
 - Fix home
-- Explode SettingsPanel
-- Adapt ui to different tab sizes
-- Remove whitespace from small tab amounts
+# Explode SettingsPanel
+# Adapt ui to different tab sizes
+# Remove whitespace from small tab amounts
 - inc and borders
 - Regex on website
 

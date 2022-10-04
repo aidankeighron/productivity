@@ -42,15 +42,20 @@ public class CustomTabbedUI extends BasicTabbedPaneUI {
             } else {
                 // plain text
                 AffineTransform affinetransform = new AffineTransform();     
-                FontRenderContext frc = new FontRenderContext(affinetransform,true,true);   
-                Font font = new Font("Tahoma", Font.PLAIN, 12);
+                FontRenderContext frc = new FontRenderContext(affinetransform,true,true); 
+                Font font = new Font("Tahoma", Font.PLAIN, 10);
                 String title = tabPane.getTitleAt(tabIndex);
                 width += (int)(font.getStringBounds(title, frc).getWidth())*.90; //SwingUtilities2.stringWidth(tabPane, metrics, title);
             }
         }
-        if (tabPane.getTabCount()-1 == tabIndex) {
+        if (tabPane.getTabCount()-1 == tabIndex && tabPane.getTitleAt(tabPane.getTabCount()-1) == "") {
             return 60;
         }
+        int[] end = {0, 0};
+        if (tabPane.getTitleAt(tabPane.getTabCount()-1) == "") {
+            end = new int[] {-60, -1};
+        }
+        width = (int)((tabPane.getWidth()+end[0])/(tabPane.getTabCount()+end[1]));
         return width;
     }
 

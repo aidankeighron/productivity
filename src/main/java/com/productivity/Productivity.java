@@ -44,7 +44,7 @@ import com.formdev.flatlaf.FlatDarculaLaf;
 
 public class Productivity extends JFrame {
 	
-	public static final int kWidth = 408; // 400
+	public static final int kWidth = 400; // 400
 	public static final int kHeight = 300; // 300
 	public static final Boolean kMigDebug = true;
 	private static final Boolean kDebug = true;
