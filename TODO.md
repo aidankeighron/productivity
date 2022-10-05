@@ -8,12 +8,12 @@
 # Adapt ui to different tab sizes
 # Remove whitespace from small tab amounts
 - setAllowBlock
-- Remove custom
+# Remove custom on home
 - Clean up ui
     - Settings
     - Home
 - inc and borders
-- Regex on website
+# Regex on website
 - Checkbox text length
 
 - Version 4.1 Checklist Update

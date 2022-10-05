@@ -17,7 +17,6 @@ public class HomePanel extends JPanel {
     
     private JPanel mCheckPanel;
     private JPanel mDailyPanel;
-    private JPanel mCustomPanel;
     private GridBagConstraints c = new GridBagConstraints();
     
     private enum BoxType {
@@ -45,39 +44,17 @@ public class HomePanel extends JPanel {
             mDailyPanel.removeAll();
             super.remove(mDailyPanel);
         }
-        if (mCustomPanel != null) {
-            mCustomPanel.removeAll();
-            super.remove(mCustomPanel);
-        }
         
         mCheckPanel = makePanel(Productivity.getInstance().getBoxes(), "Checklist", BoxType.check, c);
         mDailyPanel = makePanel(DailyChecklist.getCheckBoxes(), "Daily", BoxType.daily, c);
-        mCustomPanel = makePanel(AddCustomCheckList.getRandomCheckBoxes(), "", BoxType.custom, c);
         
-        if (mCustomPanel != null) {
-            c.gridx = 0;
-            c.gridy = 0;
-            c.gridheight = 2;
-            super.add(mCheckPanel, c);
-            
-            c.gridheight = 1;
-            c.gridx = 1;
-            c.gridy = 0;
-            super.add(mDailyPanel, c);
-            
-            c.gridx = 1;
-            c.gridy = 1;
-            super.add(mCustomPanel, c);
-        }
-        else {
-            c.gridx = 0;
-            c.gridy = 0;
-            super.add(mCheckPanel, c);
-            
-            c.gridx = 1;
-            c.gridy = 0;
-            super.add(mDailyPanel, c);
-        }
+        c.gridx = 0;
+        c.gridy = 0;
+        super.add(mCheckPanel, c);
+        
+        c.gridx = 1;
+        c.gridy = 0;
+        super.add(mDailyPanel, c);
         
         Productivity.getInstance().repaintFrame();
         this.repaint();

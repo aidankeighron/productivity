@@ -102,7 +102,7 @@ public class CheckBoxes extends JPanel {
 		super.setLayout(new MigLayout("gap 0px 0px, ins 0" + ((Productivity.kMigDebug)?",debug":"")));
 		super.add(input, "");
 		super.add(colorChooser, "wrap");
-		super.add(mChecklistPanel, "hmax 158, wmax "+ Productivity.kWidth +", grow, push, span, wrap");
+		super.add(mChecklistPanel, "grow, push, span, wrap");
 		super.add(reset, "span, center, split 2");
 		super.add(clear, "");
 	}

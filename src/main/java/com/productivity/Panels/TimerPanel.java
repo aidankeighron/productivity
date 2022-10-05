@@ -167,7 +167,7 @@ public class TimerPanel extends JPanel {
         scroll.add(new JTextField());
         scroll.add(new JButton());
         super.setLayout(new MigLayout(((Productivity.kMigDebug)?"debug, ":"")+"flowy"));
-        super.add(timeList, "spanx 2, center");
+        super.add(timeList, "spanx 2, alignx left, aligny bottom");
         super.add(timeLbl, "");
         super.add(nameLbl, "");
         super.add(alarmLbl, "");

@@ -46,7 +46,7 @@ public class BlockSites extends JPanel {
         reset.addActionListener(e -> reset(site));
         
         JLabel label = new JLabel("You will need to run program as admin for this feature to work");
-        JLabel info = new JLabel("Type websites here then press \"Apply\"");
+        JLabel info = new JLabel("Type websites here then press (EX: youtube.com) \"Apply\"");
         
         super.setLayout(new MigLayout((Productivity.kMigDebug?"debug":"")));
         super.add(info, "dock north, wrap");
@@ -115,7 +115,7 @@ public class BlockSites extends JPanel {
     private void blockSite(JTextArea site) {
         String[] sites = site.getText().split("\\r?\\n");
         String[] validSites = new String[sites.length];
-        String regex = "^((https?|ftp|smtp):\\/\\/)?(www.)?[a-z0-9]+\\.[a-z]+(\\/[a-zA-Z0-9#]+\\/?)*$";
+        String regex = "^((https?|ftp|smtp):\\/\\/)?(www.)?[a-z0-9]+\\.[a-z]+(\\/[a-zA-Z0-9#]+\\/?|\\/)*$";
         int numValidSites = 0;
         for (int i = 0; i < sites.length; i++) {
             if (isMatch(sites[i], regex)) {
