@@ -4,14 +4,17 @@
 # Clean up codebase and put into folders
 # Minimize
 # MiG Layout
-- setAllowBlock
-- Clean up ui
-- Fix home
 # Explode SettingsPanel
 # Adapt ui to different tab sizes
 # Remove whitespace from small tab amounts
+- setAllowBlock
+- Remove custom
+- Clean up ui
+    - Settings
+    - Home
 - inc and borders
 - Regex on website
+- Checkbox text length
 
 - Version 4.1 Checklist Update
 - Scheduled Notifications
