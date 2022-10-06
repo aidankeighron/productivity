@@ -1,6 +1,5 @@
 package com.productivity.Custom;
 
-import java.awt.BorderLayout;
 import java.io.File;
 import java.io.FileWriter;
 import java.nio.file.Files;
@@ -8,18 +7,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 
-import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 
 import com.productivity.CheckBoxes;
 import com.productivity.Productivity;
 import com.productivity.Panels.HomePanel;
 import com.productivity.Util.JTextFieldLimit;
+
+import net.miginfocom.swing.MigLayout;
 
 public class AddCustomCheckList extends JPanel {
     
@@ -28,12 +29,13 @@ public class AddCustomCheckList extends JPanel {
     private static final int kCharLimit = 10;
     private static final int kMaxCustomCheckLists = 8;
     
-    private static Box mVertical = Box.createVerticalBox();
     private static ArrayList<String> mNames = new ArrayList<String>();
     private static HashMap<String, CheckBoxes> mCheckBoxes = new HashMap<String, CheckBoxes>();
     private static int mCurrentNumCheckLists = 0;
     private static boolean mWantHome = true;
     private static int mRandomIndex = -1;
+
+    private static JPanel mCustomPanel = new JPanel(new MigLayout("flowy, gap 5px 5px, ins 5" + (Productivity.kMigDebug?", debug":"")));
     
     public AddCustomCheckList() {
         JTextField name = new JTextField();
@@ -68,15 +70,18 @@ public class AddCustomCheckList extends JPanel {
         });
         
         JLabel nameLbl = new JLabel("Name Of Custom Checklist:");
-        Box nameBox = Box.createVerticalBox();
-        Box inputBox = Box.createHorizontalBox();
-        inputBox.add(name);
-        inputBox.add(home);
-        nameBox.add(nameLbl);
-        nameBox.add(inputBox);
-        super.setLayout(new BorderLayout());
-        super.add(BorderLayout.NORTH, nameBox);
-        super.add(BorderLayout.CENTER, mVertical);
+        super.setLayout(new MigLayout((Productivity.kMigDebug?"debug":"")));
+        super.add(nameLbl, "wrap");
+        super.add(name, "split 2, growx");
+        super.add(home, "wrap");
+        super.add(mCustomPanel, "grow, push, span");
+
+        SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				loadCheckLists();
+			}
+		}
+		);
     }
     
     private boolean testValidFileName(String text) {
@@ -180,14 +185,16 @@ public class AddCustomCheckList extends JPanel {
         }
         JButton button = new JButton(n);
         button.addActionListener(e -> {
-            mVertical.remove(button);
+            mCustomPanel.remove(button);
             Productivity.getInstance().repaintFrame();
             deleteChecklist(n);
             saveChecklists();
             HomePanel.getInstance().reset();
         });
         button.setFocusPainted(false);
-        mVertical.add(button);
+        int rows = (int)(mCustomPanel.getHeight() / (button.getPreferredSize().getHeight()+5));
+        if (rows <= 0) rows = 1;
+        mCustomPanel.add(button, (((mCustomPanel.getComponentCount()+1) % rows == 0)?"wrap":""));
         CheckBoxes checkBox = new CheckBoxes(name, check, color, false, home);
         mCheckBoxes.put(n, checkBox);
         saveChecklists();

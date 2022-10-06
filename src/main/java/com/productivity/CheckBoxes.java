@@ -27,7 +27,7 @@ import net.miginfocom.swing.MigLayout;
 
 public class CheckBoxes extends JPanel {
 	
-	public static final int kColumns = 3;
+	public static final int kColumns = 2;
 
 	private static final String[] kColorNames = {"White", "Red", "Blue", "Green"};
 	private static final Color[] kColors = {Color.WHITE, new Color(250, 0, 0), new Color(0, 0, 230), new Color(0, 220, 0)};

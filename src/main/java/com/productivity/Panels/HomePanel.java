@@ -1,80 +1,55 @@
 package com.productivity.Panels;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
 import java.awt.Color;
 
 import com.productivity.Productivity;
-import com.productivity.Custom.AddCustomCheckList;
+
+import net.miginfocom.swing.MigLayout;
 
 public class HomePanel extends JPanel {
     
-    private JPanel mCheckPanel;
-    private JPanel mDailyPanel;
-    private GridBagConstraints c = new GridBagConstraints();
+    private JPanel mCheckPanel = new JPanel(new MigLayout("flowy, gap 0px 0px, ins 0" + (Productivity.kMigDebug?", debug":"")));
+    private JPanel mDailyPanel = new JPanel(new MigLayout("flowy, gap 0px 0px, ins 0" + (Productivity.kMigDebug?", debug":"")));
     
     private enum BoxType {
         check,
         daily,
-        custom;
     }
     
     public HomePanel() {
-        super.setLayout(new GridBagLayout());
-        reset();
+        super.setLayout(new MigLayout("gap 5px 5px, ins 5" + (Productivity.kMigDebug?", debug":"")));
+        super.add(mCheckPanel, "split 2, grow, push, span, hmax " + (Productivity.kHeight - Productivity.kTabHeight - 20) + ", wmax " + (Productivity.kWidth-15)/2);
+        super.add(mDailyPanel, "grow, push, span, hmax " + (Productivity.kHeight - Productivity.kTabHeight - 20) + ", wmax " + (Productivity.kWidth-15)/2);
+        SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+                reset();
+			}
+		}
+		);
     }
     
     public void reset() {
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.weightx = 1.0;
-        c.weighty = 1.0;
-        c.ipady = Productivity.kHeight;
+        mCheckPanel.removeAll();
+        mDailyPanel.removeAll();
         
-        if (mCheckPanel != null) {
-            mCheckPanel.removeAll();
-            super.remove(mCheckPanel);
-        }
-        if (mDailyPanel != null) {
-            mDailyPanel.removeAll();
-            super.remove(mDailyPanel);
-        }
-        
-        mCheckPanel = makePanel(Productivity.getInstance().getBoxes(), "Checklist", BoxType.check, c);
-        mDailyPanel = makePanel(DailyChecklist.getCheckBoxes(), "Daily", BoxType.daily, c);
-        
-        c.gridx = 0;
-        c.gridy = 0;
-        super.add(mCheckPanel, c);
-        
-        c.gridx = 1;
-        c.gridy = 0;
-        super.add(mDailyPanel, c);
+        makePanel(mCheckPanel, Productivity.getInstance().getBoxes(), "Checklist", BoxType.check);
+        makePanel(mDailyPanel, DailyChecklist.getCheckBoxes(), "Daily", BoxType.daily);
         
         Productivity.getInstance().repaintFrame();
         this.repaint();
     }
     
-    private JPanel makePanel(JCheckBox[] boxes, String title, BoxType type, GridBagConstraints c) {
-        JPanel panel = new JPanel(new GridBagLayout());
-        Box vertical = Box.createVerticalBox();
-        Box vertical2 = Box.createVerticalBox();
-        Box horizontal = Box.createHorizontalBox();
+    private JPanel makePanel(JPanel panel, JCheckBox[] boxes, String title, BoxType type) {
         panel.setBorder(BorderFactory.createLineBorder(Color.black));
-        if (type == BoxType.custom) {
-            title += AddCustomCheckList.getrandomName();
-        }
         JLabel label = new JLabel(title);
-        c.weighty = 1.0;
-        c.gridx = 0;
-        c.gridy = 0;
-        vertical.add(label);
-        if (boxes != null && (boxes.length > 0 || !type.equals(BoxType.custom))) {
+        panel.add(label, "spanx 2, center, pushx");
+        if (boxes != null && boxes.length > 0) {
             for (int i = 0; i < boxes.length; i++) {
                 JCheckBox checkBox = new JCheckBox(boxes[i].getText());
                 checkBox.setSelected(boxes[i].isSelected());
@@ -92,26 +67,16 @@ public class HomePanel extends JPanel {
                         DailyChecklist.setCheckBoxes(checkBox.isSelected(), index);
                         SettingsPanel.setDailySelected(checkBox.isSelected(), index);
                         break;
-                        case custom:
-                        String customTitle = AddCustomCheckList.getrandomName();
-                        AddCustomCheckList.setCheckList(checkBox.isSelected(), index, customTitle);
-                        break;
                         default:
                         break;
                     }
                 });
-                if ((boxes.length > 10 && i > boxes.length/2 && type == BoxType.check) || (boxes.length > 5 && i >= 5 && i < 10 && type != BoxType.check))
-                    vertical2.add(checkBox);
-                else if (i < 10)
-                    vertical.add(checkBox);
+                int rows = (int)(panel.getHeight() / checkBox.getPreferredSize().getHeight());
+                if (rows <= 0) rows = 1;
+                panel.add(checkBox, "width "+ panel.getWidth()/2 + ", wmax "+ panel.getWidth()/2 +(((panel.getComponentCount()+1) % rows == 0)?", wrap":""));
             }
-            horizontal.add(vertical);
-            horizontal.add(vertical2);
-            panel.add(horizontal, c);
-            return panel;
         }
-        if (!type.equals(BoxType.custom)) return panel;
-        return null;
+        return panel;
     }
     
     private static HomePanel mInstance = null;

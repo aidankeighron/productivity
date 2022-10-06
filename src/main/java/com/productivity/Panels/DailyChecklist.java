@@ -29,7 +29,7 @@ public class DailyChecklist extends JPanel {
 	
 	public DailyChecklist() {
 		loadFiles();
-		super.setLayout(new MigLayout("gap 0px 0px, ins 0" + ((Productivity.kMigDebug)?",debug":"")));
+		super.setLayout(new MigLayout("gap 5px 5px, ins 5" + ((Productivity.kMigDebug)?",debug":"")));
 		super.add(mChecklistPanel, "wmax "+ Productivity.kWidth +", grow, push, span");
 
 		SwingUtilities.invokeLater(new Runnable() {
@@ -110,7 +110,7 @@ public class DailyChecklist extends JPanel {
 		checkBox.setForeground(color);
 		checkBox.setSelected(checked);
 		mCheckBoxes.add(checkBox);
-		int rows = (int)(mChecklistPanel.getHeight() / checkBox.getPreferredSize().getHeight());
+		int rows = (int)(mChecklistPanel.getHeight() / (checkBox.getPreferredSize().getHeight()+5));
 		if (rows <= 0) rows = 1;
 		mChecklistPanel.add(checkBox, "width "+ (int)(Productivity.kWidth/CheckBoxes.kColumns) +", wmax " + (int)(Productivity.kWidth/CheckBoxes.kColumns) + (((mChecklistPanel.getComponentCount()+1) % rows == 0)?", wrap":""));
 		Productivity.getInstance().repaintFrame();

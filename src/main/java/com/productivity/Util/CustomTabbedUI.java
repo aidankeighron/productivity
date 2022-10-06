@@ -5,6 +5,8 @@ import javax.swing.JComponent;
 import javax.swing.plaf.basic.BasicTabbedPaneUI;
 import javax.swing.text.View;
 
+import com.productivity.Productivity;
+
 import java.awt.Font;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.AffineTransform;
@@ -61,7 +63,7 @@ public class CustomTabbedUI extends BasicTabbedPaneUI {
 
     @Override
     protected int calculateTabHeight(int tabPlacement, int tabIndex, int fontHeight) {
-        return 30;
+        return Productivity.kTabHeight;
     }
     
     public void setBackgroundColor(Color backgroundColor) {

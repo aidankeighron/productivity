@@ -1,6 +1,5 @@
 package com.productivity.Panels;
 
-import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -32,6 +31,8 @@ import com.productivity.Custom.AddCustomCheckList;
 import com.productivity.Util.CustomTabbedUI;
 import com.productivity.Util.Notification;
 
+import net.miginfocom.swing.MigLayout;
+
 public class SettingsPanel extends JTabbedPane {
     
     private static final String[] kTimeOptions = {"Seconds", "Minutes", "Hours"};
@@ -43,9 +44,8 @@ public class SettingsPanel extends JTabbedPane {
     private static File mColorFile;
     private static File mReminderFile;
 
-    private JPanel mConfigPanel = new JPanel();
-    private Box mConfigBox = Box.createVerticalBox();
-    private JPanel mReminderPanel = new JPanel();
+    private JPanel mConfigPanel = new JPanel(new MigLayout((Productivity.kMigDebug?"debug":"")));
+    private JPanel mReminderPanel = new JPanel(new MigLayout((Productivity.kMigDebug?"debug":"")));
     private BlockSites mBlockSites = new BlockSites();
     
     private static CheckBoxes mDailyPanel;
@@ -127,7 +127,6 @@ public class SettingsPanel extends JTabbedPane {
         addSetting("Block Sites", "blockSites", "Allows you to block sites", settingTypes.checkbox, blockSitesActive, true, "Are you sure");
         addSetting("Confetti", "wantConfetti", "Enable/Disable Confetti", settingTypes.checkbox, null, false, null);
         addSetting("Selected Confetti: ", "currentConfetti", "", settingTypes.confetti, null, false, null);
-        mConfigPanel.add(mConfigBox);
         super.setUI(new CustomTabbedUI(new Color(64, 60, 68)));
         super.addTab("Config", mConfigPanel);
         if (Boolean.parseBoolean(getSetting("blockSites"))) {
@@ -172,9 +171,7 @@ public class SettingsPanel extends JTabbedPane {
                 System.out.println("Setting does not exist");
             }
             checkBox.setToolTipText(tooltip);
-            Box horizontal = Box.createHorizontalBox();
-            horizontal.add(checkBox);
-            mConfigBox.add(horizontal);
+            mConfigPanel.add(checkBox, "wrap");
             break;
             case number:
             JLabel numLabel = new JLabel(name);
@@ -203,10 +200,8 @@ public class SettingsPanel extends JTabbedPane {
                 System.out.println("Setting does not exist");
             }
             numField.setToolTipText(tooltip);
-            Box numHorizontal = Box.createHorizontalBox();
-            numHorizontal.add(numLabel);
-            numHorizontal.add(numField);
-            mConfigBox.add(numHorizontal);
+            mConfigPanel.add(numLabel, "split 2");
+            mConfigPanel.add(numField, "wrap");
             break;
             case text:
             JLabel txtLabel = new JLabel(name);
@@ -228,10 +223,8 @@ public class SettingsPanel extends JTabbedPane {
                 System.out.println("Setting does not exist");
             }
             txtField.setToolTipText(tooltip);
-            Box txtHorizontal = Box.createHorizontalBox();
-            txtHorizontal.add(txtLabel);
-            txtHorizontal.add(txtField);
-            mConfigBox.add(txtHorizontal);
+            mConfigPanel.add(txtLabel, "split 2");
+            mConfigPanel.add(txtField, "wrap");
             break;
             case confetti:
             JLabel confettiLabel = new JLabel(name);
@@ -251,10 +244,8 @@ public class SettingsPanel extends JTabbedPane {
                 System.out.println("Setting does not exist");
             }
             confettiField.setToolTipText(tooltip);
-            Box confettiHorizontal = Box.createHorizontalBox();
-            confettiHorizontal.add(confettiLabel);
-            confettiHorizontal.add(confettiField);
-            mConfigBox.add(confettiHorizontal);
+            mConfigPanel.add(confettiLabel, "split 2");
+            mConfigPanel.add(confettiField, "wrap");
             break;
             default:
             break;
@@ -341,14 +332,12 @@ public class SettingsPanel extends JTabbedPane {
         });
         progressBar.setValue(0);
         progressBar.setStringPainted(true);
-        JLabel info = new JLabel("Causes a beep to be played every:");
-        Box vertical = Box.createVerticalBox();
-        vertical.add(info);
-        vertical.add(timeList);
-        vertical.add(textField);
-        vertical.add(save);
-        vertical.add(progressBar);
-        mReminderPanel.add(vertical);
+        JLabel info = new JLabel("Causes a beep to be played and notification to be shown every:");
+        mReminderPanel.add(info, "wrap, pushx, center");
+        mReminderPanel.add(timeList, "wrap, center");
+        mReminderPanel.add(textField, "wrap, center");
+        mReminderPanel.add(save, "wrap, center");
+        mReminderPanel.add(progressBar, "center, height " + progressBar.getPreferredSize().getHeight()*1.60);
         startTimer(Integer.parseInt(textField.getText()), progressBar);
     }
     

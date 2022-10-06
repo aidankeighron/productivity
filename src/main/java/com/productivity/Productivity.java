@@ -46,6 +46,7 @@ public class Productivity extends JFrame {
 	
 	public static final int kWidth = 400; // 400
 	public static final int kHeight = 300; // 300
+	public static final int kTabHeight = 30;
 	public static final Boolean kMigDebug = true;
 	private static final Boolean kDebug = true;
 	private static final String kDebugPath = "src\\main\\java\\com\\productivity\\";
@@ -78,7 +79,6 @@ public class Productivity extends JFrame {
         return mInstance;
     }
 	public static void main(String[] args) throws IOException {
-		new Productivity();
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				mCurrentPath = (kDebug)?kDebugPath: (args.length>0)?kExePath:kJarPath;
@@ -89,6 +89,7 @@ public class Productivity extends JFrame {
 	}
 	
 	private void createAndShowGUI() {
+		UIManager.put("TabbedPane.selected", Color.BLACK);
 		mConfetti[0] = new JLabel(new ImageIcon(getClass().getResource("Confetti/high.gif")));
 		mConfetti[0].setBounds(0, 0, kWidth, kHeight);
 		mConfetti[1] = new JLabel(new ImageIcon(getClass().getResource("Confetti/low.gif")));
@@ -122,7 +123,6 @@ public class Productivity extends JFrame {
 			e.printStackTrace();
 		}
 		SettingsPanel.loadSettings();
-		AddCustomCheckList.loadCheckLists();
 		setConfetti(Integer.parseInt(SettingsPanel.getSetting("currentConfetti")));
 		mCustomCheckList = CustomCheckList.getInstance();
 		mCheckBoxes = new CheckBoxes(mNameFile, mStateFile, mColorFile, false, true);

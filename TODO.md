@@ -9,12 +9,12 @@
 # Remove whitespace from small tab amounts
 - setAllowBlock
 # Remove custom on home
-- Clean up ui
-    - Settings
-    - Home
+# Clean up ui
 - inc and borders
 # Regex on website
-- Checkbox text length
+# Checkbox text length
+- Timers ui move
+# Daily more space
 
 - Version 4.1 Checklist Update
 - Scheduled Notifications
@@ -23,6 +23,7 @@
 - Exception
 - Add more settings options
 - More color options (color wheel?)
+- Weekly checklist
 
 - Version 5 Exe improvements
 - Better exe
