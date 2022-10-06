@@ -47,7 +47,7 @@ public class Productivity extends JFrame {
 	public static final int kWidth = 400; // 400
 	public static final int kHeight = 300; // 300
 	public static final int kTabHeight = 30;
-	public static final Boolean kMigDebug = true;
+	public static final Boolean kMigDebug = false;
 	private static final Boolean kDebug = true;
 	private static final String kDebugPath = "src\\main\\java\\com\\productivity\\";
 	private static final String kJarPath = "classes\\com\\productivity\\";
@@ -66,6 +66,7 @@ public class Productivity extends JFrame {
 	private static File mStateFile;
 	private static File mColorFile;
 	private static CheckBoxes mCheckBoxes;
+	private static TimerPanel mTimerPanel;
 
 	private static JLabel[] mConfetti = new JLabel[2];
 	private static JLabel mCurrentConfetti;
@@ -126,11 +127,12 @@ public class Productivity extends JFrame {
 		setConfetti(Integer.parseInt(SettingsPanel.getSetting("currentConfetti")));
 		mCustomCheckList = CustomCheckList.getInstance();
 		mCheckBoxes = new CheckBoxes(mNameFile, mStateFile, mColorFile, false, true);
+		mTimerPanel = new TimerPanel();
 		mTabbedPane.setUI(new CustomTabbedUI(new Color(64, 60, 68)));
 		mTabbedPane.setFocusable(false);
 		mTabbedPane.addTab("Checklist", mCheckBoxes);
 		mTabbedPane.addTab("Daily", new DailyChecklist());
-		mTabbedPane.addTab("Timers", new TimerPanel());
+		mTabbedPane.addTab("Timers", mTimerPanel);
 		if (AddCustomCheckList.getNumberOfChecklists() > 0) {
 			mTabbedPane.addTab("Custom", mCustomCheckList);
 		}
@@ -265,6 +267,10 @@ public class Productivity extends JFrame {
 	
 	public void setSelected(boolean state, int index) {
 		mCheckBoxes.setSelected(state, index);
+	}
+
+	public void setAllowBlock(boolean state) {
+		mTimerPanel.setAllowBlock(state);
 	}
 
 	public void setConfetti(int index) {

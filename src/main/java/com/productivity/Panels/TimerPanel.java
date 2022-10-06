@@ -36,6 +36,7 @@ public class TimerPanel extends JPanel {
     private boolean mWantSitesBlocked = false;
     private boolean mBlockedTimerActive = false;
     private JCheckBox mBlockBox = new JCheckBox();
+    private JLabel mBlockLbl = new JLabel();
     private JPanel mScrollPanel = new JPanel();
     
     public TimerPanel() {
@@ -99,7 +100,7 @@ public class TimerPanel extends JPanel {
         alarmBox.addActionListener(e -> {
             mAlarm = alarmBox.isSelected();
         });
-        JLabel blockLbl = new JLabel("Block: ");
+        mBlockLbl = new JLabel("Block: ");
         mBlockBox.addActionListener(e -> {
             if (!mBlockedTimerActive) {
                 mWantSitesBlocked = mBlockBox.isSelected();
@@ -114,7 +115,7 @@ public class TimerPanel extends JPanel {
         alarmLbl.setToolTipText(alarmInfo);
         String blockInfo = "Blocks websites specified in \"Block sites\" for durration of timer";
         mBlockBox.setToolTipText(blockInfo);
-        blockLbl.setToolTipText(blockInfo);
+        mBlockLbl.setToolTipText(blockInfo);
         JButton addBtn = new JButton("           Add           ");
         addBtn.setFocusPainted(false);
         addBtn.addActionListener(e -> {
@@ -167,21 +168,30 @@ public class TimerPanel extends JPanel {
         scroll.add(new JTextField());
         scroll.add(new JButton());
         super.setLayout(new MigLayout(((Productivity.kMigDebug)?"debug, ":"")+"flowy"));
-        super.add(timeList, "spanx 2, alignx left, aligny bottom");
+        super.add(timeList, "spanx 2, center, aligny bottom");
         super.add(timeLbl, "");
         super.add(nameLbl, "");
         super.add(alarmLbl, "");
-        super.add(blockLbl, "");
-        super.add(addBtn, "spanx 2, wrap");
+        if (Boolean.parseBoolean(SettingsPanel.getSetting("blockSites")))
+            super.add(mBlockLbl, "");
+        super.add(addBtn, "spanx 2, wrap, pushy, center");
         super.add(timeField, "");
         super.add(nameFelid, "");
-        super.add(mBlockBox, "");
+        if (Boolean.parseBoolean(SettingsPanel.getSetting("blockSites")))
+            super.add(mBlockBox, "");
         super.add(alarmBox, "wrap");
         super.add(scroll, "spany 6, grow, push");
     }
     
-    public static void setAllowBlock(boolean value) {
-        
+    public void setAllowBlock(boolean value) {
+        if (value) {
+            super.add(mBlockLbl, "cell 0 3");
+            super.add(mBlockBox, "cell 1 3");
+        }
+        else {
+            super.remove(mBlockLbl);
+            super.remove(mBlockBox);
+        }
     }
     
     private void addProgressBar(String name, int length) {

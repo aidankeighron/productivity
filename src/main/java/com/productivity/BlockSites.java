@@ -48,8 +48,8 @@ public class BlockSites extends JPanel {
         JLabel label = new JLabel("You will need to run program as admin for this feature to work");
         JLabel info = new JLabel("Type websites here then press (EX: youtube.com) \"Apply\"");
         
-        super.setLayout(new MigLayout((Productivity.kMigDebug?"debug":"")));
-        super.add(info, "dock north, wrap");
+        super.setLayout(new MigLayout((Productivity.kMigDebug?", debug":"")));
+        super.add(info, "wrap");
         super.add(site, "grow, push, span, wrap");
         super.add(label, "align left, wrap");
         super.add(apply, "split 2");

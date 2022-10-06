@@ -7,13 +7,14 @@
 # Explode SettingsPanel
 # Adapt ui to different tab sizes
 # Remove whitespace from small tab amounts
-- setAllowBlock
+# setAllowBlock
 # Remove custom on home
 # Clean up ui
-- inc and borders
+# block sites inc and borders
+- bug test
 # Regex on website
 # Checkbox text length
-- Timers ui move
+# Timers ui move
 # Daily more space
 
 - Version 4.1 Checklist Update

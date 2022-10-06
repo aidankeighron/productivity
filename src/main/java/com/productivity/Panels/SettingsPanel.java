@@ -122,7 +122,7 @@ public class SettingsPanel extends JTabbedPane {
                     super.remove(mBlockSites);
                 }
             }
-            TimerPanel.setAllowBlock(a);
+            Productivity.getInstance().setAllowBlock(a);
         };
         addSetting("Block Sites", "blockSites", "Allows you to block sites", settingTypes.checkbox, blockSitesActive, true, "Are you sure");
         addSetting("Confetti", "wantConfetti", "Enable/Disable Confetti", settingTypes.checkbox, null, false, null);
