@@ -19,8 +19,7 @@ import net.miginfocom.swing.MigLayout;
 
 public class NotesPanel extends JDesktopPane {
 	
-	private static final File kNamesFile = new File(Productivity.getInstance().getCurrentPath() + "Notes\\names.TXT");
-	private static final String kFilePath = Productivity.getInstance().getCurrentPath() + "Notes\\";
+	private static final File kNamesFile = Productivity.getSave("Notes/names.TXT");
 	private static final int kTextLimit = 10;
 	
 	public NotesPanel() {
@@ -37,8 +36,8 @@ public class NotesPanel extends JDesktopPane {
 				nameField.setText((String)noteChoose.getSelectedItem());
 				return;
 			}
-			File file = new File(kFilePath + (String)noteChoose.getSelectedItem() + ".txt");
-			File newFile = new File(kFilePath + text + ".txt");
+			File file = Productivity.getSave("Notes/"+(String)noteChoose.getSelectedItem()+".txt");
+			File newFile = Productivity.getSave("Notes/"+text+".txt");
 			file.renameTo(newFile);
 			int index = noteChoose.getSelectedIndex();
 			names[index] = text;
@@ -49,13 +48,13 @@ public class NotesPanel extends JDesktopPane {
 		
 		JTextArea textArea = new JTextArea();
 		textArea.addCaretListener(e -> {
-			File file = new File(kFilePath + (String)noteChoose.getSelectedItem() + ".txt");
+			File file = Productivity.getSave("Notes/"+(String)noteChoose.getSelectedItem()+".txt");
 			String[] data = textArea.getText().split("\\r?\\n");
 			writeData(data, file);
 		});
 		
 		noteChoose.addActionListener(e -> {
-			File file = new File(kFilePath + (String)noteChoose.getSelectedItem() + ".txt");
+			File file = Productivity.getSave("Notes/"+(String)noteChoose.getSelectedItem()+".txt");
 			String[] data;
 			try {
 				data = readData(file);
@@ -80,7 +79,7 @@ public class NotesPanel extends JDesktopPane {
 			nameField.setText((String)noteChoose.getSelectedItem());
 		});
 		
-		File file = new File(kFilePath + (String)noteChoose.getSelectedItem() + ".txt");
+		File file = Productivity.getSave("Notes/"+(String)noteChoose.getSelectedItem()+".txt");
 		String[] data;
 		try {
 			data = readData(file);

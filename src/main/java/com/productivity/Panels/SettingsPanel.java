@@ -38,11 +38,11 @@ public class SettingsPanel extends JTabbedPane {
     private static final String[] kTimeOptions = {"Seconds", "Minutes", "Hours"};
     
     private static HashMap<String, String> mSettings = new HashMap<String, String>();
-    private static File mSettingsFile;
-    private static File mNameFile;
-    private static File mStateFile;
-    private static File mColorFile;
-    private static File mReminderFile;
+    private static File mSettingsFile = Productivity.getSave("Saves/settings.TXT");;
+    private static File mNameFile = Productivity.getSave("Saves/daily.TXT");
+    private static File mStateFile = Productivity.getSave("Saves/dailyCheck.TXT");
+    private static File mColorFile = Productivity.getSave("Saves/dailyColor.TXT");
+    private static File mReminderFile = Productivity.getSave("Saves/reminder.TXT");
 
     private JPanel mConfigPanel = new JPanel(new MigLayout((Productivity.kMigDebug?"debug":"")));
     private JPanel mReminderPanel = new JPanel(new MigLayout((Productivity.kMigDebug?"debug":"")));
@@ -254,14 +254,6 @@ public class SettingsPanel extends JTabbedPane {
         
     }
     
-    private static void loadFiles() {
-        mSettingsFile = new File(Productivity.getInstance().getCurrentPath()+"Saves\\settings.TXT");
-        mNameFile = new File(Productivity.getInstance().getCurrentPath()+"Saves\\daily.TXT");
-        mStateFile = new File(Productivity.getInstance().getCurrentPath()+"Saves\\dailyCheck.TXT");
-        mColorFile = new File(Productivity.getInstance().getCurrentPath()+"Saves\\dailyColor.TXT");
-        mReminderFile = new File(Productivity.getInstance().getCurrentPath()+"Saves\\reminder.TXT");
-    }
-    
     private void reminder() {
         int[] data = loadTimer();
         JComboBox<String> timeList = new JComboBox<>(kTimeOptions);
@@ -414,7 +406,6 @@ public class SettingsPanel extends JTabbedPane {
     }
     
     public static void loadSettings() {
-        loadFiles();
         String[] data = readData(mSettingsFile);
         String[] keys = new String[(data.length - 1)/2];
         String[] values = new String[(data.length - 1)/2];

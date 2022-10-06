@@ -3,6 +3,9 @@ package com.productivity;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Paths;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.prefs.Preferences;
@@ -28,6 +31,8 @@ import java.awt.Frame;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.Color;
+import java.awt.Image;
+import java.awt.Toolkit;
 
 import com.productivity.Custom.AddCustomCheckList;
 import com.productivity.Custom.CustomCheckList;
@@ -49,9 +54,6 @@ public class Productivity extends JFrame {
 	public static final int kTabHeight = 30;
 	public static final Boolean kMigDebug = false;
 	private static final Boolean kDebug = true;
-	private static final String kDebugPath = "src\\main\\java\\com\\productivity\\";
-	private static final String kJarPath = "classes\\com\\productivity\\";
-	private static final String kExePath = "target\\classes\\com\\productivity\\";
 	private static final String kCustomDebugPath = "src\\main\\java\\com\\productivity\\Custom\\Saves\\";
 	private static final String kCustomJarPath = "classes\\com\\productivity\\Custom\\Saves\\";
 	private static final String kCustomExePath = "target\\classes\\com\\productivity\\Custom\\Saves\\";
@@ -60,11 +62,10 @@ public class Productivity extends JFrame {
 	private static final JLayeredPane mLayeredPane = new JLayeredPane();
 	private static CustomCheckList mCustomCheckList;
 	
-	private static String mCurrentPath;
 	private static String mCurrentCustomPath;
-	private static File mNameFile;
-	private static File mStateFile;
-	private static File mColorFile;
+	private static File mNameFile = getSave("Saves/list.TXT");
+	private static File mStateFile = getSave("Saves/listCheck.TXT");;
+	private static File mColorFile = getSave("Saves/listColor.TXT");;
 	private static CheckBoxes mCheckBoxes;
 	private static TimerPanel mTimerPanel;
 
@@ -82,7 +83,6 @@ public class Productivity extends JFrame {
 	public static void main(String[] args) throws IOException {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				mCurrentPath = (kDebug)?kDebugPath: (args.length>0)?kExePath:kJarPath;
 				mCurrentCustomPath = (kDebug)?kCustomDebugPath: (args.length>0)?kCustomExePath:kCustomJarPath;
 				Productivity.getInstance().createAndShowGUI();
 			}
@@ -91,14 +91,11 @@ public class Productivity extends JFrame {
 	
 	private void createAndShowGUI() {
 		UIManager.put("TabbedPane.selected", Color.BLACK);
-		mConfetti[0] = new JLabel(new ImageIcon(getClass().getResource("Confetti/high.gif")));
+		mConfetti[0] = new JLabel(new ImageIcon(getImage("Images/high.gif")));
 		mConfetti[0].setBounds(0, 0, kWidth, kHeight);
-		mConfetti[1] = new JLabel(new ImageIcon(getClass().getResource("Confetti/low.gif")));
+		mConfetti[1] = new JLabel(new ImageIcon(getImage("Images/low.gif")));
 		mConfetti[1].setBounds(0, 0, kWidth, kHeight);
 		mTabbedPane.setBounds(0, 0, kWidth, kHeight); // kWidth-15, kHeight-30
-		mNameFile = new File(mCurrentPath+"Saves\\list.TXT");
-		mStateFile = new File(mCurrentPath+"Saves\\listCheck.TXT");
-		mColorFile = new File(mCurrentPath+"Saves\\listColor.TXT");
 		start();
 		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
 			public void run() {
@@ -164,7 +161,8 @@ public class Productivity extends JFrame {
 			}
 		});
 		
-		ImageIcon img = new ImageIcon(getClass().getResource("icon.png"));
+		ImageIcon img = new ImageIcon(getImage("Images/icon.png"));
+
 		mLayeredPane.add(mTabbedPane, 0);
 
 		ComponentMover cm = new ComponentMover(this, mTabbedPane);
@@ -252,10 +250,6 @@ public class Productivity extends JFrame {
 		super.repaint();
 	}
 	
-	public String getCurrentPath() {
-		return mCurrentPath;
-	}
-	
 	public String getCurrentCustomPath() {
 		return mCurrentCustomPath;
 	}
@@ -315,6 +309,22 @@ public class Productivity extends JFrame {
             }
         };
         time.schedule(task, 0, 1000/kScale);
+	}
+
+	public static Image getImage(final String path) {
+		final URL url = Thread.currentThread().getContextClassLoader().getResource(path);
+		return Toolkit.getDefaultToolkit().getImage(url);
+	}
+
+	public static File getSave(final String path) {
+		URL url = Thread.currentThread().getContextClassLoader().getResource(path);
+		String filePath = null;
+		try {
+			filePath = Paths.get(url.toURI()).toString();
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
+		return new File(filePath);
 	}
 
 	public static class FadeLabel extends JLabel {

@@ -21,14 +21,11 @@ public class BlockSites extends JPanel {
     
     private static final File kHostsFile = new File("C:\\Windows\\System32\\drivers\\etc\\hosts");
     
-    private static File mNewHosts;
-    private static File mBackupFile;
-    private static File mBlockedSites;
+    private static File mNewHosts = Productivity.getSave("Saves/Newhosts");
+    private static File mBackupFile = Productivity.getSave("Saves/hosts");
+    private static File mBlockedSites = Productivity.getSave("Saves/blockedSites.TXT");
     
     public BlockSites() {
-        mNewHosts = new File(Productivity.getInstance().getCurrentPath()+"Saves\\Newhosts");
-        mBackupFile = new File(Productivity.getInstance().getCurrentPath()+"Saves\\hosts");
-        mBlockedSites = new File(Productivity.getInstance().getCurrentPath()+"Saves\\blockedSites.TXT");
         JTextArea site = new JTextArea();
         site.setDocument(new JTextFieldLimit(50));
         site.setText(load());

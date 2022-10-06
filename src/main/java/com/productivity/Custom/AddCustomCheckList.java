@@ -25,7 +25,7 @@ import net.miginfocom.swing.MigLayout;
 public class AddCustomCheckList extends JPanel {
     
     private static final String kCustomPath = Productivity.getInstance().getCurrentCustomPath();
-    private static final File kCustomNames = new File(Productivity.getInstance().getCurrentCustomPath()+"customNames.TXT");
+    private static final File kCustomNames = Productivity.getSave("Custom/customNames.TXT");
     private static final int kCharLimit = 10;
     private static final int kMaxCustomCheckLists = 8;
     

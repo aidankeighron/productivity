@@ -20,15 +20,14 @@ import net.miginfocom.swing.MigLayout;
 
 public class DailyChecklist extends JPanel {
 	
-	private static File mNameFile;
-	private static File mStateFile;
-	private static File mColorFile;
-	private static File mTimeFile;
+	private static File mNameFile = Productivity.getSave("Saves/daily.TXT");
+	private static File mStateFile = Productivity.getSave("Saves/dailyCheck.TXT");
+	private static File mColorFile = Productivity.getSave("Saves/dailyColor.TXT");
+	private static File mTimeFile = Productivity.getSave("Saves/time.TXT");
 	private static JPanel mChecklistPanel = new JPanel(new MigLayout("gap 0px 0px, ins 0, flowy")); //new GridLayout(Productivity.kHeight/30, Productivity.kWidth/200));
 	private static ArrayList<JCheckBox> mCheckBoxes = new ArrayList<JCheckBox>();
 	
 	public DailyChecklist() {
-		loadFiles();
 		super.setLayout(new MigLayout("gap 5px 5px, ins 5" + ((Productivity.kMigDebug)?",debug":"")));
 		super.add(mChecklistPanel, "wmax "+ Productivity.kWidth +", grow, push, span");
 
@@ -89,13 +88,6 @@ public class DailyChecklist extends JPanel {
 			writeData("", mStateFile);
 			writeData("", mColorFile);
 		}
-	}
-	
-	private void loadFiles() {
-		mNameFile = new File(Productivity.getInstance().getCurrentPath()+"Saves\\daily.TXT");
-		mStateFile = new File(Productivity.getInstance().getCurrentPath()+"Saves\\dailyCheck.TXT");
-		mColorFile = new File(Productivity.getInstance().getCurrentPath()+"Saves\\dailyColor.TXT");
-		mTimeFile = new File(Productivity.getInstance().getCurrentPath()+"Saves\\time.TXT");
 	}
 	
 	private static void addCheckBox(String name, Color color, Boolean checked, int index) {

@@ -227,7 +227,7 @@ public class CheckBoxes extends JPanel {
 				if (mDaily) {
 					boolean reset = false; 
 					try {
-						if (!DateTimeFormatter.ofPattern("dd/MM/yyyy").format(LocalDateTime.now()).equals(readData(new File(Productivity.getInstance().getCurrentPath()+"Saves\\time.TXT"))[0])) {
+						if (!DateTimeFormatter.ofPattern("dd/MM/yyyy").format(LocalDateTime.now()).equals(readData(Productivity.getSave("Saves/time.TXT"))[0])) {
 							reset = true;
 						}
 					} catch (Exception e) { e.printStackTrace(); }
