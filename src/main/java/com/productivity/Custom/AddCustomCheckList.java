@@ -63,17 +63,11 @@ public class AddCustomCheckList extends JPanel {
                 JOptionPane.showMessageDialog(this, "Please enter valid name");
             }
         });
-        JCheckBox home = new JCheckBox("Home");
-        home.setSelected(true);
-        home.addActionListener(e -> {
-            mWantHome = home.isSelected();
-        });
         
         JLabel nameLbl = new JLabel("Name Of Custom Checklist:");
         super.setLayout(new MigLayout((Productivity.kMigDebug?"debug":"")));
         super.add(nameLbl, "wrap");
-        super.add(name, "split 2, growx");
-        super.add(home, "wrap");
+        super.add(name, "split 2, growx, wrap");
         super.add(mCustomPanel, "grow, push, span");
 
         SwingUtilities.invokeLater(new Runnable() {
