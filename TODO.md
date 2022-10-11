@@ -19,6 +19,7 @@
 
 - Version 4.1 Checklist Update
 - remove getHome()
+- exception in timer
 - Scheduled Notifications
 - Group checklist items
 - Backlog
