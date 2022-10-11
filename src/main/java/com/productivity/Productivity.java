@@ -5,7 +5,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.Paths;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.prefs.Preferences;
@@ -53,16 +52,12 @@ public class Productivity extends JFrame {
 	public static final int kHeight = 300; // 300
 	public static final int kTabHeight = 30;
 	public static final Boolean kMigDebug = false;
-	private static final Boolean kDebug = true;
-	private static final String kCustomDebugPath = "src\\main\\java\\com\\productivity\\Custom\\Saves\\";
-	private static final String kCustomJarPath = "classes\\com\\productivity\\Custom\\Saves\\";
-	private static final String kCustomExePath = "target\\classes\\com\\productivity\\Custom\\Saves\\";
+	public static String kPath = "";
 	
 	private static final JTabbedPane mTabbedPane = new JTabbedPane();
 	private static final JLayeredPane mLayeredPane = new JLayeredPane();
 	private static CustomCheckList mCustomCheckList;
 	
-	private static String mCurrentCustomPath;
 	private static File mNameFile = getSave("Saves/list.TXT");
 	private static File mStateFile = getSave("Saves/listCheck.TXT");;
 	private static File mColorFile = getSave("Saves/listColor.TXT");;
@@ -83,7 +78,6 @@ public class Productivity extends JFrame {
 	public static void main(String[] args) throws IOException {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				mCurrentCustomPath = (kDebug)?kCustomDebugPath: (args.length>0)?kCustomExePath:kCustomJarPath;
 				Productivity.getInstance().createAndShowGUI();
 			}
 		});
@@ -250,10 +244,6 @@ public class Productivity extends JFrame {
 		super.repaint();
 	}
 	
-	public String getCurrentCustomPath() {
-		return mCurrentCustomPath;
-	}
-	
 	public JCheckBox[] getBoxes() {
 		if (mCheckBoxes == null) return null;
 		return mCheckBoxes.getBoxes();
@@ -317,14 +307,20 @@ public class Productivity extends JFrame {
 	}
 
 	public static File getSave(final String path) {
-		URL url = Thread.currentThread().getContextClassLoader().getResource(path);
-		String filePath = null;
+		URL url = Productivity.class.getClassLoader().getResource(path);
+    	String file = url.getPath();
+		String jarName = "";
 		try {
-			filePath = Paths.get(url.toURI()).toString();
+			jarName = Productivity.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
+			jarName = jarName.substring(jarName.lastIndexOf("/") + 1) + "!";
 		} catch (URISyntaxException e) {
-			e.printStackTrace();
+			jarName = "Productivity-4.0.0.jar!";
 		}
-		return new File(filePath);
+		file = file.split("/", 2)[1].replaceFirst(jarName, "classes");
+		kPath = file.substring(0, file.lastIndexOf("/"));
+		kPath = kPath.substring(0, kPath.lastIndexOf("/"));
+		kPath += "/Custom/";
+		return new File(file);
 	}
 
 	public static class FadeLabel extends JLabel {

@@ -18,6 +18,7 @@
 # Daily more space
 
 - Version 4.1 Checklist Update
+- remove getHome()
 - Scheduled Notifications
 - Group checklist items
 - Backlog

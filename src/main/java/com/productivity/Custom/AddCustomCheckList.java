@@ -24,7 +24,6 @@ import net.miginfocom.swing.MigLayout;
 
 public class AddCustomCheckList extends JPanel {
     
-    private static final String kCustomPath = Productivity.getInstance().getCurrentCustomPath();
     private static final File kCustomNames = Productivity.getSave("Custom/customNames.TXT");
     private static final int kCharLimit = 10;
     private static final int kMaxCustomCheckLists = 8;
@@ -105,7 +104,7 @@ public class AddCustomCheckList extends JPanel {
 
         } catch (Exception e) {
             e.printStackTrace();
-            File dir = new File(Productivity.getInstance().getCurrentCustomPath());
+            File dir = new File(Productivity.kPath);
             purgeDirectory(dir);
             try {
                 kCustomNames.createNewFile();
@@ -162,9 +161,9 @@ public class AddCustomCheckList extends JPanel {
     }
     
     private static void addCheckList(String n, boolean home) {
-        File name = new File(kCustomPath + n + "Name.TXT");
-        File color = new File(kCustomPath + n + "Color.TXT");
-        File check = new File(kCustomPath + n + "Check.TXT");
+        File name = new File(Productivity.kPath + n + "Name.TXT");
+        File color = new File(Productivity.kPath + n + "Color.TXT");
+        File check = new File(Productivity.kPath + n + "Check.TXT");
         if (!name.exists() && !color.exists() && !check.exists()) {        
             try {
                 name.createNewFile();
@@ -197,9 +196,9 @@ public class AddCustomCheckList extends JPanel {
     }
     
     private static void deleteChecklist(String n) {
-        File name = new File(kCustomPath + n + "Name.TXT");
-        File color = new File(kCustomPath + n + "Color.TXT");
-        File check = new File(kCustomPath + n + "Check.TXT");
+        File name = new File(Productivity.kPath + n + "Name.TXT");
+        File color = new File(Productivity.kPath + n + "Color.TXT");
+        File check = new File(Productivity.kPath + n + "Check.TXT");
         name.delete();
         color.delete();
         check.delete();

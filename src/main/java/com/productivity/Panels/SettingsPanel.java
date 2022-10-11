@@ -411,7 +411,6 @@ public class SettingsPanel extends JTabbedPane {
         String[] values = new String[(data.length - 1)/2];
         for (int i = 0; i < (data.length - 1)/2; i++) {
             if (data[i].equals("*")) {
-                //System.out.println("End of keys");
                 break;
             }
             keys[i] = data[i];
