@@ -41,7 +41,6 @@ public class CheckBoxes extends JPanel {
 	private File mColorFile;
 	private Color mSelectedColor = kColors[0];
 	private int mNumCheckBox = 0;
-	private boolean mHome;
 	private boolean mDaily;
 	
 	private enum fileType {
@@ -50,8 +49,7 @@ public class CheckBoxes extends JPanel {
 		color
 	}
 	
-	public CheckBoxes(File name, File check, File color, boolean daily, boolean home) {
-		mHome = home;
+	public CheckBoxes(File name, File check, File color, boolean daily) {
 		mDaily = daily;
 		mNameFile = name;
 		mCheckFile = check;
@@ -366,9 +364,5 @@ public class CheckBoxes extends JPanel {
 		JCheckBox[] data = new JCheckBox[mCheckBoxes.size()];
 		data = mCheckBoxes.toArray(data);
 		return data;
-	}
-	
-	public boolean getHome() {
-		return mHome;
 	}
 }

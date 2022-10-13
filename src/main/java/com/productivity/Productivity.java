@@ -117,7 +117,7 @@ public class Productivity extends JFrame {
 		SettingsPanel.loadSettings();
 		setConfetti(Integer.parseInt(SettingsPanel.getSetting("currentConfetti")));
 		mCustomCheckList = CustomCheckList.getInstance();
-		mCheckBoxes = new CheckBoxes(mNameFile, mStateFile, mColorFile, false, true);
+		mCheckBoxes = new CheckBoxes(mNameFile, mStateFile, mColorFile, false);
 		mTimerPanel = new TimerPanel();
 		mTabbedPane.setUI(new CustomTabbedUI(new Color(64, 60, 68)));
 		mTabbedPane.setFocusable(false);

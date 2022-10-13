@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -31,8 +30,6 @@ public class AddCustomCheckList extends JPanel {
     private static ArrayList<String> mNames = new ArrayList<String>();
     private static HashMap<String, CheckBoxes> mCheckBoxes = new HashMap<String, CheckBoxes>();
     private static int mCurrentNumCheckLists = 0;
-    private static boolean mWantHome = true;
-    private static int mRandomIndex = -1;
 
     private static JPanel mCustomPanel = new JPanel(new MigLayout("flowy, gap 5px 5px, ins 5" + (Productivity.kMigDebug?", debug":"")));
     
@@ -49,7 +46,7 @@ public class AddCustomCheckList extends JPanel {
                 return;
             }
             if (!mNames.contains(name.getText()) && !name.getText().equals("")) {
-                addCheckList(name.getText(), mWantHome);
+                addCheckList(name.getText());
                 mCurrentNumCheckLists++;
                 if (getNumberOfChecklists() == 1) {
                     Productivity.getInstance().customCheckListVisibility(true);
@@ -90,15 +87,15 @@ public class AddCustomCheckList extends JPanel {
     }
     
     public static int getNumberOfChecklists() {
-        return readData(kCustomNames).length/2;
+        return readData(kCustomNames).length;
     }
     
     public static void loadCheckLists() {
         try {
             String[] data = readData(kCustomNames);
-            for (int i = 0; i < data.length; i += 2) {
+            for (int i = 0; i < data.length; i++) {
                 mNames.add(data[i]);
-                addCheckList(data[i], Boolean.parseBoolean(data[i + 1]));
+                addCheckList(data[i]);
                 mCurrentNumCheckLists++;
             }
 
@@ -114,53 +111,11 @@ public class AddCustomCheckList extends JPanel {
         }
     }
     
-    public static JCheckBox[] getRandomCheckBoxes() {
-        if (mNames.size() <= 0 || mCheckBoxes.size() <= 0) {
-            mRandomIndex = -1;
-            return null;
-        }
-        int index = (int)(Math.random() * mCheckBoxes.size());
-        try {
-            if (!mCheckBoxes.get(mNames.get(index)).getHome() || mCheckBoxes.get(mNames.get(index)).getBoxes().length <= 0) {
-                if (index < mCheckBoxes.size()) {
-                    for (int i = index; i < mCheckBoxes.size(); i++) {
-                        if (mCheckBoxes.get(mNames.get(i)).getHome() && mCheckBoxes.get(mNames.get(index)).getBoxes().length > 0) {
-                            index = i;
-                            break;
-                        }
-                    }
-                }
-                if (!mCheckBoxes.get(mNames.get(index)).getHome() || mCheckBoxes.get(mNames.get(index)).getBoxes().length <= 0) {
-                    for (int i = index; i >= 0; i--) {
-                        if (mCheckBoxes.get(mNames.get(i)).getHome() && mCheckBoxes.get(mNames.get(index)).getBoxes().length > 0) {
-                            index = i;
-                            break;
-                        }
-                    }
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Error getting random check box");
-        }
-        CheckBoxes checkBox = mCheckBoxes.get(mNames.get(index));
-        if (checkBox != null && mCheckBoxes.get(mNames.get(index)).getHome() && mCheckBoxes.get(mNames.get(index)).getBoxes().length > 0) {
-            mRandomIndex = index;
-            return checkBox.getBoxes();
-        }
-        mRandomIndex = -1;
-        return null;
-    }
-
-    public static String getrandomName() {
-        return (mRandomIndex != -1) ? mNames.get(mRandomIndex) : "";
-    }
-    
     public static void setCheckList(boolean state, int index, String name) {
         mCheckBoxes.get(name).setSelected(state, index);
     }
     
-    private static void addCheckList(String n, boolean home) {
+    private static void addCheckList(String n) {
         File name = new File(Productivity.kPath + n + "Name.TXT");
         File color = new File(Productivity.kPath + n + "Color.TXT");
         File check = new File(Productivity.kPath + n + "Check.TXT");
@@ -188,7 +143,7 @@ public class AddCustomCheckList extends JPanel {
         int rows = (int)(mCustomPanel.getHeight() / (button.getPreferredSize().getHeight()+5));
         if (rows <= 0) rows = 1;
         mCustomPanel.add(button, (((mCustomPanel.getComponentCount()+1) % rows == 0)?"wrap":""));
-        CheckBoxes checkBox = new CheckBoxes(name, check, color, false, home);
+        CheckBoxes checkBox = new CheckBoxes(name, check, color, false);
         mCheckBoxes.put(n, checkBox);
         saveChecklists();
         CustomCheckList.getInstance().addCheckList(checkBox, n);
@@ -212,10 +167,9 @@ public class AddCustomCheckList extends JPanel {
     }
     
     private static void saveChecklists() {
-        String[] data = new String[mNames.size() * 2];
-        for (int i = 0; i < data.length; i += 2) {
-            data[i] = mNames.get(i/2);
-            data[i + 1] = Boolean.toString(mCheckBoxes.get(mNames.get(i/2)).getHome());
+        String[] data = new String[mNames.size()];
+        for (int i = 0; i < data.length; i++) {
+            data[i] = mNames.get(i);
         }
         writeData(data, kCustomNames);
     }

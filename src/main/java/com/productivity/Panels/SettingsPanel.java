@@ -64,7 +64,7 @@ public class SettingsPanel extends JTabbedPane {
     
     public SettingsPanel() {
         super.setFocusable(false);
-        mDailyPanel = new CheckBoxes(mNameFile, mStateFile, mColorFile, true, true);
+        mDailyPanel = new CheckBoxes(mNameFile, mStateFile, mColorFile, true);
         runBoolean allOnTop = (a) -> Productivity.getInstance().setOnTop(a);
         addSetting("Always on top", "onTop", "Makes window always on your screen unless you minimize it", settingTypes.checkbox, allOnTop, false, null);
         runBoolean reminderActive = (a) -> {
