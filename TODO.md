@@ -1,4 +1,4 @@
-- Version 4 UI Update
+# Version 4 UI Update
 # Remove Mac?
 # Expand limits for char count and checkbox count
 # Clean up codebase and put into folders
@@ -11,25 +11,20 @@
 # Remove custom on home
 # Clean up ui
 # block sites inc and borders
-- bug test
+# bug test
 # Regex on website
 # Checkbox text length
 # Timers ui move
 # Daily more space
 
 - Version 4.1 Checklist Update
-- remove getHome()
-- exception in timer
+# remove getHome()
+# exception in timer
 - Scheduled Notifications
-- Group checklist items
-- Backlog
-- Exception
-- Add more settings options
+# Exception
+# Add more settings options
 - More color options (color wheel?)
-- Weekly checklist
+- Better exe
 
 - Version 5 Exe improvements
-- Better exe
-- Package .txt in jar
-- Age for checklist items
 - Discord API (in-between)

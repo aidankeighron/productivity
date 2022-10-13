@@ -30,7 +30,7 @@ public class CheckBoxes extends JPanel {
 	public static final int kColumns = 2;
 
 	private static final String[] kColorNames = {"White", "Red", "Blue", "Green"};
-	private static final Color[] kColors = {Color.WHITE, new Color(250, 0, 0), new Color(0, 0, 230), new Color(0, 220, 0)};
+	private static final Color[] kColors = {Color.WHITE, new Color(190, 50, 50), new Color(90, 90, 255), new Color(50, 200, 50)};
 	private static final int kCharLimit = 35;
 	
 	private int mCheckBoxLimit = 20;

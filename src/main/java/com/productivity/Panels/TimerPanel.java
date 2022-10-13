@@ -52,7 +52,6 @@ public class TimerPanel extends JPanel {
                     notInt = true;
                 }
             } catch (Exception ex) {
-                ex.printStackTrace();
                 notInt = true;
             }
             if (timeField.getText().equals("") || notInt || (!notInt) && Integer.parseInt(timeField.getText()) > 1000 || nameFelid.getText().length() > 10) {
@@ -78,7 +77,6 @@ public class TimerPanel extends JPanel {
                     notInt = true;
                 }
             } catch (Exception ex) {
-                ex.printStackTrace();
                 notInt = true;
             }
             if (timeField.getText().equals("") || notInt || (!notInt) && Integer.parseInt(timeField.getText()) > 1000 || nameFelid.getText().length() > 10) {
@@ -126,7 +124,6 @@ public class TimerPanel extends JPanel {
                     notInt = true;
                 }
             } catch (Exception ex) {
-                ex.printStackTrace();
                 notInt = true;
             }
             if (timeField.getText().equals("") || notInt) {
