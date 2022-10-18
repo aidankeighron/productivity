@@ -1,10 +1,8 @@
 package com.productivity.Panels;
 
 import javax.swing.JCheckBox;
-import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import com.productivity.CheckBoxes;
 import com.productivity.Productivity;
 
 import java.awt.Color;
@@ -16,21 +14,15 @@ import java.nio.file.Files;
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDateTime;
 
-import net.miginfocom.swing.MigLayout;
-
-public class DailyChecklist extends JPanel {
+public class DailyChecklist {
 	
 	private static File mNameFile = Productivity.getSave("Saves/daily.TXT");
 	private static File mStateFile = Productivity.getSave("Saves/dailyCheck.TXT");
 	private static File mColorFile = Productivity.getSave("Saves/dailyColor.TXT");
 	private static File mTimeFile = Productivity.getSave("Saves/time.TXT");
-	private static JPanel mChecklistPanel = new JPanel(new MigLayout("gap 0px 0px, ins 0, flowy")); //new GridLayout(Productivity.kHeight/30, Productivity.kWidth/200));
 	private static ArrayList<JCheckBox> mCheckBoxes = new ArrayList<JCheckBox>();
 	
 	public DailyChecklist() {
-		super.setLayout(new MigLayout("gap 5px 5px, ins 5" + ((Productivity.kMigDebug)?",debug":"")));
-		super.add(mChecklistPanel, "wmax "+ Productivity.kWidth +", grow, push, span");
-
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");  
@@ -59,9 +51,6 @@ public class DailyChecklist extends JPanel {
 	}
 	
 	public static void resetBoxes(boolean reset) {
-		for (int i = 0; i < mCheckBoxes.size(); i++) {
-			mChecklistPanel.remove(mCheckBoxes.get(i));
-		}
 		try {
 			String[] names = readData(mNameFile);
 			String[] checked = readData(mStateFile);
@@ -92,20 +81,9 @@ public class DailyChecklist extends JPanel {
 	
 	private static void addCheckBox(String name, Color color, Boolean checked, int index) {
 		JCheckBox checkBox = new JCheckBox(name);
-		checkBox.setFocusPainted(false);
-		checkBox.addActionListener(e -> {
-			if (checkBox.isSelected())
-				Productivity.showConfetti();
-			saveCheckBoxes();
-			SettingsPanel.setDailySelected(checkBox.isSelected(), index);
-		});
 		checkBox.setForeground(color);
 		checkBox.setSelected(checked);
 		mCheckBoxes.add(checkBox);
-		int rows = (int)(mChecklistPanel.getHeight() / (checkBox.getPreferredSize().getHeight()+5));
-		if (rows <= 0) rows = 1;
-		mChecklistPanel.add(checkBox, "width "+ (int)(Productivity.kWidth/CheckBoxes.kColumns) +", wmax " + (int)(Productivity.kWidth/CheckBoxes.kColumns) + (((mChecklistPanel.getComponentCount()+1) % rows == 0)?", wrap":""));
-		Productivity.getInstance().repaintFrame();
 	}
 	
 	private static void saveCheckBoxes() {

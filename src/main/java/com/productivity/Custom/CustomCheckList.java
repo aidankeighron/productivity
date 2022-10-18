@@ -1,7 +1,6 @@
 package com.productivity.Custom;
 
 import com.productivity.CheckBoxes;
-import com.productivity.Productivity;
 import com.productivity.Util.CustomTabbedUI;
 
 import java.awt.Component;
@@ -91,13 +90,11 @@ public class CustomCheckList extends JTabbedPane {
     public void addCheckList(CheckBoxes checkBoxes, String name) {
         super.addTab(name, checkBoxes);
         mBoxes.put(name, checkBoxes);
-        Productivity.getInstance().repaintFrame();
     }
     
     public void removeChecklist(String name) {
         super.remove(mBoxes.get(name));
         mBoxes.remove(name);
-        Productivity.getInstance().repaintFrame();
     }
     
     protected void paintComponent(Graphics g) {

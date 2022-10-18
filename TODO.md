@@ -25,6 +25,9 @@
 # Add more settings options
 - More color options (color wheel?)
 - Better exe
+# remove daily
+# Home.reset()
+# Productivity.refresh()
 
 - Version 5 Exe improvements
 - Discord API (in-between)

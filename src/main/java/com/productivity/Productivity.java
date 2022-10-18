@@ -35,8 +35,8 @@ import java.awt.Toolkit;
 
 import com.productivity.Custom.AddCustomCheckList;
 import com.productivity.Custom.CustomCheckList;
-import com.productivity.Panels.DailyChecklist;
 import com.productivity.Panels.HomePanel;
+import com.productivity.Panels.NotificationPanel;
 import com.productivity.Panels.SettingsPanel;
 import com.productivity.Panels.TimerPanel;
 import com.productivity.Util.ComponentMover;
@@ -122,8 +122,8 @@ public class Productivity extends JFrame {
 		mTabbedPane.setUI(new CustomTabbedUI(new Color(64, 60, 68)));
 		mTabbedPane.setFocusable(false);
 		mTabbedPane.addTab("Checklist", mCheckBoxes);
-		mTabbedPane.addTab("Daily", new DailyChecklist());
 		mTabbedPane.addTab("Timers", mTimerPanel);
+		mTabbedPane.addTab("Notification", new NotificationPanel());
 		if (AddCustomCheckList.getNumberOfChecklists() > 0) {
 			mTabbedPane.addTab("Custom", mCustomCheckList);
 		}
@@ -200,11 +200,9 @@ public class Productivity extends JFrame {
 	public void customCheckListVisibility(boolean value) {
 		if (value && mTabbedPane.indexOfComponent(mCustomCheckList) == -1) {
 			mTabbedPane.insertTab("Custom", null, mCustomCheckList, null, mTabbedPane.getTabCount()-2);
-			repaintFrame();
 		}
 		else if (mTabbedPane.indexOfComponent(mCustomCheckList) != -1) {
 			mTabbedPane.remove(mCustomCheckList);
-			repaintFrame();
 		}
 	}
 	
@@ -337,7 +335,6 @@ public class Productivity extends JFrame {
                 float old = alpha;
                 alpha = value;
                 firePropertyChange("alpha", old, alpha);
-                repaint();
             }
         }
 

@@ -170,7 +170,6 @@ public class CheckBoxes extends JPanel {
 			mChecklistPanel.remove(checkBox);
 			mNumCheckBox--;
 			saveCheckBoxes();
-			Productivity.getInstance().repaintFrame();
 			if (mDaily) {
 				DailyChecklist.resetBoxes(false);
 			}
@@ -182,7 +181,7 @@ public class CheckBoxes extends JPanel {
 		if (rows <= 0) rows = 1;
 		mChecklistPanel.add(checkBox, "width "+ (int)(Productivity.kWidth/kColumns) +", wmax " + (int)(Productivity.kWidth/kColumns) + (((mChecklistPanel.getComponentCount()+1) % rows == 0)?", wrap":""));
 		saveCheckBoxes();
-		Productivity.getInstance().repaintFrame();
+		
 	}
 	
 	private void clearSelected() {
@@ -194,7 +193,6 @@ public class CheckBoxes extends JPanel {
 			}
 		}
 		saveCheckBoxes();
-		Productivity.getInstance().repaintFrame();
 	}
 	
 	private void removeCheckBoxes() {
@@ -205,7 +203,6 @@ public class CheckBoxes extends JPanel {
 		writeData("", mNameFile);
 		writeData("", mCheckFile);
 		writeData("", mColorFile);
-		Productivity.getInstance().repaintFrame();
 		mNumCheckBox = 0;
 		HomePanel.getInstance().reset();
 	}

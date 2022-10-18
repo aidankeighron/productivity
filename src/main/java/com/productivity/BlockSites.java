@@ -35,7 +35,6 @@ public class BlockSites extends JPanel {
         apply.addActionListener(e -> {
             blockSite(site);
             site.setText(load());
-            Productivity.getInstance().repaintFrame();
         });
         
         JButton reset = new JButton("Reset");

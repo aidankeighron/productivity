@@ -41,8 +41,7 @@ public class HomePanel extends JPanel {
         makePanel(mCheckPanel, Productivity.getInstance().getBoxes(), "Checklist", BoxType.check);
         makePanel(mDailyPanel, DailyChecklist.getCheckBoxes(), "Daily", BoxType.daily);
         
-        Productivity.getInstance().repaintFrame();
-        this.repaint();
+        Productivity.getInstance().repaintFrame(); // reset() is called in multiple places where repainting is needed + home needs to repaint
     }
     
     private JPanel makePanel(JPanel panel, JCheckBox[] boxes, String title, BoxType type) {

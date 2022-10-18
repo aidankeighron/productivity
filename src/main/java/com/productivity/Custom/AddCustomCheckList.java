@@ -16,7 +16,6 @@ import javax.swing.SwingUtilities;
 
 import com.productivity.CheckBoxes;
 import com.productivity.Productivity;
-import com.productivity.Panels.HomePanel;
 import com.productivity.Util.JTextFieldLimit;
 
 import net.miginfocom.swing.MigLayout;
@@ -50,10 +49,8 @@ public class AddCustomCheckList extends JPanel {
                 mCurrentNumCheckLists++;
                 if (getNumberOfChecklists() == 1) {
                     Productivity.getInstance().customCheckListVisibility(true);
-                    Productivity.getInstance().repaintFrame();
                 }
                 name.setText("");
-                HomePanel.getInstance().reset();
             }
             else {
                 JOptionPane.showMessageDialog(this, "Please enter valid name");
@@ -134,10 +131,8 @@ public class AddCustomCheckList extends JPanel {
         JButton button = new JButton(n);
         button.addActionListener(e -> {
             mCustomPanel.remove(button);
-            Productivity.getInstance().repaintFrame();
             deleteChecklist(n);
             saveChecklists();
-            HomePanel.getInstance().reset();
         });
         button.setFocusPainted(false);
         int rows = (int)(mCustomPanel.getHeight() / (button.getPreferredSize().getHeight()+5));
@@ -147,7 +142,6 @@ public class AddCustomCheckList extends JPanel {
         mCheckBoxes.put(n, checkBox);
         saveChecklists();
         CustomCheckList.getInstance().addCheckList(checkBox, n);
-        HomePanel.getInstance().reset();
     }
     
     private static void deleteChecklist(String n) {
