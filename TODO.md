@@ -23,8 +23,10 @@
 - Scheduled Notifications
 # Exception
 # Add more settings options
-- More color options (color wheel?)
+- More color options
+- Focus (focus painted?)
 - Better exe
+- Keyboard interaction (tab, enter)
 # remove daily
 # Home.reset()
 # Productivity.refresh()
