@@ -21,6 +21,8 @@
 # remove getHome()
 # exception in timer
 - Scheduled Notifications
+- description regex
+- move app across monitors
 # Exception
 # Add more settings options
 - More color options

@@ -2,38 +2,41 @@ package com.productivity.Panels;
 
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+import javax.swing.JTextArea;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
+import com.github.lgooddatepicker.components.DatePicker;
+import com.github.lgooddatepicker.components.TimePicker;
 import com.productivity.Productivity;
 import com.productivity.Util.JTextFieldLimit;
-import com.productivity.Util.Notification;
 
 import net.miginfocom.swing.MigLayout;
 
+import java.awt.AWTException;
 import java.awt.Color;
-import java.awt.Frame;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.awt.Toolkit;
 import java.io.File;
 import java.io.FileWriter;
 import java.nio.file.Files;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.temporal.TemporalAmount;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 public class NotificationPanel extends JPanel {
     
     String[] kRepeatOptions = {"None", "Hour(s)", "Day(s)", "Week(s)", "Month(s)", "Year(s)"};
     ArrayList<Notification> mNotifications = new ArrayList<Notification>();
     File mNotificationFile = Productivity.getSave("Saves/notification.TXT");
+    DateTimeFormatter mFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy-HH-mm-ss");
     
     public NotificationPanel() {
         JButton addBtn = new JButton("Add");
@@ -50,10 +53,15 @@ public class NotificationPanel extends JPanel {
         
         JLabel nameLbl = new JLabel("Name:");
         JTextField name = new JTextField();
+
+        JLabel textLbl = new JLabel("Description");
+        JTextArea text = new JTextArea();
         
-        JLabel startTimeLbl = new JLabel("Start time (no time will mean now):");
-        
+        JLabel timeLbl = new JLabel("Start time (no time will mean now):");
+        TimePicker timePicker = new TimePicker();
+
         JLabel dateLbl = new JLabel("Date (no date will mean today):");
+        DatePicker datePicker = new DatePicker();
         
         JLabel repeatLbl = new JLabel("Repeat:");
         JLabel repeatInfo = new JLabel("Every:");
@@ -68,50 +76,80 @@ public class NotificationPanel extends JPanel {
                 return;
             }
             int amount = repeatAmount.getText().equals("") ? 0 : Integer.parseInt(repeatAmount.getText());
-            newNotification(name.getText(), repeat.getSelectedIndex(), amount);
+            newNotification(name.getText(), text.getText(), repeat.getSelectedIndex(), amount, datePicker.getDate(), timePicker.getTime());
             infoBox.dispose();
         });
         
         infoBox.setLayout(new MigLayout((Productivity.kMigDebug)?"debug":""));
         infoBox.add(nameLbl, "wrap");
         infoBox.add(name, "wrap");
+        infoBox.add(textLbl, "wrap");
+        infoBox.add(text, "wrap");
+        infoBox.add(timeLbl, "wrap");
+        infoBox.add(timePicker, "wrap");
+        infoBox.add(dateLbl, "wrap");
+        infoBox.add(datePicker, "wrap");
         infoBox.add(repeatLbl, "wrap");
         infoBox.add(repeatInfo, "split 3");
         infoBox.add(repeatAmount, "");
         infoBox.add(repeat, "wrap");
         infoBox.add(confirm, "dock south, spanx, grow, push");
-        infoBox.setSize(300, 200);
+        infoBox.setSize(230, 300);
         infoBox.setVisible(true);
     }
 
-    private void showNotification(String name, long lastTime, long nextTime) {
-        JProgressBar progressBar = new JProgressBar(0, (int)(nextTime-lastTime));
+    private void showNotification(String name, String message, Notification notification) {
+        JProgressBar progressBar = new JProgressBar(0, /*(int)(nextTime-lastTime)*/100);
         JButton delete = new JButton("Remove");
         JLabel info = new JLabel(name);
-
+        
         JPanel panel = new JPanel(new MigLayout());
         panel.add(info);
         panel.add(progressBar);
         panel.add(delete);
 
+        // Timer time = new Timer();
+        // TimerTask task = new TimerTask()
+        // {
+        //     long seconds = nextTime - lastTime;
+        //     int i = 0;
+        //     @Override
+        //     public void run()
+        //     {
+        //         if (i <= seconds) {
+        //             try {
+        //                 com.productivity.Util.Notification.displayTray(name, message);
+        //             } catch (AWTException e) {
+        //                 e.printStackTrace();
+        //             }
+        //             i = 0;
+        //         }
+        //         i++;
+        //     }
+        // };
+        // time.schedule(task, 0, 1000);
+
+        delete.addActionListener(e -> {
+            super.remove(panel);
+            mNotifications.remove(notification);
+            //task.cancel();
+        });
         super.add(panel);
         Productivity.getInstance().repaint();
     }
     
-    private void newNotification(String name, int repeat, int amount) {
-        Notification notification = new Notification(name, repeat, amount);
+    private void newNotification(String name, String text, int repeat, int amount, LocalDate date, LocalTime time) {
+        LocalDateTime startDate = LocalDateTime.of(date, time);
+        Notification notification = new Notification(name, repeat, amount, startDate);
         mNotifications.add(notification);
 
         String[] data = new String[mNotifications.size()];
         for (int i = 0; i < data.length; i++) {
-            data[i] = mNotifications.get(i).mName + "," + Integer.toString(mNotifications.get(i).mRepeat) + "," + Integer.toString(mNotifications.get(i).mAmount);
+            data[i] = mNotifications.get(i).mName + "," + text + "," + Integer.toString(mNotifications.get(i).mRepeat) + "," + Integer.toString(mNotifications.get(i).mAmount);
         }
         writeData(data, mNotificationFile);
 
-        notification.setLastDateTime(LocalDateTime.now());
-        long lastTime = notification.getLastTime();
-        long nextTime = notification.getNextTime();
-        showNotification(name, lastTime, nextTime);
+        showNotification(name, text, notification);
     }
 
     private void loadNotifications() {
@@ -119,14 +157,21 @@ public class NotificationPanel extends JPanel {
 
         for (int i = 0; i < data.length; i++) {
             String[] values = data[i].split(",");
-            Notification notification = new Notification(values[0], Integer.parseInt(values[1]), Integer.parseInt(values[2]));
+            Notification notification = new Notification(values[0], Integer.parseInt(values[2]), Integer.parseInt(values[3]));
             mNotifications.add(notification);
 
-            notification.setLastDateTime(LocalDateTime.now());
-            long lastTime = notification.getLastTime();
-            long nextTime = notification.getNextTime();
-            showNotification(values[0], lastTime, nextTime);
+            showNotification(values[0], values[1], notification);
         }
+    }
+
+    public static long convertDateToLong(LocalDateTime date) {
+        boolean leapYear = date.toLocalDate().isLeapYear();
+        long s = date.getSecond();
+        long m = date.getMinute();
+        long h = date.getHour();
+        long d = date.getDayOfYear();
+        long y = date.getYear();
+        return s + (m*60) + (h*60*60) + (d*24*60*60) + (y*(leapYear?366:365)*24*60*60);
     }
     
     private static String[] readData(File file) {
@@ -172,56 +217,38 @@ public class NotificationPanel extends JPanel {
         public int mRepeat;
         public int mAmount;
         
-        private LocalDateTime mLastDateTime;
+        private LocalDateTime mStartDate;
         
-        public Notification(String name, int repeat, int amount) {
+        public Notification(String name, int repeat, int amount, LocalDateTime startDate) {
             mName = name;
             mRepeat = repeat;
             mAmount = amount;
-        }
-        
-        public void setLastDateTime(LocalDateTime time) {
-            mLastDateTime = time;
-        }
-
-        public long getLastTime() {
-            long s = mLastDateTime.getSecond();
-            long m = mLastDateTime.getMinute();
-            long h = mLastDateTime.getHour();
-            long d = mLastDateTime.getDayOfYear();
-            long y = mLastDateTime.getYear();
-            return s + (m*60) + (h*60*60) + (d*24*60*60) + (y*365*24*60*60);
+            mStartDate = startDate;
         }
         
         public long getNextTime() {
-            LocalDateTime nextDateTime = mLastDateTime;
             switch (mRepeat) {
                 case 0: // None
                 break;
                 case 1: // Hours
-                nextDateTime.plusHours(mAmount);
+                mStartDate.plusHours(mAmount);
                 break;
                 case 2: // Days
-                nextDateTime.plusDays(mAmount);
+                mStartDate.plusDays(mAmount);
                 break;
                 case 3: // Weeks
-                nextDateTime.plusWeeks(mAmount);
+                mStartDate.plusWeeks(mAmount);
                 break;
                 case 4: // Months
-                nextDateTime.plusMonths(mAmount);
+                mStartDate.plusMonths(mAmount);
                 break;
                 case 5: // Years
-                nextDateTime.plusYears(mAmount);
+                mStartDate.plusYears(mAmount);
                 break;
                 default:
                 break;
             }
-            long s = nextDateTime.getSecond();
-            long m = nextDateTime.getMinute();
-            long h = nextDateTime.getHour();
-            long d = nextDateTime.getDayOfYear();
-            long y = nextDateTime.getYear();
-            return s + (m*60) + (h*60*60) + (d*24*60*60) + (y*365*24*60*60);
+            return NotificationPanel.convertDateToLong(mStartDate);
         }
     }
 }
