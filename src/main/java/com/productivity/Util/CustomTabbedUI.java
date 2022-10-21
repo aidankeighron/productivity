@@ -51,11 +51,11 @@ public class CustomTabbedUI extends BasicTabbedPaneUI {
             }
         }
         if (tabPane.getTabCount()-1 == tabIndex && tabPane.getTitleAt(tabPane.getTabCount()-1) == "") {
-            return 60;
+            return tabPane.getTabComponentAt(tabPane.getTabCount()-1).getWidth();
         }
         int[] end = {0, 0};
         if (tabPane.getTitleAt(tabPane.getTabCount()-1) == "") {
-            end = new int[] {-60, -1};
+            end = new int[] {-tabPane.getTabComponentAt(tabPane.getTabCount()-1).getWidth(), -1};
         }
         width = (int)((tabPane.getWidth()+end[0])/(tabPane.getTabCount()+end[1]));
         return width;

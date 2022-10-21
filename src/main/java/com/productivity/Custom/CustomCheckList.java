@@ -6,7 +6,6 @@ import com.productivity.Util.CustomTabbedUI;
 import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.Color;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
@@ -16,6 +15,7 @@ import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
 import javax.swing.JTabbedPane;
+import javax.swing.UIManager;
 
 public class CustomCheckList extends JTabbedPane {
     
@@ -84,7 +84,11 @@ public class CustomCheckList extends JTabbedPane {
                 mTabImage = null;
             }
         });
-        super.setUI(new CustomTabbedUI(new Color(64, 60, 68)));
+        super.setUI(new CustomTabbedUI(UIManager.getColor("Panel.background")));
+    }
+
+    public void updateLaf() {
+        super.setUI(new CustomTabbedUI(UIManager.getColor("Panel.background")));
     }
     
     public void addCheckList(CheckBoxes checkBoxes, String name) {

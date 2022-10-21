@@ -31,14 +31,12 @@ public class BlockSites extends JPanel {
         site.setText(load());
         
         JButton apply = new JButton("Apply");
-        apply.setFocusPainted(false);
         apply.addActionListener(e -> {
             blockSite(site);
             site.setText(load());
         });
         
         JButton reset = new JButton("Reset");
-        reset.setFocusPainted(false);
         reset.addActionListener(e -> reset(site));
         
         JLabel label = new JLabel("You will need to run program as admin for this feature to work");

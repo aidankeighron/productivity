@@ -9,38 +9,58 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
 
 import com.github.lgooddatepicker.components.DatePicker;
+import com.github.lgooddatepicker.components.DatePickerSettings;
 import com.github.lgooddatepicker.components.TimePicker;
+import com.github.lgooddatepicker.components.DatePickerSettings.DateArea;
 import com.productivity.Productivity;
 import com.productivity.Util.JTextFieldLimit;
 
 import net.miginfocom.swing.MigLayout;
 
-import java.awt.AWTException;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.io.File;
 import java.io.FileWriter;
 import java.nio.file.Files;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 
 public class NotificationPanel extends JPanel {
     
-    String[] kRepeatOptions = {"None", "Hour(s)", "Day(s)", "Week(s)", "Month(s)", "Year(s)"};
-    ArrayList<Notification> mNotifications = new ArrayList<Notification>();
-    File mNotificationFile = Productivity.getSave("Saves/notification.TXT");
-    DateTimeFormatter mFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy-HH-mm-ss");
+    private String[] kRepeatOptions = {"None", "Hour(s)", "Day(s)", "Week(s)", "Month(s)", "Year(s)"};
+    private ArrayList<Notification> mNotifications = new ArrayList<Notification>();
+    private File mNotificationFile = Productivity.getSave("Saves/notification.TXT");
+
+    private static DatePickerSettings mDatePickerSettings = new DatePickerSettings();
+    static {
+        mDatePickerSettings.setColor(DateArea.TextFieldBackgroundValidDate, UIManager.getColor("TextField.background"));
+        mDatePickerSettings.setColor(DateArea.BackgroundClearLabel, UIManager.getColor("TextField.background"));
+        mDatePickerSettings.setColor(DateArea.BackgroundMonthAndYearMenuLabels, UIManager.getColor("TextField.background"));
+        mDatePickerSettings.setColor(DateArea.BackgroundTodayLabel, UIManager.getColor("TextField.background"));
+        mDatePickerSettings.setColor(DateArea.CalendarBackgroundNormalDates, UIManager.getColor("TextField.background"));
+        mDatePickerSettings.setColor(DateArea.BackgroundOverallCalendarPanel, UIManager.getColor("TextField.background"));
+        mDatePickerSettings.setColor(DateArea.BackgroundCalendarPanelLabelsOnHover, UIManager.getColor("TextField.background"));
+        mDatePickerSettings.setColor(DateArea.BackgroundTopLeftLabelAboveWeekNumbers, UIManager.getColor("TextField.background"));
+        mDatePickerSettings.setColor(DateArea.TextFieldBackgroundInvalidDate, UIManager.getColor("TextField.background"));
+        mDatePickerSettings.setColor(DateArea.CalendarBorderSelectedDate, Color.black);
+        
+        mDatePickerSettings.setColor(DateArea.CalendarBackgroundSelectedDate, UIManager.getColor("textText"));
+        mDatePickerSettings.setColor(DateArea.DatePickerTextValidDate, UIManager.getColor("textText"));
+        mDatePickerSettings.setColor(DateArea.CalendarTextWeekdays, Color.black);
+        mDatePickerSettings.setColor(DateArea.CalendarTextNormalDates, UIManager.getColor("textText"));
+    }
     
     public NotificationPanel() {
         JButton addBtn = new JButton("Add");
-        addBtn.setFocusPainted(false);
         addBtn.addActionListener(e -> notificationPopup());
         
         super.setLayout(new MigLayout((Productivity.kMigDebug)?"debug":""));
@@ -61,7 +81,7 @@ public class NotificationPanel extends JPanel {
         TimePicker timePicker = new TimePicker();
 
         JLabel dateLbl = new JLabel("Date (no date will mean today):");
-        DatePicker datePicker = new DatePicker();
+        DatePicker datePicker = new DatePicker(mDatePickerSettings);
         
         JLabel repeatLbl = new JLabel("Repeat:");
         JLabel repeatInfo = new JLabel("Every:");
@@ -99,7 +119,8 @@ public class NotificationPanel extends JPanel {
     }
 
     private void showNotification(String name, String message, Notification notification) {
-        JProgressBar progressBar = new JProgressBar(0, /*(int)(nextTime-lastTime)*/100);
+        long length = notification.getNextDate() - notification.getStartDate();
+        JProgressBar progressBar = new JProgressBar(0, (int)length);
         JButton delete = new JButton("Remove");
         JLabel info = new JLabel(name);
         
@@ -108,31 +129,32 @@ public class NotificationPanel extends JPanel {
         panel.add(progressBar);
         panel.add(delete);
 
-        // Timer time = new Timer();
-        // TimerTask task = new TimerTask()
-        // {
-        //     long seconds = nextTime - lastTime;
-        //     int i = 0;
-        //     @Override
-        //     public void run()
-        //     {
-        //         if (i <= seconds) {
-        //             try {
-        //                 com.productivity.Util.Notification.displayTray(name, message);
-        //             } catch (AWTException e) {
-        //                 e.printStackTrace();
-        //             }
-        //             i = 0;
-        //         }
-        //         i++;
-        //     }
-        // };
-        // time.schedule(task, 0, 1000);
+        Timer time = new Timer();
+        TimerTask task = new TimerTask()
+        {
+            long seconds = length;
+            int i = 0;
+            @Override
+            public void run()
+            {
+                if (i <= seconds) {
+                    try {
+                        com.productivity.Util.Notification.displayTray(name, message);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    i = 0;
+                }
+                i++;
+                progressBar.setValue(i);
+            }
+        };
+        time.schedule(task, 0, 1000);
 
         delete.addActionListener(e -> {
             super.remove(panel);
             mNotifications.remove(notification);
-            //task.cancel();
+            task.cancel();
         });
         super.add(panel);
         Productivity.getInstance().repaint();
@@ -145,7 +167,7 @@ public class NotificationPanel extends JPanel {
 
         String[] data = new String[mNotifications.size()];
         for (int i = 0; i < data.length; i++) {
-            data[i] = mNotifications.get(i).mName + "," + text + "," + Integer.toString(mNotifications.get(i).mRepeat) + "," + Integer.toString(mNotifications.get(i).mAmount);
+            data[i] = mNotifications.get(i).mName+","+text+","+Integer.toString(mNotifications.get(i).mRepeat)+","+Integer.toString(mNotifications.get(i).mAmount)+","+Long.toString(mNotifications.get(i).getStartDate());
         }
         writeData(data, mNotificationFile);
 
@@ -157,7 +179,8 @@ public class NotificationPanel extends JPanel {
 
         for (int i = 0; i < data.length; i++) {
             String[] values = data[i].split(",");
-            Notification notification = new Notification(values[0], Integer.parseInt(values[2]), Integer.parseInt(values[3]));
+            LocalDateTime date = LocalDateTime.ofInstant(Instant.ofEpochSecond(Long.parseLong(values[4])), TimeZone.getDefault().toZoneId());
+            Notification notification = new Notification(values[0], Integer.parseInt(values[2]), Integer.parseInt(values[3]), date);
             mNotifications.add(notification);
 
             showNotification(values[0], values[1], notification);
@@ -216,7 +239,6 @@ public class NotificationPanel extends JPanel {
         public String mName;
         public int mRepeat;
         public int mAmount;
-        
         private LocalDateTime mStartDate;
         
         public Notification(String name, int repeat, int amount, LocalDateTime startDate) {
@@ -225,8 +247,12 @@ public class NotificationPanel extends JPanel {
             mAmount = amount;
             mStartDate = startDate;
         }
+
+        public long getStartDate() {
+            return NotificationPanel.convertDateToLong(mStartDate);
+        }
         
-        public long getNextTime() {
+        public long getNextDate() {
             switch (mRepeat) {
                 case 0: // None
                 break;

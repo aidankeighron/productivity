@@ -134,7 +134,6 @@ public class AddCustomCheckList extends JPanel {
             deleteChecklist(n);
             saveChecklists();
         });
-        button.setFocusPainted(false);
         int rows = (int)(mCustomPanel.getHeight() / (button.getPreferredSize().getHeight()+5));
         if (rows <= 0) rows = 1;
         mCustomPanel.add(button, (((mCustomPanel.getComponentCount()+1) % rows == 0)?"wrap":""));

@@ -53,7 +53,6 @@ public class HomePanel extends JPanel {
                 JCheckBox checkBox = new JCheckBox(boxes[i].getText());
                 checkBox.setSelected(boxes[i].isSelected());
                 checkBox.setForeground(boxes[i].getForeground());
-                checkBox.setFocusPainted(false);
                 int index = i;
                 checkBox.addActionListener(e -> {
                     if (checkBox.isSelected())

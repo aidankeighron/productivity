@@ -115,7 +115,6 @@ public class TimerPanel extends JPanel {
         mBlockBox.setToolTipText(blockInfo);
         mBlockLbl.setToolTipText(blockInfo);
         JButton addBtn = new JButton("           Add           ");
-        addBtn.setFocusPainted(false);
         addBtn.addActionListener(e -> {
             boolean notInt = false;
             try {
@@ -200,7 +199,6 @@ public class TimerPanel extends JPanel {
         progressBar.setStringPainted(true);
         String title = (name.equals("")) ? Integer.toString(length) : name;
         JButton button = new JButton(title);
-        button.setFocusPainted(false);
         if (isBlockedTimer) {
             button.setBackground(Color.RED);
         }

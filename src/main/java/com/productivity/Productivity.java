@@ -18,8 +18,10 @@ import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.LookAndFeel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 import java.awt.AlphaComposite;
 import java.awt.image.BufferedImage;
@@ -45,6 +47,23 @@ import com.productivity.Util.CustomTabbedUI;
 import net.miginfocom.swing.MigLayout;
 
 import com.formdev.flatlaf.FlatDarculaLaf;
+import com.formdev.flatlaf.FlatDarkLaf;
+import com.formdev.flatlaf.intellijthemes.FlatCarbonIJTheme;
+import com.formdev.flatlaf.intellijthemes.FlatGruvboxDarkHardIJTheme;
+import com.formdev.flatlaf.intellijthemes.FlatMaterialDesignDarkIJTheme;
+import com.formdev.flatlaf.intellijthemes.FlatOneDarkIJTheme;
+import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatArcDarkContrastIJTheme;
+import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatAtomOneDarkContrastIJTheme;
+import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatDraculaContrastIJTheme;
+import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatGitHubDarkContrastIJTheme;
+import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatMaterialDarkerContrastIJTheme;
+import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatMaterialDeepOceanContrastIJTheme;
+import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatMaterialOceanicContrastIJTheme;
+import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatMaterialPalenightContrastIJTheme;
+import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatMonokaiProContrastIJTheme;
+import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatMoonlightContrastIJTheme;
+import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatNightOwlContrastIJTheme;
+import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatSolarizedDarkContrastIJTheme;
 
 public class Productivity extends JFrame {
 	
@@ -57,6 +76,7 @@ public class Productivity extends JFrame {
 	private static final JTabbedPane mTabbedPane = new JTabbedPane();
 	private static final JLayeredPane mLayeredPane = new JLayeredPane();
 	private static CustomCheckList mCustomCheckList;
+	private static SettingsPanel mSettingsPanel;
 	
 	private static File mNameFile = getSave("Saves/list.TXT");
 	private static File mStateFile = getSave("Saves/listCheck.TXT");;
@@ -85,6 +105,7 @@ public class Productivity extends JFrame {
 	
 	private void createAndShowGUI() {
 		UIManager.put("TabbedPane.selected", Color.BLACK);
+		UIManager.put("TabbedPane.focus", UIManager.getColor("TabbedPane.selected"));
 		mConfetti[0] = new JLabel(new ImageIcon(getImage("Images/high.gif")));
 		mConfetti[0].setBounds(0, 0, kWidth, kHeight);
 		mConfetti[1] = new JLabel(new ImageIcon(getImage("Images/low.gif")));
@@ -101,10 +122,11 @@ public class Productivity extends JFrame {
 	}
 	
 	private void start() {
+		super.setUndecorated(true);
+		SettingsPanel.loadSettings();
 		try {
 			try {
-				UIManager.setLookAndFeel(new FlatDarculaLaf());
-				//setIconImage(Toolkit.getDefaultToolkit().getImage("C:/Users/aidan/OneDrive/Documents/Programms/Productivity/src/main/java/com/productivity/icon.png"));
+				UIManager.setLookAndFeel(getLaf());
 			}
 			catch (Exception ex) {
 				System.out.print("Failed to initialize theme. Using fallback.");
@@ -114,20 +136,20 @@ public class Productivity extends JFrame {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		SettingsPanel.loadSettings();
 		setConfetti(Integer.parseInt(SettingsPanel.getSetting("currentConfetti")));
 		mCustomCheckList = CustomCheckList.getInstance();
+		mSettingsPanel = new SettingsPanel();
 		mCheckBoxes = new CheckBoxes(mNameFile, mStateFile, mColorFile, false);
 		mTimerPanel = new TimerPanel();
-		mTabbedPane.setUI(new CustomTabbedUI(new Color(64, 60, 68)));
-		mTabbedPane.setFocusable(false);
+		mTabbedPane.setUI(new CustomTabbedUI(UIManager.getColor("Panel.background")));
+		//mTabbedPane.setFocusable(false);
 		mTabbedPane.addTab("Checklist", mCheckBoxes);
 		mTabbedPane.addTab("Timers", mTimerPanel);
 		mTabbedPane.addTab("Notification", new NotificationPanel());
 		if (AddCustomCheckList.getNumberOfChecklists() > 0) {
 			mTabbedPane.addTab("Custom", mCustomCheckList);
 		}
-		mTabbedPane.addTab("Settings", new SettingsPanel());
+		mTabbedPane.addTab("Settings", mSettingsPanel);
 		mTabbedPane.insertTab("Home", null, HomePanel.getInstance(), null, 0);
 
 		JButton close = new JButton("X");
@@ -171,8 +193,78 @@ public class Productivity extends JFrame {
 		super.setSize(kWidth, kHeight);
 		super.setLocation(xPos, yPos);
 		super.setResizable(false);
-		super.setUndecorated(true);
 		super.setVisible(true);
+	}
+
+	public void updateLaf() {
+		try {
+			UIManager.setLookAndFeel(getLaf());
+		} catch (UnsupportedLookAndFeelException e) {
+			e.printStackTrace();
+		}
+		SwingUtilities.updateComponentTreeUI(this);
+		mTabbedPane.setUI(new CustomTabbedUI(UIManager.getColor("Panel.background")));
+		mCustomCheckList.updateLaf();
+		if (mSettingsPanel != null) {
+			mSettingsPanel.updateLaf();
+		}
+	}
+
+	private LookAndFeel getLaf() {
+		// UIManager.setLookAndFeel(new FlatDarculaLaf());
+		// UIManager.setLookAndFeel(new FlatMaterialOceanicContrastIJTheme());
+		// UIManager.setLookAndFeel(new FlatMaterialDeepOceanContrastIJTheme());
+		// UIManager.setLookAndFeel(new FlatCarbonIJTheme());
+		// UIManager.setLookAndFeel(new FlatGruvboxDarkHardIJTheme());				
+		// UIManager.setLookAndFeel(new FlatMaterialDesignDarkIJTheme());				
+		// UIManager.setLookAndFeel(new FlatMonokaiProContrastIJTheme());
+		// UIManager.setLookAndFeel(new FlatOneDarkIJTheme());
+		// UIManager.setLookAndFeel(new FlatArcDarkContrastIJTheme());
+		// UIManager.setLookAndFeel(new FlatAtomOneDarkContrastIJTheme());
+		// UIManager.setLookAndFeel(new FlatDraculaContrastIJTheme());
+		// UIManager.setLookAndFeel(new FlatGitHubDarkContrastIJTheme());
+		// UIManager.setLookAndFeel(new FlatMaterialDarkerContrastIJTheme());
+		// UIManager.setLookAndFeel(new FlatMaterialPalenightContrastIJTheme());
+		// UIManager.setLookAndFeel(new FlatMoonlightContrastIJTheme());
+		// UIManager.setLookAndFeel(new FlatNightOwlContrastIJTheme());
+		// UIManager.setLookAndFeel(new FlatSolarizedDarkContrastIJTheme());
+		switch (Integer.parseInt(SettingsPanel.getSetting("laf"))) {
+			case 0:
+			return new FlatDarculaLaf();
+			case 1:
+			return new FlatMaterialOceanicContrastIJTheme();
+			case 2:
+			return new FlatMaterialDeepOceanContrastIJTheme();
+			case 3:
+			return new FlatCarbonIJTheme();
+			case 4:
+			return new FlatGruvboxDarkHardIJTheme();
+			case 5:
+			return new FlatMaterialDesignDarkIJTheme();
+			case 6:
+			return new FlatMonokaiProContrastIJTheme();
+			case 7:
+			return new FlatOneDarkIJTheme();
+			case 8:
+			return new FlatArcDarkContrastIJTheme();
+			case 9:
+			return new FlatAtomOneDarkContrastIJTheme();
+			case 10:
+			return new FlatDraculaContrastIJTheme();
+			case 11:
+			return new FlatGitHubDarkContrastIJTheme();
+			case 12:
+			return new FlatMaterialDarkerContrastIJTheme();
+			case 13:
+			return new FlatMaterialPalenightContrastIJTheme();
+			case 14:
+			return new FlatMoonlightContrastIJTheme();
+			case 15:
+			return new FlatNightOwlContrastIJTheme();
+			case 16:
+			return new FlatSolarizedDarkContrastIJTheme();
+		}
+		return new FlatDarkLaf();
 	}
 
 	private void close() {

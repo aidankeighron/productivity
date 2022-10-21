@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
 
 import java.awt.AWTException;
 import java.awt.Component;
@@ -21,7 +22,6 @@ import java.util.Scanner;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import java.awt.Color;
 import java.awt.Toolkit;
 
 import com.productivity.BlockSites;
@@ -56,7 +56,8 @@ public class SettingsPanel extends JTabbedPane {
         text,
         checkbox,
         number,
-        confetti
+        confetti,
+        laf,
     }
     
     Timer mTime;
@@ -127,7 +128,11 @@ public class SettingsPanel extends JTabbedPane {
         addSetting("Block Sites", "blockSites", "Allows you to block sites", settingTypes.checkbox, blockSitesActive, true, "Are you sure");
         addSetting("Confetti", "wantConfetti", "Enable/Disable Confetti", settingTypes.checkbox, null, false, null);
         addSetting("Selected Confetti: ", "currentConfetti", "", settingTypes.confetti, null, false, null);
-        super.setUI(new CustomTabbedUI(new Color(64, 60, 68)));
+        runBoolean changeLaf = (a) -> {
+            Productivity.getInstance().updateLaf();
+        };
+        addSetting("Look and Feel", "laf", "Changes look of app", settingTypes.laf, changeLaf , false, null);
+        super.setUI(new CustomTabbedUI(UIManager.getColor("Panel.background")));
         super.addTab("Config", mConfigPanel);
         if (Boolean.parseBoolean(getSetting("blockSites"))) {
             super.addTab("Block Sites", mBlockSites);
@@ -148,7 +153,6 @@ public class SettingsPanel extends JTabbedPane {
         switch(type) {
             case checkbox:
             JCheckBox checkBox = new JCheckBox(name);
-            checkBox.setFocusPainted(false);
             checkBox.addActionListener(e -> {
                 if (conformation && checkBox.isSelected()) {
                     int result = JOptionPane.showConfirmDialog(this, conformationDio);
@@ -247,11 +251,42 @@ public class SettingsPanel extends JTabbedPane {
             mConfigPanel.add(confettiLabel, "split 2");
             mConfigPanel.add(confettiField, "wrap");
             break;
-            default:
+            case laf:
+            JLabel lafLabel = new JLabel(name);
+            String[] typesOfLaf = {"Darcula", "Material Oceanic Contrast",
+                                    "Material Deep Ocean Contrast", "Carbon",
+                                    "Gruvbox Design Dark", "Material Design Dark",
+                                    "Monokai Pro Contrast", "One Dark",
+                                    "Arc Dark Contrast", "Atom One Dark Contrast",
+                                    "Dracula Contrast", "GitHub Dark Contrast",
+                                    "Material Darker Contrast", "Material Palenignt Contrast",
+                                    "Moonlight Contrast", "Night Owl Contrast",
+                                    "Solarized Dark Contrast"};	
+            JComboBox<String> lafField = new JComboBox<String>(typesOfLaf);
+            lafField.setFocusable(false);
+            lafField.addActionListener(e -> {
+                mSettings.put(key, Integer.toString(lafField.getSelectedIndex()));
+                if (rt != null) {
+                    runOperation(true, rt);
+                }
+                saveSettings();
+            });
+            try {
+                lafField.setSelectedIndex(Integer.parseInt(mSettings.get(key)));
+            }
+            catch(Exception e) {
+                e.printStackTrace();
+                System.out.println("Setting does not exist");
+            }
+            lafField.setToolTipText(tooltip);
+            mConfigPanel.add(lafLabel, "split 2");
+            mConfigPanel.add(lafField, "wrap");
             break;
-        }
-        
-        
+        }   
+    }
+
+    public void updateLaf() {
+        super.setUI(new CustomTabbedUI(UIManager.getColor("Panel.background")));
     }
     
     private void reminder() {
@@ -300,7 +335,6 @@ public class SettingsPanel extends JTabbedPane {
             }
         });
         JButton save = new JButton("      Save      ");
-        save.setFocusPainted(false);
         save.addActionListener(e -> {
             boolean notInt = false;
             try {

@@ -80,7 +80,6 @@ public class CheckBoxes extends JPanel {
 				DailyChecklist.resetBoxes(false);
 			}
 		});
-		reset.setFocusPainted(false);
 		// reset.setMargin(new Insets(0, 0, 0, 0));
 		JButton clear = new JButton("Clear Selected");
 		clear.addActionListener(e -> {
@@ -89,7 +88,6 @@ public class CheckBoxes extends JPanel {
 				DailyChecklist.resetBoxes(false);
 			}
 		});
-		clear.setFocusPainted(false);
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				loadCheckBoxes();
@@ -127,7 +125,6 @@ public class CheckBoxes extends JPanel {
 		});
 		checkBox.setForeground(color);
 		checkBox.setSelected(state);
-		checkBox.setFocusPainted(false);
 		mCheckBoxes.add(checkBox);
 		JMenuItem[] items = new JMenuItem[3];
 		items[0] = new JMenuItem("Edit");

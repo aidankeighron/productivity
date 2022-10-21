@@ -28,7 +28,8 @@
 - More color options
 - Focus (focus painted?)
 - Better exe
-- Keyboard interaction (tab, enter)
+# Keyboard interaction (tab, enter)
+# mnemonics
 # remove daily
 # Home.reset()
 # Productivity.refresh()
