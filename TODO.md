@@ -23,11 +23,11 @@
 - Scheduled Notifications
 - description regex
 - move app across monitors
+- Better exe
+# More color options
 # Exception
 # Add more settings options
-- More color options
-- Focus (focus painted?)
-- Better exe
+# Focus (focus painted?)
 # Keyboard interaction (tab, enter)
 # mnemonics
 # remove daily
