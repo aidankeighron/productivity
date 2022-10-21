@@ -2,6 +2,7 @@ package com.productivity.Util;
 
 import javax.swing.Icon;
 import javax.swing.JComponent;
+import javax.swing.UIManager;
 import javax.swing.plaf.basic.BasicTabbedPaneUI;
 import javax.swing.text.View;
 
@@ -45,7 +46,7 @@ public class CustomTabbedUI extends BasicTabbedPaneUI {
                 // plain text
                 AffineTransform affinetransform = new AffineTransform();     
                 FontRenderContext frc = new FontRenderContext(affinetransform,true,true); 
-                Font font = new Font("Tahoma", Font.PLAIN, 10);
+                Font font = UIManager.getFont("TabbedPane.font");//new Font("Tahoma", Font.PLAIN, 10);
                 String title = tabPane.getTitleAt(tabIndex);
                 width += (int)(font.getStringBounds(title, frc).getWidth())*.90; //SwingUtilities2.stringWidth(tabPane, metrics, title);
             }

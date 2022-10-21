@@ -39,6 +39,7 @@ public class NotificationPanel extends JPanel {
     private String[] kRepeatOptions = {"None", "Hour(s)", "Day(s)", "Week(s)", "Month(s)", "Year(s)"};
     private ArrayList<Notification> mNotifications = new ArrayList<Notification>();
     private File mNotificationFile = Productivity.getSave("Saves/notification.TXT");
+    private final String kDelimiter = "|~|"; // I understand this is the worst way to do this but if someone has this in their description they deserve to break the code
 
     private static DatePickerSettings mDatePickerSettings = new DatePickerSettings();
     static {
@@ -167,7 +168,7 @@ public class NotificationPanel extends JPanel {
 
         String[] data = new String[mNotifications.size()];
         for (int i = 0; i < data.length; i++) {
-            data[i] = mNotifications.get(i).mName+","+text+","+Integer.toString(mNotifications.get(i).mRepeat)+","+Integer.toString(mNotifications.get(i).mAmount)+","+Long.toString(mNotifications.get(i).getStartDate());
+            data[i] = mNotifications.get(i).mName+kDelimiter+text+kDelimiter+Integer.toString(mNotifications.get(i).mRepeat)+kDelimiter+Integer.toString(mNotifications.get(i).mAmount)+kDelimiter+Long.toString(mNotifications.get(i).getStartDate());
         }
         writeData(data, mNotificationFile);
 
@@ -178,7 +179,7 @@ public class NotificationPanel extends JPanel {
         String[] data = readData(mNotificationFile);
 
         for (int i = 0; i < data.length; i++) {
-            String[] values = data[i].split(",");
+            String[] values = data[i].split(kDelimiter);
             LocalDateTime date = LocalDateTime.ofInstant(Instant.ofEpochSecond(Long.parseLong(values[4])), TimeZone.getDefault().toZoneId());
             Notification notification = new Notification(values[0], Integer.parseInt(values[2]), Integer.parseInt(values[3]), date);
             mNotifications.add(notification);

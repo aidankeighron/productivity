@@ -3,15 +3,14 @@ package com.productivity.Util;
 import java.awt.*;
 import java.awt.TrayIcon.MessageType;
 
+import com.productivity.Productivity;
+
 public class Notification {
     
     public static void displayTray(String title, String description) throws AWTException {
         SystemTray tray = SystemTray.getSystemTray();
     
-        Image image = Toolkit.getDefaultToolkit().createImage("C:/Users/aidan/OneDrive/Documents/Programms/Productivity/src/main/java/com/productivity/icon.png");
-        //Alternative (if the icon is on the classpath):
-        //Image image = Toolkit.getDefaultToolkit().createImage(getClass().getResource("icon.png"));
-
+        Image image = Productivity.getImage("Images/icon.png");
         TrayIcon trayIcon = new TrayIcon(image, "Productivity");
         trayIcon.setImageAutoSize(true);
         trayIcon.setToolTip(null);
