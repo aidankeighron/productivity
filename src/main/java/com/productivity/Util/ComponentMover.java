@@ -23,7 +23,6 @@ import javax.swing.SwingUtilities;
 public class ComponentMover extends MouseAdapter
 {
 	private Insets dragInsets = new Insets(0, 0, 0, 0);
-	private Dimension snapSize = new Dimension(1, 1);
 	private Insets edgeInsets = new Insets(0, 0, 0, 0);
 	private boolean changeCursor = true;
 	private boolean autoLayout = false;
@@ -61,7 +60,7 @@ public class ComponentMover extends MouseAdapter
 	public ComponentMover(Class destinationClass, Component... components)
 	{
 		this.destinationClass = destinationClass;
-		registerComponent( components );
+		registerComponent(components);
 	}
 
 	/**
@@ -75,7 +74,7 @@ public class ComponentMover extends MouseAdapter
 	public ComponentMover(Component destinationComponent, Component... components)
 	{
 		this.destinationComponent = destinationComponent;
-		registerComponent( components );
+		registerComponent(components);
 	}
 
 	/**
@@ -173,7 +172,7 @@ public class ComponentMover extends MouseAdapter
 	public void deregisterComponent(Component... components)
 	{
 		for (Component component : components)
-			component.removeMouseListener( this );
+			component.removeMouseListener(this);
 	}
 
 	/**
@@ -184,31 +183,7 @@ public class ComponentMover extends MouseAdapter
 	public void registerComponent(Component... components)
 	{
 		for (Component component : components)
-			component.addMouseListener( this );
-	}
-
-	/**
-	 *	Get the snap size
-	 *
-	 *  @return the snap size
-	 */
-	public Dimension getSnapSize()
-	{
-		return snapSize;
-	}
-
-	/**
-	 *  Set the snap size. Forces the component to be snapped to
-	 *  the closest grid position. Snapping will occur when the mouse is
-	 *  dragged half way.
-	 */
-	public void setSnapSize(Dimension snapSize)
-	{
-		if (snapSize.width < 1
-		||  snapSize.height < 1)
-			throw new IllegalArgumentException("Snap sizes must be greater than 0");
-
-		this.snapSize = snapSize;
+			component.addMouseListener(this);
 	}
 
 	/**
@@ -233,7 +208,7 @@ public class ComponentMover extends MouseAdapter
 
 	private void setupForDragging(MouseEvent e)
 	{
-		source.addMouseMotionListener( this );
+		source.addMouseMotionListener(this);
 		potentialDrag = true;
 
 		//  Determine the component that will ultimately be moved
@@ -257,7 +232,7 @@ public class ComponentMover extends MouseAdapter
 		if (changeCursor)
 		{
 			originalCursor = source.getCursor();
-			source.setCursor( Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR) );
+			source.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
 		}
 
 		//  Making sure autoscrolls is false will allow for smoother dragging of
@@ -267,7 +242,7 @@ public class ComponentMover extends MouseAdapter
 		{
 			JComponent jc = (JComponent)destination;
 			autoscrolls = jc.getAutoscrolls();
-			jc.setAutoscrolls( false );
+			jc.setAutoscrolls(false);
 		}
 	}
 
@@ -279,29 +254,11 @@ public class ComponentMover extends MouseAdapter
 	public void mouseDragged(MouseEvent e)
 	{
 		Point dragged = e.getLocationOnScreen();
-		int dragX = getDragDistance(dragged.x, pressed.x, snapSize.width);
-		int dragY = getDragDistance(dragged.y, pressed.y, snapSize.height);
+		int dragX = getDragDistance(dragged.x, pressed.x);
+		int dragY = getDragDistance(dragged.y, pressed.y);
 
 		int locationX = location.x + dragX;
 		int locationY = location.y + dragY;
-
-		//  Mouse dragged events are not generated for every pixel the mouse
-		//  is moved. Adjust the location to make sure we are still on a
-		//  snap value.
-
-		while (locationX < edgeInsets.left)
-			locationX += snapSize.width;
-
-		while (locationY < edgeInsets.top)
-			locationY += snapSize.height;
-
-		Dimension d = getBoundingSize( destination );
-
-		while (locationX + destination.getSize().width + edgeInsets.right > d.width)
-			locationX -= snapSize.width;
-
-		while (locationY + destination.getSize().height + edgeInsets.bottom > d.height)
-			locationY -= snapSize.height;
 
 		//  Adjustments are finished, move the component
 
@@ -312,12 +269,9 @@ public class ComponentMover extends MouseAdapter
 	 *  Determine how far the mouse has moved from where dragging started
 	 *  (Assume drag direction is down and right for positive drag distance)
 	 */
-	private int getDragDistance(int larger, int smaller, int snapSize)
+	private int getDragDistance(int larger, int smaller)
 	{
-		int halfway = snapSize / 2;
 		int drag = larger - smaller;
-		drag += (drag < 0) ? -halfway : halfway;
-		drag = (drag / snapSize) * snapSize;
 
 		return drag;
 	}
@@ -347,15 +301,15 @@ public class ComponentMover extends MouseAdapter
 	{
 		if (!potentialDrag) return;
 
-		source.removeMouseMotionListener( this );
+		source.removeMouseMotionListener(this);
 		potentialDrag = false;
 
 		if (changeCursor)
-			source.setCursor( originalCursor );
+			source.setCursor(originalCursor);
 
 		if (destination instanceof JComponent)
 		{
-			((JComponent)destination).setAutoscrolls( autoscrolls );
+			((JComponent)destination).setAutoscrolls(autoscrolls);
 		}
 
 		//  Layout the components on the parent container
