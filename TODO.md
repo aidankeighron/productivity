@@ -22,6 +22,8 @@
 # exception in timer
 - Scheduled Notifications
 - Better exe
+- sub check boxes
+- move check boxes
 # move app across monitors
 # description regex
 # More color options
