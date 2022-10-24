@@ -13,7 +13,9 @@ import javax.swing.UIManager;
 import com.github.lgooddatepicker.components.DatePicker;
 import com.github.lgooddatepicker.components.DatePickerSettings;
 import com.github.lgooddatepicker.components.TimePicker;
+import com.github.lgooddatepicker.components.TimePickerSettings;
 import com.github.lgooddatepicker.components.DatePickerSettings.DateArea;
+import com.github.lgooddatepicker.components.TimePickerSettings.TimeArea;
 import com.productivity.Productivity;
 import com.productivity.Util.JTextFieldLimit;
 
@@ -41,6 +43,12 @@ public class NotificationPanel extends JPanel {
     private File mNotificationFile = Productivity.getSave("Saves/notification.TXT");
     private final String kDelimiter = "|~|"; // I understand this is the worst way to do this but if someone has this in their description they deserve to break the code
     private final String kRegexDelimiter = "\\|~\\|";
+
+    private static TimePickerSettings mTimePickerSettings = new TimePickerSettings();
+    static {
+        mTimePickerSettings.setColor(TimeArea.TextFieldBackgroundValidTime, UIManager.getColor("TextField.background"));
+        mTimePickerSettings.setColor(TimeArea.TimePickerTextValidTime, UIManager.getColor("textText"));
+    }
 
     private static DatePickerSettings mDatePickerSettings = new DatePickerSettings();
     static {
@@ -75,34 +83,46 @@ public class NotificationPanel extends JPanel {
             @Override
             public void run()
             {
-                System.out.print("Run");
-                for (Notification n : mNotifications) {
-                    long duration = n.getStartDate() - (System.currentTimeMillis() / 1000l) ;
-
+                for (Notification notification : mNotifications) {
+                    long duration = notification.getStartDate() - (System.currentTimeMillis() / 1000l);
+                    
+                    System.out.print("Run");
                     System.out.print(" | " + (System.currentTimeMillis() / 1000l));
-                    System.out.print(" | " + n.getStartDate());
-                    System.out.print(" | " + duration);
+                    System.out.print(" | " + notification.getStartDate());
+                    System.out.println(" | " + duration);
                     if (0 >= duration) {
                         try {
-                            com.productivity.Util.Notification.displayTray(n.mName, n.mText);
-                            if (n.getNextDate() == -1) {
-                                mNotifications.remove(n);
-                            }
-                            else {
-                                String[] data = new String[mNotifications.size()];
-                                for (int j = 0; j < data.length; j++) {
-                                    data[j] = mNotifications.get(j).mName+kDelimiter+mNotifications.get(j).mText+kDelimiter+Integer.toString(mNotifications.get(j).mRepeat)+kDelimiter+Integer.toString(mNotifications.get(j).mAmount)+kDelimiter+Long.toString(mNotifications.get(j).getStartDate());
-                                }
-                                writeData(data, mNotificationFile);
-                            }
-                        } catch (Exception e) {
+                            com.productivity.Util.Notification.displayTray(notification.mName, notification.mText);
+                        }
+                        catch (Exception e) {
                             e.printStackTrace();
+                        }
+                        if (notification.getNextDate() == -1) {
+                            removeNotification(notification, notification.getPanel());
+                            Productivity.getInstance().repaint();
+                        }
+                        else {
+                            String[] data = new String[mNotifications.size()];
+                            for (int j = 0; j < data.length; j++) {
+                                data[j] = mNotifications.get(j).mName+kDelimiter+mNotifications.get(j).mText+kDelimiter+Integer.toString(mNotifications.get(j).mRepeat)+kDelimiter+Integer.toString(mNotifications.get(j).mAmount)+kDelimiter+Long.toString(mNotifications.get(j).getStartDate());
+                            }
+                            writeData(data, mNotificationFile);
                         }
                     }
                 }
             }
         };
         time.schedule(task, 0, 1000);
+    }
+
+    private void removeNotification(Notification notification, JPanel panel) {
+        super.remove(panel);
+        mNotifications.remove(notification);
+        String[] data = new String[mNotifications.size()];
+        for (int j = 0; j < data.length; j++) {
+            data[j] = mNotifications.get(j).mName+kDelimiter+mNotifications.get(j).mText+kDelimiter+Integer.toString(mNotifications.get(j).mRepeat)+kDelimiter+Integer.toString(mNotifications.get(j).mAmount)+kDelimiter+Long.toString(mNotifications.get(j).getStartDate());
+        }
+        writeData(data, mNotificationFile);
     }
     
     private void notificationPopup() {
@@ -115,10 +135,10 @@ public class NotificationPanel extends JPanel {
         JTextArea text = new JTextArea();
         
         JLabel timeLbl = new JLabel("Start time (no time will mean now):");
-        TimePicker timePicker = new TimePicker();
+        TimePicker timePicker = new TimePicker(mTimePickerSettings);
 
         JLabel dateLbl = new JLabel("Date (no date will mean today):");
-        DatePicker datePicker = new DatePicker(mDatePickerSettings);
+        DatePicker datePicker = new DatePicker(mDatePickerSettings.copySettings());
         
         JLabel repeatLbl = new JLabel("Repeat:");
         JLabel repeatInfo = new JLabel("Every:");
@@ -130,6 +150,16 @@ public class NotificationPanel extends JPanel {
         confirm.addActionListener(e -> {
             if (name.getText().equals("")) {
                 JOptionPane.showMessageDialog(this, "Name field can not be blank", "Warning", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+            if (datePicker.getDate() == null) {
+                datePicker.setDate(LocalDate.now());
+            }
+            if (timePicker.getTime() == null) {
+                timePicker.setTime(LocalTime.now());
+            }
+            if (convertDateToLong(LocalDateTime.of(datePicker.getDate(), timePicker.getTime())) - (System.currentTimeMillis() / 1000l) < 0) {
+                JOptionPane.showMessageDialog(this, "Date/Time can't be in the past", "Warning", JOptionPane.INFORMATION_MESSAGE);
                 return;
             }
             int amount = repeatAmount.getText().equals("") ? 0 : Integer.parseInt(repeatAmount.getText());
@@ -159,15 +189,16 @@ public class NotificationPanel extends JPanel {
         JButton delete = new JButton("Remove");
         JLabel info = new JLabel(name+" | Repeat every "+amount+" "+kRepeatOptions[repeat]);
         JPanel panel = new JPanel(new MigLayout());
+        
         panel.add(info);
         panel.add(delete);
-
+        notification.setPanel(panel);
         delete.addActionListener(e -> {
             mNotifications.remove(notification);
             super.remove(panel);
             Productivity.getInstance().repaint();
         });
-        super.add(panel);
+        super.add(panel, "wrap");
         Productivity.getInstance().repaint();
     }
     
@@ -248,6 +279,7 @@ public class NotificationPanel extends JPanel {
         public int mRepeat;
         public int mAmount;
         private LocalDateTime mStartDate;
+        private JPanel mPanel;
         
         public Notification(String name, String text, int repeat, int amount, LocalDateTime startDate) {
             mName = name;
@@ -260,25 +292,33 @@ public class NotificationPanel extends JPanel {
         public long getStartDate() {
             return NotificationPanel.convertDateToLong(mStartDate);
         }
+
+        public void setPanel(JPanel panel) {
+            mPanel = panel;
+        }
+
+        public JPanel getPanel() {
+            return mPanel;
+        }
         
         public long getNextDate() {
             switch (mRepeat) {
                 case 0: // None
                 return -1;
                 case 1: // Hours
-                mStartDate.plusHours(mAmount);
+                mStartDate = mStartDate.plusHours(mAmount);
                 break;
                 case 2: // Days
-                mStartDate.plusDays(mAmount);
+                mStartDate = mStartDate.plusDays(mAmount);
                 break;
                 case 3: // Weeks
-                mStartDate.plusWeeks(mAmount);
+                mStartDate = mStartDate.plusWeeks(mAmount);
                 break;
                 case 4: // Months
-                mStartDate.plusMonths(mAmount);
+                mStartDate = mStartDate.plusMonths(mAmount);
                 break;
                 case 5: // Years
-                mStartDate.plusYears(mAmount);
+                mStartDate = mStartDate.plusYears(mAmount);
                 break;
                 default:
                 break;
