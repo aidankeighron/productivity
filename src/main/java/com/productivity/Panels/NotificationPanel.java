@@ -1,7 +1,6 @@
 package com.productivity.Panels;
 
 import javax.swing.JPanel;
-import javax.swing.JProgressBar;
 import javax.swing.JTextArea;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -33,6 +32,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 
 public class NotificationPanel extends JPanel {
     
@@ -40,6 +40,7 @@ public class NotificationPanel extends JPanel {
     private ArrayList<Notification> mNotifications = new ArrayList<Notification>();
     private File mNotificationFile = Productivity.getSave("Saves/notification.TXT");
     private final String kDelimiter = "|~|"; // I understand this is the worst way to do this but if someone has this in their description they deserve to break the code
+    private final String kRegexDelimiter = "\\|~\\|";
 
     private static DatePickerSettings mDatePickerSettings = new DatePickerSettings();
     static {
@@ -67,6 +68,41 @@ public class NotificationPanel extends JPanel {
         super.setLayout(new MigLayout((Productivity.kMigDebug)?"debug":""));
         super.add(addBtn, "dock south, spanx, grow, push");
         loadNotifications();
+
+        Timer time = new Timer();
+        TimerTask task = new TimerTask()
+        {
+            @Override
+            public void run()
+            {
+                System.out.print("Run");
+                for (Notification n : mNotifications) {
+                    long duration = n.getStartDate() - (System.currentTimeMillis() / 1000l) ;
+
+                    System.out.print(" | " + (System.currentTimeMillis() / 1000l));
+                    System.out.print(" | " + n.getStartDate());
+                    System.out.print(" | " + duration);
+                    if (0 >= duration) {
+                        try {
+                            com.productivity.Util.Notification.displayTray(n.mName, n.mText);
+                            if (n.getNextDate() == -1) {
+                                mNotifications.remove(n);
+                            }
+                            else {
+                                String[] data = new String[mNotifications.size()];
+                                for (int j = 0; j < data.length; j++) {
+                                    data[j] = mNotifications.get(j).mName+kDelimiter+mNotifications.get(j).mText+kDelimiter+Integer.toString(mNotifications.get(j).mRepeat)+kDelimiter+Integer.toString(mNotifications.get(j).mAmount)+kDelimiter+Long.toString(mNotifications.get(j).getStartDate());
+                                }
+                                writeData(data, mNotificationFile);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        };
+        time.schedule(task, 0, 1000);
     }
     
     private void notificationPopup() {
@@ -115,47 +151,21 @@ public class NotificationPanel extends JPanel {
         infoBox.add(repeatAmount, "");
         infoBox.add(repeat, "wrap");
         infoBox.add(confirm, "dock south, spanx, grow, push");
-        infoBox.setSize(230, 300);
+        infoBox.setSize(220, 320);
         infoBox.setVisible(true);
     }
 
-    private void showNotification(String name, String message, Notification notification) {
-        long length = notification.getNextDate() - notification.getStartDate();
-        JProgressBar progressBar = new JProgressBar(0, (int)length);
+    private void showNotification(String name, String message, Notification notification, int repeat, int amount) {
         JButton delete = new JButton("Remove");
-        JLabel info = new JLabel(name);
-        
+        JLabel info = new JLabel(name+" | Repeat every "+amount+" "+kRepeatOptions[repeat]);
         JPanel panel = new JPanel(new MigLayout());
         panel.add(info);
-        panel.add(progressBar);
         panel.add(delete);
 
-        Timer time = new Timer();
-        TimerTask task = new TimerTask()
-        {
-            long seconds = length;
-            int i = 0;
-            @Override
-            public void run()
-            {
-                if (i <= seconds) {
-                    try {
-                        com.productivity.Util.Notification.displayTray(name, message);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    i = 0;
-                }
-                i++;
-                progressBar.setValue(i);
-            }
-        };
-        time.schedule(task, 0, 1000);
-
         delete.addActionListener(e -> {
-            super.remove(panel);
             mNotifications.remove(notification);
-            task.cancel();
+            super.remove(panel);
+            Productivity.getInstance().repaint();
         });
         super.add(panel);
         Productivity.getInstance().repaint();
@@ -163,39 +173,35 @@ public class NotificationPanel extends JPanel {
     
     private void newNotification(String name, String text, int repeat, int amount, LocalDate date, LocalTime time) {
         LocalDateTime startDate = LocalDateTime.of(date, time);
-        Notification notification = new Notification(name, repeat, amount, startDate);
+        Notification notification = new Notification(name, text, repeat, amount, startDate);
         mNotifications.add(notification);
 
         String[] data = new String[mNotifications.size()];
         for (int i = 0; i < data.length; i++) {
-            data[i] = mNotifications.get(i).mName+kDelimiter+text+kDelimiter+Integer.toString(mNotifications.get(i).mRepeat)+kDelimiter+Integer.toString(mNotifications.get(i).mAmount)+kDelimiter+Long.toString(mNotifications.get(i).getStartDate());
+            data[i] = mNotifications.get(i).mName+kDelimiter+mNotifications.get(i).mText+kDelimiter+Integer.toString(mNotifications.get(i).mRepeat)+kDelimiter+Integer.toString(mNotifications.get(i).mAmount)+kDelimiter+Long.toString(mNotifications.get(i).getStartDate());
         }
         writeData(data, mNotificationFile);
 
-        showNotification(name, text, notification);
+        showNotification(name, text, notification, repeat, amount);
     }
 
     private void loadNotifications() {
         String[] data = readData(mNotificationFile);
 
         for (int i = 0; i < data.length; i++) {
-            String[] values = data[i].split(kDelimiter);
+            String[] values = data[i].split(kRegexDelimiter);
             LocalDateTime date = LocalDateTime.ofInstant(Instant.ofEpochSecond(Long.parseLong(values[4])), TimeZone.getDefault().toZoneId());
-            Notification notification = new Notification(values[0], Integer.parseInt(values[2]), Integer.parseInt(values[3]), date);
+            Notification notification = new Notification(values[0], values[1], Integer.parseInt(values[2]), Integer.parseInt(values[3]), date);
             mNotifications.add(notification);
 
-            showNotification(values[0], values[1], notification);
+            showNotification(values[0], values[1], notification, Integer.parseInt(values[2]), Integer.parseInt(values[3]));
         }
     }
 
     public static long convertDateToLong(LocalDateTime date) {
-        boolean leapYear = date.toLocalDate().isLeapYear();
-        long s = date.getSecond();
-        long m = date.getMinute();
-        long h = date.getHour();
-        long d = date.getDayOfYear();
-        long y = date.getYear();
-        return s + (m*60) + (h*60*60) + (d*24*60*60) + (y*(leapYear?366:365)*24*60*60);
+        Instant instant = Instant.now(); //can be LocalDateTime
+        ZoneId systemZone = ZoneId.systemDefault(); // my timezone
+        return date.toEpochSecond(systemZone.getRules().getOffset(instant));
     }
     
     private static String[] readData(File file) {
@@ -238,12 +244,14 @@ public class NotificationPanel extends JPanel {
     private static class Notification {
         
         public String mName;
+        public String mText;
         public int mRepeat;
         public int mAmount;
         private LocalDateTime mStartDate;
         
-        public Notification(String name, int repeat, int amount, LocalDateTime startDate) {
+        public Notification(String name, String text, int repeat, int amount, LocalDateTime startDate) {
             mName = name;
+            mText = text;
             mRepeat = repeat;
             mAmount = amount;
             mStartDate = startDate;
@@ -256,7 +264,7 @@ public class NotificationPanel extends JPanel {
         public long getNextDate() {
             switch (mRepeat) {
                 case 0: // None
-                break;
+                return -1;
                 case 1: // Hours
                 mStartDate.plusHours(mAmount);
                 break;
@@ -275,7 +283,10 @@ public class NotificationPanel extends JPanel {
                 default:
                 break;
             }
-            return NotificationPanel.convertDateToLong(mStartDate);
+            if (mAmount <= 0) {
+                return -1;
+            }
+            return 0;
         }
     }
 }

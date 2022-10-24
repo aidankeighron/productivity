@@ -21,9 +21,8 @@
 # remove getHome()
 # exception in timer
 - Scheduled Notifications
+- clean up notification loop
 - Better exe
-- sub check boxes
-- move check boxes
 # move app across monitors
 # description regex
 # More color options
