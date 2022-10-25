@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
 
 import com.productivity.BlockSites;
 import com.productivity.Productivity;
@@ -16,10 +17,10 @@ import com.productivity.Util.Notification;
 
 import net.miginfocom.swing.MigLayout;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.awt.Color;
 import java.awt.Toolkit;
 
 public class TimerPanel extends JPanel {
@@ -200,7 +201,8 @@ public class TimerPanel extends JPanel {
         String title = (name.equals("")) ? Integer.toString(length) : name;
         JButton button = new JButton(title);
         if (isBlockedTimer) {
-            button.setBackground(Color.RED);
+            button.setBackground(UIManager.getColor("ProgressBar.foreground"));
+            button.setForeground(Color.BLACK);
         }
 
         Timer time = new Timer();

@@ -2,6 +2,7 @@ package com.productivity;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
@@ -51,9 +52,6 @@ public class BlockSites extends JPanel {
     }
     
     public static void reBlockSites() {
-        System.out.println(kHostsFile.getAbsolutePath());
-        System.out.println(Paths.get(kHostsFile.getAbsolutePath()));    
-        System.out.println(Files.isWritable(Paths.get(kHostsFile.getAbsolutePath())));   
         if (Files.isWritable(Paths.get(kHostsFile.getAbsolutePath()))) {
             try {
                 String[] data = readData(mNewHosts);
@@ -63,6 +61,9 @@ public class BlockSites extends JPanel {
                 String[] data = readData(mBackupFile);
                 writeData(data, mNewHosts);
             }
+        }
+        else {
+            JOptionPane.showMessageDialog(null , "Run as administrator to use blocking");
         }
     }
     

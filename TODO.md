@@ -21,8 +21,9 @@
 # remove getHome()
 # exception in timer
 # Scheduled Notifications
-- site blocker
+# site blocker
 - Better exe
+# time red block button
 # timer ui when no block
 # clean up notification loop
 # recheck daily
