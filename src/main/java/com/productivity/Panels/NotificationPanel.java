@@ -43,6 +43,7 @@ public class NotificationPanel extends JPanel {
     private File mNotificationFile = Productivity.getSave("Saves/notification.TXT");
     private final String kDelimiter = "|~|"; // I understand this is the worst way to do this but if someone has this in their description they deserve to break the code
     private final String kRegexDelimiter = "\\|~\\|";
+    private final JPanel mPanel = new JPanel(new MigLayout(!Productivity.kMigDebug?"debug":""));
 
     private static TimePickerSettings mTimePickerSettings = new TimePickerSettings();
     static {
@@ -73,8 +74,9 @@ public class NotificationPanel extends JPanel {
         JButton addBtn = new JButton("Add");
         addBtn.addActionListener(e -> notificationPopup());
         
-        super.setLayout(new MigLayout((Productivity.kMigDebug)?"debug":""));
-        super.add(addBtn, "dock south, spanx, grow, push");
+        super.setLayout(new MigLayout((!Productivity.kMigDebug)?"debug":""));
+        super.add(mPanel, "grow, push, span");
+        super.add(addBtn, "growx");
         loadNotifications();
 
         Timer time = new Timer();
@@ -116,7 +118,7 @@ public class NotificationPanel extends JPanel {
     }
 
     private void removeNotification(Notification notification, JPanel panel) {
-        super.remove(panel);
+        mPanel.remove(panel);
         mNotifications.remove(notification);
         String[] data = new String[mNotifications.size()];
         for (int j = 0; j < data.length; j++) {
@@ -152,13 +154,18 @@ public class NotificationPanel extends JPanel {
                 JOptionPane.showMessageDialog(this, "Name field can not be blank", "Warning", JOptionPane.INFORMATION_MESSAGE);
                 return;
             }
+            if (datePicker.getDate() == null && timePicker.getTime() == null) {
+                int amount = repeatAmount.getText().equals("") ? 0 : Integer.parseInt(repeatAmount.getText());
+                newNotification(name.getText(), text.getText(), repeat.getSelectedIndex(), amount, LocalDate.now(), LocalTime.now());
+                infoBox.dispose();
+            }
             if (datePicker.getDate() == null) {
                 datePicker.setDate(LocalDate.now());
             }
             if (timePicker.getTime() == null) {
                 timePicker.setTime(LocalTime.now());
             }
-            if (convertDateToLong(LocalDateTime.of(datePicker.getDate(), timePicker.getTime())) - (System.currentTimeMillis() / 1000l) < 0) {
+            if (convertDateToLong(LocalDateTime.of(datePicker.getDate(), timePicker.getTime())) - (System.currentTimeMillis() / 1000l) <= 0) {
                 JOptionPane.showMessageDialog(this, "Date/Time can't be in the past", "Warning", JOptionPane.INFORMATION_MESSAGE);
                 return;
             }
@@ -167,7 +174,7 @@ public class NotificationPanel extends JPanel {
             infoBox.dispose();
         });
         
-        infoBox.setLayout(new MigLayout((Productivity.kMigDebug)?"debug":""));
+        infoBox.setLayout(new MigLayout(((Productivity.kMigDebug)?"debug, ":"")+"ins 5"));
         infoBox.add(nameLbl, "wrap");
         infoBox.add(name, "wrap");
         infoBox.add(textLbl, "wrap");
@@ -180,8 +187,8 @@ public class NotificationPanel extends JPanel {
         infoBox.add(repeatInfo, "split 3");
         infoBox.add(repeatAmount, "");
         infoBox.add(repeat, "wrap");
-        infoBox.add(confirm, "dock south, spanx, grow, push");
-        infoBox.setSize(220, 320);
+        infoBox.add(confirm, "dock south, span, grow, push");
+        infoBox.setSize(210, 320);
         infoBox.setVisible(true);
     }
 
@@ -191,14 +198,14 @@ public class NotificationPanel extends JPanel {
         JPanel panel = new JPanel(new MigLayout());
         
         panel.add(info);
-        panel.add(delete);
+        panel.add(delete, "align right");
         notification.setPanel(panel);
         delete.addActionListener(e -> {
             mNotifications.remove(notification);
-            super.remove(panel);
+            mPanel.remove(panel);
             Productivity.getInstance().repaint();
         });
-        super.add(panel, "wrap");
+        mPanel.add(panel, "wrap, growx, pushx, spanx");
         Productivity.getInstance().repaint();
     }
     
