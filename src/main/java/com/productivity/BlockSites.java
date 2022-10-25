@@ -51,6 +51,9 @@ public class BlockSites extends JPanel {
     }
     
     public static void reBlockSites() {
+        System.out.println(kHostsFile.getAbsolutePath());
+        System.out.println(Paths.get(kHostsFile.getAbsolutePath()));    
+        System.out.println(Files.isWritable(Paths.get(kHostsFile.getAbsolutePath())));   
         if (Files.isWritable(Paths.get(kHostsFile.getAbsolutePath()))) {
             try {
                 String[] data = readData(mNewHosts);

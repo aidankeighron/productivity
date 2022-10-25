@@ -20,9 +20,12 @@
 - Version 4.1 Checklist Update
 # remove getHome()
 # exception in timer
-- Scheduled Notifications
-- clean up notification loop
+# Scheduled Notifications
+- site blocker
 - Better exe
+# timer ui when no block
+# clean up notification loop
+# recheck daily
 # move app across monitors
 # description regex
 # More color options

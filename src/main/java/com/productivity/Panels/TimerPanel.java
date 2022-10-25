@@ -167,9 +167,9 @@ public class TimerPanel extends JPanel {
         super.add(timeList, "spanx 2, center, aligny bottom");
         super.add(timeLbl, "");
         super.add(nameLbl, "");
-        super.add(alarmLbl, "");
         if (Boolean.parseBoolean(SettingsPanel.getSetting("blockSites")))
             super.add(mBlockLbl, "");
+        super.add(alarmLbl, "");
         super.add(addBtn, "spanx 2, wrap, pushy, center");
         super.add(timeField, "");
         super.add(nameFelid, "");
@@ -270,7 +270,6 @@ public class TimerPanel extends JPanel {
 
         mScrollPanel.add(progressBar, "grow, pushx");
         mScrollPanel.add(button, "grow, pushx, wrap");
-        //mNames.add(nameBox);
         if (isBlockedTimer) {
             mBlockBox.setSelected(false);
         }
