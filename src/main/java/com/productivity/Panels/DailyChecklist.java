@@ -27,13 +27,14 @@ public class DailyChecklist {
 			public void run() {
 				DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");  
 				LocalDateTime now = LocalDateTime.now();
+
+				resetBoxes(!dtf.format(now).equals(readData(mTimeFile)[0]));
 				try {
 					writeData(dtf.format(now), mTimeFile);
 				} catch (Exception e) {
 					e.printStackTrace();
 					writeData("11/11/2020", mTimeFile);
 				}
-				resetBoxes(!dtf.format(now).equals(readData(mTimeFile)[0]));
 			}
 		}
 		);
@@ -70,6 +71,8 @@ public class DailyChecklist {
 					addCheckBox(names[i], new Color(Integer.parseInt(color[i])), false, i);
 				}
 			}
+
+			saveCheckBoxes();
 			HomePanel.getInstance().reset();
 		} catch (Exception e) {
 			e.printStackTrace();

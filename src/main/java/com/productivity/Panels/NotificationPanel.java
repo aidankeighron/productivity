@@ -35,12 +35,14 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 public class NotificationPanel extends JPanel {
     
     private String[] kRepeatOptions = {"None", "Hour(s)", "Day(s)", "Week(s)", "Month(s)", "Year(s)"};
     private ArrayList<Notification> mNotifications = new ArrayList<Notification>();
     private File mNotificationFile = Productivity.getSave("Saves/notification.TXT");
+    private static File mTimeFile = Productivity.getSave("Saves/time.TXT");
     private final String kDelimiter = "|~|"; // I understand this is the worst way to do this but if someone has this in their description they deserve to break the code
     private final String kRegexDelimiter = "\\|~\\|";
     private final JPanel mPanel = new JPanel(new MigLayout(!Productivity.kMigDebug?"debug":""));
@@ -85,13 +87,10 @@ public class NotificationPanel extends JPanel {
             @Override
             public void run()
             {
+                Notification notificationToRemove = null;
                 for (Notification notification : mNotifications) {
                     long duration = notification.getStartDate() - (System.currentTimeMillis() / 1000l);
                     
-                    System.out.print("Run");
-                    System.out.print(" | " + (System.currentTimeMillis() / 1000l));
-                    System.out.print(" | " + notification.getStartDate());
-                    System.out.println(" | " + duration);
                     if (0 >= duration) {
                         try {
                             com.productivity.Util.Notification.displayTray(notification.mName, notification.mText);
@@ -100,7 +99,13 @@ public class NotificationPanel extends JPanel {
                             e.printStackTrace();
                         }
                         if (notification.getNextDate() == -1) {
-                            removeNotification(notification, notification.getPanel());
+                            NotificationPanel.super.remove(notification.getPanel());
+                            notificationToRemove = notification;
+                            String[] data = new String[mNotifications.size()];
+                            for (int j = 0; j < data.length; j++) {
+                                data[j] = mNotifications.get(j).mName+kDelimiter+mNotifications.get(j).mText+kDelimiter+Integer.toString(mNotifications.get(j).mRepeat)+kDelimiter+Integer.toString(mNotifications.get(j).mAmount)+kDelimiter+Long.toString(mNotifications.get(j).getStartDate());
+                            }
+                            writeData(data, mNotificationFile);
                             Productivity.getInstance().repaint();
                         }
                         else {
@@ -112,19 +117,22 @@ public class NotificationPanel extends JPanel {
                         }
                     }
                 }
+                if (notificationToRemove != null) {
+                    mNotifications.remove(notificationToRemove);
+                }
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");  
+				LocalDateTime now = LocalDateTime.now();
+
+                DailyChecklist.resetBoxes(!dtf.format(now).equals(readData(mTimeFile)[0]));
+				try {
+					writeData(dtf.format(now), mTimeFile);
+				} catch (Exception e) {
+					e.printStackTrace();
+					writeData("11/11/2020", mTimeFile);
+				}
             }
         };
         time.schedule(task, 0, 1000);
-    }
-
-    private void removeNotification(Notification notification, JPanel panel) {
-        mPanel.remove(panel);
-        mNotifications.remove(notification);
-        String[] data = new String[mNotifications.size()];
-        for (int j = 0; j < data.length; j++) {
-            data[j] = mNotifications.get(j).mName+kDelimiter+mNotifications.get(j).mText+kDelimiter+Integer.toString(mNotifications.get(j).mRepeat)+kDelimiter+Integer.toString(mNotifications.get(j).mAmount)+kDelimiter+Long.toString(mNotifications.get(j).getStartDate());
-        }
-        writeData(data, mNotificationFile);
     }
     
     private void notificationPopup() {
@@ -161,9 +169,11 @@ public class NotificationPanel extends JPanel {
             }
             if (datePicker.getDate() == null) {
                 datePicker.setDate(LocalDate.now());
+                System.out.println("date");
             }
             if (timePicker.getTime() == null) {
                 timePicker.setTime(LocalTime.now());
+                System.out.println("time");
             }
             if (convertDateToLong(LocalDateTime.of(datePicker.getDate(), timePicker.getTime())) - (System.currentTimeMillis() / 1000l) <= 0) {
                 JOptionPane.showMessageDialog(this, "Date/Time can't be in the past", "Warning", JOptionPane.INFORMATION_MESSAGE);

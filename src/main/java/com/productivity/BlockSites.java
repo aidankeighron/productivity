@@ -2,6 +2,7 @@ package com.productivity;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
@@ -60,6 +61,9 @@ public class BlockSites extends JPanel {
                 String[] data = readData(mBackupFile);
                 writeData(data, mNewHosts);
             }
+        }
+        else {
+            JOptionPane.showMessageDialog(null , "Run as administrator to use blocking");
         }
     }
     
