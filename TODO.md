@@ -17,7 +17,7 @@
 # Timers ui move
 # Daily more space
 
-- Version 4.1 Checklist Update
+- Version 5.0 Checklist Update
 # remove getHome()
 # exception in timer
 # Scheduled Notifications
@@ -25,11 +25,10 @@
 - Better exe
 - change notification delay to 1 min
 # future notifications not removed
+# reminder length not resetting if deleted and tab switch
+# notification text area static size
+# improve notification info preview
 - regex
-- reminder length not resetting if deleted and tab switch
-- make delete key delete selected boxes
-- notification text area static size
-- improve notification info preview
 # timer text fields resizing with long text
 - only re-get things if they change
 - daily refresh or home refresh sometimes duplicating (only refresh if something changes)

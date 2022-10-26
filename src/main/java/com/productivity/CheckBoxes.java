@@ -88,13 +88,14 @@ public class CheckBoxes extends JPanel {
 				DailyChecklist.resetBoxes(false);
 			}
 		});
+
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				loadCheckBoxes();
 			}
 		}
 		);
-		
+
 		super.setLayout(new MigLayout("gap 0px 0px, ins 0" + ((Productivity.kMigDebug)?",debug":"")));
 		super.add(input, "");
 		super.add(colorChooser, "wrap");

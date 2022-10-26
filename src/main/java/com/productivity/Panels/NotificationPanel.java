@@ -44,6 +44,7 @@ public class NotificationPanel extends JPanel {
     private ArrayList<Notification> mNotifications = new ArrayList<Notification>();
     private File mNotificationFile = Productivity.getSave("Saves/notification.TXT");
     private static File mTimeFile = Productivity.getSave("Saves/time.TXT");
+    private static DateTimeFormatter mFormatter = DateTimeFormatter.ofPattern("MM/dd/yy HH:mm:ss");
     private final String kDelimiter = "|~|"; // I understand this is the worst way to do this but if someone has this in their description they deserve to break the code
     private final String kRegexDelimiter = "\\|~\\|";
     private final JPanel mPanel = new JPanel(new MigLayout(Productivity.kMigDebug?"debug":""));
@@ -142,8 +143,10 @@ public class NotificationPanel extends JPanel {
         JTextField name = new JTextField(10);
 
         JLabel textLbl = new JLabel("Description");
-        JTextArea text = new JTextArea(2, 15);
-        
+        JTextArea text = new JTextArea(5, 15);
+        text.setLineWrap(true);
+        JScrollPane scroll = new JScrollPane(text);
+
         JLabel timeLbl = new JLabel("Start time (no time will mean now):");
         TimePicker timePicker = new TimePicker(mTimePickerSettings);
 
@@ -176,12 +179,31 @@ public class NotificationPanel extends JPanel {
             newNotification(name.getText(), text.getText(), repeat.getSelectedIndex(), amount, datePicker.getDate(), timePicker.getTime());
             infoBox.dispose();
         });
+        name.addActionListener(e -> {
+            if (name.getText().equals("")) {
+                JOptionPane.showMessageDialog(this, "Name field can not be blank", "Warning", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+            if (datePicker.getDate() == null) {
+                datePicker.setDate(LocalDate.now());
+            }
+            if (timePicker.getTime() == null) {
+                timePicker.setTime(LocalTime.now());
+            }
+            if (convertDateToLong(LocalDateTime.of(datePicker.getDate(), timePicker.getTime())) - (System.currentTimeMillis() / 1000l) <= -60*60) {
+                JOptionPane.showMessageDialog(this, "Date/Time can't be in the past", "Warning", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+            int amount = repeatAmount.getText().equals("") ? 0 : Integer.parseInt(repeatAmount.getText());
+            newNotification(name.getText(), text.getText(), repeat.getSelectedIndex(), amount, datePicker.getDate(), timePicker.getTime());
+            infoBox.dispose();
+        });
         
         infoBox.setLayout(new MigLayout(((Productivity.kMigDebug)?"debug, ":"")+"ins 5"));
         infoBox.add(nameLbl, "wrap");
         infoBox.add(name, "wrap");
         infoBox.add(textLbl, "wrap");
-        infoBox.add(text, "wrap");
+        infoBox.add(scroll, "wrap, h 100");
         infoBox.add(timeLbl, "wrap");
         infoBox.add(timePicker, "wrap");
         infoBox.add(dateLbl, "wrap");
@@ -191,7 +213,8 @@ public class NotificationPanel extends JPanel {
         infoBox.add(repeatAmount, "");
         infoBox.add(repeat, "wrap");
         infoBox.add(confirm, "dock south, span, grow, push");
-        infoBox.setSize(210, 320);
+        infoBox.setSize(210, 400);
+        infoBox.setLocation(Productivity.getInstance().getLocation());
         infoBox.setVisible(true);
     }
 
@@ -199,7 +222,8 @@ public class NotificationPanel extends JPanel {
         if (mNumberOfNotifications >= kMaxNumberOfNotifications) return;
         mNumberOfNotifications++;
         JButton delete = new JButton("Remove");
-        JLabel info = new JLabel(name+" | Repeat every "+amount+" "+kRepeatOptions[repeat]);
+        LocalDateTime ldt = Instant.ofEpochSecond(notification.getStartDate()).atZone(ZoneId.systemDefault()).toLocalDateTime();
+        JLabel info = new JLabel(name+" | Repeat every: "+amount+" "+kRepeatOptions[repeat]+" | Next notification "+ldt.format(mFormatter));
         JPanel panel = new JPanel(new MigLayout());
         
         panel.add(info);

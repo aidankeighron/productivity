@@ -23,6 +23,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import java.awt.Toolkit;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 
 import com.productivity.BlockSites;
 import com.productivity.CheckBoxes;
@@ -332,6 +334,17 @@ public class SettingsPanel extends JTabbedPane {
                 stopTimer();
                 startTimer(Integer.parseInt(textField.getText()), progressBar);
                 saveTimer(timeList, textField);
+            }
+        });
+        textField.addFocusListener((FocusListener) new FocusListener() {
+
+            @Override
+            public void focusGained(FocusEvent e) {
+            }
+            
+            @Override
+            public void focusLost(FocusEvent e) {
+                textField.setText(Integer.toString(progressBar.getMaximum()/mTimeMultiplier));
             }
         });
         JButton save = new JButton("      Save      ");
