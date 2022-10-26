@@ -26,7 +26,7 @@ import java.awt.Toolkit;
 public class TimerPanel extends JPanel {
 
     private static final String[] kTimeOptions = {"Seconds", "Minutes", "Hours"};
-    private static final int kMaxTimers = 20;
+    private static final int kMaxTimers = 10;
 
     private ArrayList<JProgressBar> mBars = new ArrayList<JProgressBar>();
     private ArrayList<JButton> mButtons = new ArrayList<JButton>();
@@ -42,9 +42,9 @@ public class TimerPanel extends JPanel {
     
     public TimerPanel() {
         JLabel timeLbl = new JLabel("Duration:");
-        JTextField timeField = new JTextField();
+        JTextField timeField = new JTextField(6);
         JLabel nameLbl = new JLabel("Name:");
-        JTextField nameFelid = new JTextField();
+        JTextField nameFelid = new JTextField(6);
         nameFelid.addActionListener(e -> {
             boolean notInt = false;
             try {
@@ -57,7 +57,7 @@ public class TimerPanel extends JPanel {
             }
             if (timeField.getText().equals("") || notInt || (!notInt) && Integer.parseInt(timeField.getText()) > 1000 || nameFelid.getText().length() > 10) {
                 timeField.setText("");
-                JOptionPane.showMessageDialog(this, "Enter valid positive time");
+                JOptionPane.showMessageDialog(this, "Enter valid positive duration");
             }
             else {
                 if (mNumTimers < kMaxTimers) {
@@ -82,7 +82,7 @@ public class TimerPanel extends JPanel {
             }
             if (timeField.getText().equals("") || notInt || (!notInt) && Integer.parseInt(timeField.getText()) > 1000 || nameFelid.getText().length() > 10) {
                 timeField.setText("");
-                JOptionPane.showMessageDialog(this, "Enter valid positive time");
+                JOptionPane.showMessageDialog(this, "Enter valid positive duration");
             }
             else {
                 if (mNumTimers < kMaxTimers) {
@@ -112,7 +112,7 @@ public class TimerPanel extends JPanel {
         String alarmInfo = "Causes beep to happen 3 times";
         alarmBox.setToolTipText(alarmInfo);
         alarmLbl.setToolTipText(alarmInfo);
-        String blockInfo = "Blocks websites specified in \"Block sites\" for durration of timer";
+        String blockInfo = "Blocks websites specified in \"Block sites\" for duration of timer";
         mBlockBox.setToolTipText(blockInfo);
         mBlockLbl.setToolTipText(blockInfo);
         JButton addBtn = new JButton("           Add           ");

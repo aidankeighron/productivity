@@ -7,9 +7,9 @@ currentConfetti
 blockSites
 *
 false
-11
+10
 true
-false
+true
 true
 0
 true

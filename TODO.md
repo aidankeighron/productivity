@@ -23,6 +23,26 @@
 # Scheduled Notifications
 # site blocker
 - Better exe
+- change notification delay to 1 min
+# future notifications not removed
+- regex
+- reminder length not resetting if deleted and tab switch
+- make delete key delete selected boxes
+- notification text area static size
+- improve notification info preview
+# timer text fields resizing with long text
+- only re-get things if they change
+- daily refresh or home refresh sometimes duplicating (only refresh if something changes)
+- improve timers? 1 loop vs multiple
+- flickering on home
+# enter valid positive time -> enter valid positive duration
+- checklist columns mess up when deleting boxes
+- home gets messed up when deleting boxes
+- box limit can be broken when in weird deleting state
+# error when not inputting number for reminder length
+# date/time cant be in the past appears when both are blank
+# add button gets pushed off by notifications
+# remove does not remove notifications that repeat
 # time red block button
 # timer ui when no block
 # clean up notification loop

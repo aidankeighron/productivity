@@ -343,7 +343,6 @@ public class SettingsPanel extends JTabbedPane {
                     notInt = true;
                 }
             } catch (Exception ex) {
-                ex.printStackTrace();
                 notInt = true;
             }
             if (textField.getText().equals("") || notInt) {

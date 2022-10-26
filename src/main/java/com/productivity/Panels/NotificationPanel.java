@@ -1,6 +1,7 @@
 package com.productivity.Panels;
 
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -45,11 +46,14 @@ public class NotificationPanel extends JPanel {
     private static File mTimeFile = Productivity.getSave("Saves/time.TXT");
     private final String kDelimiter = "|~|"; // I understand this is the worst way to do this but if someone has this in their description they deserve to break the code
     private final String kRegexDelimiter = "\\|~\\|";
-    private final JPanel mPanel = new JPanel(new MigLayout(!Productivity.kMigDebug?"debug":""));
+    private final JPanel mPanel = new JPanel(new MigLayout(Productivity.kMigDebug?"debug":""));
+    private int mNumberOfNotifications = 0;
+    private final int kMaxNumberOfNotifications = 15;
 
     private static TimePickerSettings mTimePickerSettings = new TimePickerSettings();
     static {
         mTimePickerSettings.setColor(TimeArea.TextFieldBackgroundValidTime, UIManager.getColor("TextField.background"));
+        mTimePickerSettings.setColor(TimeArea.TextFieldBackgroundInvalidTime, UIManager.getColor("TextField.background"));
         mTimePickerSettings.setColor(TimeArea.TimePickerTextValidTime, UIManager.getColor("textText"));
     }
 
@@ -76,8 +80,9 @@ public class NotificationPanel extends JPanel {
         JButton addBtn = new JButton("Add");
         addBtn.addActionListener(e -> notificationPopup());
         
-        super.setLayout(new MigLayout((!Productivity.kMigDebug)?"debug":""));
-        super.add(mPanel, "grow, push, span");
+        super.setLayout(new MigLayout((Productivity.kMigDebug)?"debug":""));
+        JScrollPane scroll = new JScrollPane(mPanel);
+        super.add(scroll, "grow, push, span");
         super.add(addBtn, "growx");
         loadNotifications();
 
@@ -93,7 +98,9 @@ public class NotificationPanel extends JPanel {
                     
                     if (0 >= duration) {
                         try {
-                            com.productivity.Util.Notification.displayTray(notification.mName, notification.mText);
+                            if (duration >= -60*60) {
+                                com.productivity.Util.Notification.displayTray(notification.mName, notification.mText);
+                            }
                         }
                         catch (Exception e) {
                             e.printStackTrace();
@@ -101,24 +108,17 @@ public class NotificationPanel extends JPanel {
                         if (notification.getNextDate() == -1) {
                             NotificationPanel.super.remove(notification.getPanel());
                             notificationToRemove = notification;
-                            String[] data = new String[mNotifications.size()];
-                            for (int j = 0; j < data.length; j++) {
-                                data[j] = mNotifications.get(j).mName+kDelimiter+mNotifications.get(j).mText+kDelimiter+Integer.toString(mNotifications.get(j).mRepeat)+kDelimiter+Integer.toString(mNotifications.get(j).mAmount)+kDelimiter+Long.toString(mNotifications.get(j).getStartDate());
-                            }
-                            writeData(data, mNotificationFile);
                             Productivity.getInstance().repaint();
                         }
                         else {
-                            String[] data = new String[mNotifications.size()];
-                            for (int j = 0; j < data.length; j++) {
-                                data[j] = mNotifications.get(j).mName+kDelimiter+mNotifications.get(j).mText+kDelimiter+Integer.toString(mNotifications.get(j).mRepeat)+kDelimiter+Integer.toString(mNotifications.get(j).mAmount)+kDelimiter+Long.toString(mNotifications.get(j).getStartDate());
-                            }
-                            writeData(data, mNotificationFile);
+                            saveNotifications();
                         }
                     }
                 }
                 if (notificationToRemove != null) {
                     mNotifications.remove(notificationToRemove);
+                    mNumberOfNotifications--;
+                    saveNotifications();
                 }
                 DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");  
 				LocalDateTime now = LocalDateTime.now();
@@ -139,10 +139,10 @@ public class NotificationPanel extends JPanel {
         JDialog infoBox = new JDialog(Productivity.getInstance(), "Create Notification");
         
         JLabel nameLbl = new JLabel("Name:");
-        JTextField name = new JTextField();
+        JTextField name = new JTextField(10);
 
         JLabel textLbl = new JLabel("Description");
-        JTextArea text = new JTextArea();
+        JTextArea text = new JTextArea(2, 15);
         
         JLabel timeLbl = new JLabel("Start time (no time will mean now):");
         TimePicker timePicker = new TimePicker(mTimePickerSettings);
@@ -162,20 +162,13 @@ public class NotificationPanel extends JPanel {
                 JOptionPane.showMessageDialog(this, "Name field can not be blank", "Warning", JOptionPane.INFORMATION_MESSAGE);
                 return;
             }
-            if (datePicker.getDate() == null && timePicker.getTime() == null) {
-                int amount = repeatAmount.getText().equals("") ? 0 : Integer.parseInt(repeatAmount.getText());
-                newNotification(name.getText(), text.getText(), repeat.getSelectedIndex(), amount, LocalDate.now(), LocalTime.now());
-                infoBox.dispose();
-            }
             if (datePicker.getDate() == null) {
                 datePicker.setDate(LocalDate.now());
-                System.out.println("date");
             }
             if (timePicker.getTime() == null) {
                 timePicker.setTime(LocalTime.now());
-                System.out.println("time");
             }
-            if (convertDateToLong(LocalDateTime.of(datePicker.getDate(), timePicker.getTime())) - (System.currentTimeMillis() / 1000l) <= 0) {
+            if (convertDateToLong(LocalDateTime.of(datePicker.getDate(), timePicker.getTime())) - (System.currentTimeMillis() / 1000l) <= -60*60) {
                 JOptionPane.showMessageDialog(this, "Date/Time can't be in the past", "Warning", JOptionPane.INFORMATION_MESSAGE);
                 return;
             }
@@ -203,6 +196,8 @@ public class NotificationPanel extends JPanel {
     }
 
     private void showNotification(String name, String message, Notification notification, int repeat, int amount) {
+        if (mNumberOfNotifications >= kMaxNumberOfNotifications) return;
+        mNumberOfNotifications++;
         JButton delete = new JButton("Remove");
         JLabel info = new JLabel(name+" | Repeat every "+amount+" "+kRepeatOptions[repeat]);
         JPanel panel = new JPanel(new MigLayout());
@@ -213,22 +208,27 @@ public class NotificationPanel extends JPanel {
         delete.addActionListener(e -> {
             mNotifications.remove(notification);
             mPanel.remove(panel);
+            mNumberOfNotifications--;
+            saveNotifications();
             Productivity.getInstance().repaint();
         });
         mPanel.add(panel, "wrap, growx, pushx, spanx");
         Productivity.getInstance().repaint();
+    }
+
+    private void saveNotifications() {
+        String[] data = new String[mNotifications.size()];
+        for (int j = 0; j < data.length; j++) {
+            data[j] = mNotifications.get(j).mName+kDelimiter+mNotifications.get(j).mText+kDelimiter+Integer.toString(mNotifications.get(j).mRepeat)+kDelimiter+Integer.toString(mNotifications.get(j).mAmount)+kDelimiter+Long.toString(mNotifications.get(j).getStartDate());
+        }
+        writeData(data, mNotificationFile);
     }
     
     private void newNotification(String name, String text, int repeat, int amount, LocalDate date, LocalTime time) {
         LocalDateTime startDate = LocalDateTime.of(date, time);
         Notification notification = new Notification(name, text, repeat, amount, startDate);
         mNotifications.add(notification);
-
-        String[] data = new String[mNotifications.size()];
-        for (int i = 0; i < data.length; i++) {
-            data[i] = mNotifications.get(i).mName+kDelimiter+mNotifications.get(i).mText+kDelimiter+Integer.toString(mNotifications.get(i).mRepeat)+kDelimiter+Integer.toString(mNotifications.get(i).mAmount)+kDelimiter+Long.toString(mNotifications.get(i).getStartDate());
-        }
-        writeData(data, mNotificationFile);
+        saveNotifications();
 
         showNotification(name, text, notification, repeat, amount);
     }
