@@ -10,11 +10,13 @@ import com.productivity.Util.JTextFieldLimit;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -54,12 +56,14 @@ public class BlockSites extends JPanel {
     public static void reBlockSites() {
         if (Files.isWritable(Paths.get(kHostsFile.getAbsolutePath()))) {
             try {
-                String[] data = readData(mNewHosts);
-                writeData(data, kHostsFile);
+                Files.copy(mNewHosts.toPath(), kHostsFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
             } catch (Exception e) {
                 e.printStackTrace();
-                String[] data = readData(mBackupFile);
-                writeData(data, mNewHosts);
+                try {
+                    Files.copy(mBackupFile.toPath(), mNewHosts.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
             }
         }
         else {
@@ -70,12 +74,10 @@ public class BlockSites extends JPanel {
     public static void unBlockSites() {
         if (Files.isWritable(Paths.get(kHostsFile.getAbsolutePath()))) {
             try {
-                String[] data = readData(mBackupFile);
-                writeData(data, kHostsFile);
+                Files.copy(mBackupFile.toPath(), kHostsFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            
         }
     }
     
@@ -83,13 +85,11 @@ public class BlockSites extends JPanel {
         String result = "";
         try {
             String[] data = readData(mBlockedSites);
-            if (data.length >= 1) {
-                for (int i = 0; i < data.length; i++) {
-                    if (data[i].equals("*")) {
-                        continue;
-                    }
-                    result += data[i] + "\n";
+            for (int i = 0; i < data.length; i++) {
+                if (data[i].equals("*")) {
+                    continue;
                 }
+                result += data[i] + "\n";
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -128,6 +128,7 @@ public class BlockSites extends JPanel {
         String[] data = new String[numValidSites + host.length];
         String[] filteredSites = new String[numValidSites];
         int j = 0;
+
         for (int i = 0; i < host.length; i++) {
             data[j] = host[i];
             j++;
@@ -152,11 +153,14 @@ public class BlockSites extends JPanel {
     }
     
     private void reset(JTextArea area) {
-        String[] data = readData(mBackupFile);
-        if (Files.isWritable(Paths.get(kHostsFile.getAbsolutePath()))) {
-            writeData(data, kHostsFile);
+        try {
+            if (Files.isWritable(Paths.get(kHostsFile.getAbsolutePath()))) {
+                Files.copy(mBackupFile.toPath(), kHostsFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            }
+            Files.copy(mBackupFile.toPath(), mNewHosts.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        writeData(data, mNewHosts);
         writeData("", mBlockedSites);
         area.setText("");
     }
@@ -191,10 +195,7 @@ public class BlockSites extends JPanel {
     }
     
     private static void writeData(String[] dataArr, File file) {
-        String data = "";
-        for (int i = 0; i < dataArr.length; i++) {
-            data += (dataArr[i] + "\n");
-        }
+        String data = String.join("\n", dataArr);
         writeData(data, file);
     }
 }

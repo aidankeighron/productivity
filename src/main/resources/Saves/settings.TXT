@@ -4,6 +4,7 @@ reminderActive
 wantConfetti
 currentConfetti
 blockSites
+laf
 *
 false
 true
@@ -11,3 +12,4 @@ false
 true
 0
 false
+1

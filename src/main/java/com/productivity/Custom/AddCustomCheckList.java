@@ -78,13 +78,13 @@ public class AddCustomCheckList extends JPanel {
     private static void purgeDirectory(File dir) {
         for (File file: dir.listFiles()) {
             if (file.isDirectory())
-            purgeDirectory(file);
+                purgeDirectory(file);
             file.delete();
         }
     }
     
     public static int getNumberOfChecklists() {
-        return readData(kCustomNames).length;
+        return mCheckBoxes.size();
     }
     
     public static void loadCheckLists() {
@@ -132,14 +132,14 @@ public class AddCustomCheckList extends JPanel {
         button.addActionListener(e -> {
             mCustomPanel.remove(button);
             deleteChecklist(n);
-            saveChecklists();
+            saveChecklists(false);
         });
         int rows = (int)(mCustomPanel.getHeight() / (button.getPreferredSize().getHeight()+5));
         if (rows <= 0) rows = 1;
         mCustomPanel.add(button, (((mCustomPanel.getComponentCount()+1) % rows == 0)?"wrap":""));
         CheckBoxes checkBox = new CheckBoxes(name, check, color, false);
         mCheckBoxes.put(n, checkBox);
-        saveChecklists();
+        saveChecklists(true);
         CustomCheckList.getInstance().addCheckList(checkBox, n);
     }
     
@@ -159,12 +159,28 @@ public class AddCustomCheckList extends JPanel {
         mCurrentNumCheckLists--;
     }
     
-    private static void saveChecklists() {
-        String[] data = new String[mNames.size()];
-        for (int i = 0; i < data.length; i++) {
-            data[i] = mNames.get(i);
+    private static void saveChecklists(boolean append) {
+        if (!append) {
+            String[] data = new String[mNames.size()];
+            for (int i = 0; i < data.length; i++) {
+                data[i] = mNames.get(i);
+            }
+            writeData(data, kCustomNames);
         }
-        writeData(data, kCustomNames);
+        else {
+            appendChecklists(mNames.get(mNames.size()-1), kCustomNames);
+        }
+    }
+
+    private static void appendChecklists(String data, File file) {
+        try  {
+            FileWriter writer = new FileWriter(file, true);
+            writer.write(data+"\n");
+            writer.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
     
     private static String[] readData(File file) {
@@ -197,10 +213,7 @@ public class AddCustomCheckList extends JPanel {
     }
     
     private static void writeData(String[] dataArr, File file) {
-        String data = "";
-        for (int i = 0; i < dataArr.length; i++) {
-            data += (dataArr[i] + "\n");
-        }
+        String data = String.join("\n", dataArr);
         writeData(data, file);
     }
 }

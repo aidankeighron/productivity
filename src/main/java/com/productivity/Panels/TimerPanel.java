@@ -39,6 +39,7 @@ public class TimerPanel extends JPanel {
     private JCheckBox mBlockBox = new JCheckBox();
     private JLabel mBlockLbl = new JLabel();
     private JPanel mScrollPanel = new JPanel();
+    private Productivity mProductivity = Productivity.getInstance();
     
     public TimerPanel() {
         JLabel timeLbl = new JLabel("Duration:");
@@ -158,7 +159,6 @@ public class TimerPanel extends JPanel {
                 break;
             }
         });
-        timeList.setFocusable(false);
 
         mScrollPanel.setLayout(new MigLayout());
         JScrollPane scroll = new JScrollPane(mScrollPanel);
@@ -275,7 +275,7 @@ public class TimerPanel extends JPanel {
         if (isBlockedTimer) {
             mBlockBox.setSelected(false);
         }
-        Productivity.getInstance().repaintFrame();
+        mProductivity.repaintFrame();
     }
     
     private void removeProgressBar(JButton button, JProgressBar progressBar, TimerTask task, Timer time, Boolean isBlockedTimer) {
@@ -289,6 +289,6 @@ public class TimerPanel extends JPanel {
         time.purge();
         mScrollPanel.remove(progressBar);
         mScrollPanel.remove(button);
-        Productivity.getInstance().repaintFrame();
+        mProductivity.repaintFrame();
     }
 }

@@ -142,7 +142,6 @@ public class Productivity extends JFrame {
 		mCheckBoxes = new CheckBoxes(mNameFile, mStateFile, mColorFile, false);
 		mTimerPanel = new TimerPanel();
 		mTabbedPane.setUI(new CustomTabbedUI(UIManager.getColor("Panel.background")));
-		//mTabbedPane.setFocusable(false);
 		mTabbedPane.addTab("Checklist", mCheckBoxes);
 		mTabbedPane.addTab("Timers", mTimerPanel);
 		mTabbedPane.addTab("Notification", new NotificationPanel());
@@ -312,6 +311,7 @@ public class Productivity extends JFrame {
 				String currentDir = System.getProperty("user.dir");
 				String data = "start " + currentDir + "\\Productivity.exe";
 				writeData(data, startupFile);
+				System.out.println("Writing to: " + startupFile.getPath());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -413,6 +413,10 @@ public class Productivity extends JFrame {
 		kPath = kPath.substring(0, kPath.lastIndexOf("/"));
 		kPath += "/Custom/";
 		return new File(file);
+	}
+
+	public SettingsPanel getSettingsPanel() {
+		return mSettingsPanel;
 	}
 
 	public static class FadeLabel extends JLabel {

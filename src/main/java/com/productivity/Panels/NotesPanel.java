@@ -26,7 +26,6 @@ public class NotesPanel extends JDesktopPane {
 		String[] names = readData(kNamesFile);
 		
 		JComboBox<String> noteChoose = new JComboBox<>(names);
-		noteChoose.setFocusable(false);
 		
 		JTextField nameField = new JTextField();
 		nameField.setDocument(new JTextFieldLimit(kTextLimit));
@@ -144,10 +143,7 @@ public class NotesPanel extends JDesktopPane {
 	}
 	
 	private static void writeData(String[] dataArr, File file) {
-		String data = "";
-		for (int i = 0; i < dataArr.length; i++) {
-			data += (dataArr[i] + "\n");
-		}
+        String data = String.join("\n", dataArr);
 		writeData(data, file);
 	}
 }

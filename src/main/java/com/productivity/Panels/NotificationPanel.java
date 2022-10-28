@@ -90,6 +90,7 @@ public class NotificationPanel extends JPanel {
         Timer time = new Timer();
         TimerTask task = new TimerTask()
         {
+            int iterations = 0;
             @Override
             public void run()
             {
@@ -112,25 +113,31 @@ public class NotificationPanel extends JPanel {
                             Productivity.getInstance().repaint();
                         }
                         else {
-                            saveNotifications();
+                            saveNotifications(false);
                         }
                     }
                 }
                 if (notificationToRemove != null) {
                     mNotifications.remove(notificationToRemove);
                     mNumberOfNotifications--;
-                    saveNotifications();
+                    saveNotifications(false);
                 }
-                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");  
-				LocalDateTime now = LocalDateTime.now();
-
-                DailyChecklist.resetBoxes(!dtf.format(now).equals(readData(mTimeFile)[0]));
-				try {
-					writeData(dtf.format(now), mTimeFile);
-				} catch (Exception e) {
-					e.printStackTrace();
-					writeData("11/11/2020", mTimeFile);
-				}
+                if (iterations >= 10) { // Check every 10 min
+                    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");  
+                    LocalDateTime now = LocalDateTime.now();
+                    String fileContents = readData(mTimeFile)[0];
+                    if (!dtf.format(now).equals(fileContents)) {
+                        SettingsPanel.getDaily().setToFalse();
+                        try {
+                            writeData(dtf.format(now), mTimeFile);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            writeData("11/11/2020", mTimeFile);
+                        }
+                    }
+                    iterations = 0;
+                }
+                iterations++;
             }
         };
         time.schedule(task, 0, 1000);
@@ -233,26 +240,34 @@ public class NotificationPanel extends JPanel {
             mNotifications.remove(notification);
             mPanel.remove(panel);
             mNumberOfNotifications--;
-            saveNotifications();
+            saveNotifications(false);
             Productivity.getInstance().repaint();
         });
         mPanel.add(panel, "wrap, growx, pushx, spanx");
         Productivity.getInstance().repaint();
     }
 
-    private void saveNotifications() {
-        String[] data = new String[mNotifications.size()];
-        for (int j = 0; j < data.length; j++) {
-            data[j] = mNotifications.get(j).mName+kDelimiter+mNotifications.get(j).mText+kDelimiter+Integer.toString(mNotifications.get(j).mRepeat)+kDelimiter+Integer.toString(mNotifications.get(j).mAmount)+kDelimiter+Long.toString(mNotifications.get(j).getStartDate());
+    private void saveNotifications(Boolean append) {
+        if (!append) {
+            String[] data = new String[mNotifications.size()];
+            for (int j = 0; j < data.length; j++) {
+                data[j] = mNotifications.get(j).mName+kDelimiter+mNotifications.get(j).mText+kDelimiter+Integer.toString(mNotifications.get(j).mRepeat)+kDelimiter+Integer.toString(mNotifications.get(j).mAmount)+kDelimiter+Long.toString(mNotifications.get(j).getStartDate());
+            }
+            writeData(data, mNotificationFile);
+
         }
-        writeData(data, mNotificationFile);
+        else {
+            int index = mNotifications.size()-1;
+            String data = mNotifications.get(index).mName+kDelimiter+mNotifications.get(index).mText+kDelimiter+Integer.toString(mNotifications.get(index).mRepeat)+kDelimiter+Integer.toString(mNotifications.get(index).mAmount)+kDelimiter+Long.toString(mNotifications.get(index).getStartDate());
+            appendFile(data, mNotificationFile);
+        }
     }
     
     private void newNotification(String name, String text, int repeat, int amount, LocalDate date, LocalTime time) {
         LocalDateTime startDate = LocalDateTime.of(date, time);
         Notification notification = new Notification(name, text, repeat, amount, startDate);
         mNotifications.add(notification);
-        saveNotifications();
+        saveNotifications(true);
 
         showNotification(name, text, notification, repeat, amount);
     }
@@ -274,6 +289,17 @@ public class NotificationPanel extends JPanel {
         Instant instant = Instant.now(); //can be LocalDateTime
         ZoneId systemZone = ZoneId.systemDefault(); // my timezone
         return date.toEpochSecond(systemZone.getRules().getOffset(instant));
+    }
+
+    private static void appendFile(String data, File file) {
+        try  {
+            FileWriter writer = new FileWriter(file, true);
+            writer.write(data + "\n");
+            writer.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
     
     private static String[] readData(File file) {
@@ -306,10 +332,7 @@ public class NotificationPanel extends JPanel {
 	}
 	
 	private static void writeData(String[] dataArr, File file) {
-		String data = "";
-		for (int i = 0; i < dataArr.length; i++) {
-			data += (dataArr[i] + "\n");
-		}
+        String data = String.join("\n", dataArr);
 		writeData(data, file);
 	}
     

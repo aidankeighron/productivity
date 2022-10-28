@@ -16,10 +16,19 @@ public class HomePanel extends JPanel {
     
     private JPanel mCheckPanel = new JPanel(new MigLayout("flowy, gap 0px 0px, ins 0" + (Productivity.kMigDebug?", debug":"")));
     private JPanel mDailyPanel = new JPanel(new MigLayout("flowy, gap 0px 0px, ins 0" + (Productivity.kMigDebug?", debug":"")));
-    
+    private Productivity mProductivity = Productivity.getInstance();
+
     private enum BoxType {
         check,
         daily,
+    }
+
+    public enum FileType {
+        name,
+        color,
+        check,
+        all,
+        remove,
     }
     
     public HomePanel() {
@@ -28,20 +37,20 @@ public class HomePanel extends JPanel {
         super.add(mDailyPanel, "grow, push, span, hmax " + (Productivity.kHeight - Productivity.kTabHeight - 20) + ", wmax " + (Productivity.kWidth-15)/2);
         SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-                reset();
+                reset(FileType.all, false);
 			}
 		}
 		);
     }
     
-    public void reset() {
+    public void reset(FileType type, Boolean append) {
         mCheckPanel.removeAll();
         mDailyPanel.removeAll();
         
-        makePanel(mCheckPanel, Productivity.getInstance().getBoxes(), "Checklist", BoxType.check);
-        makePanel(mDailyPanel, DailyChecklist.getCheckBoxes(), "Daily", BoxType.daily);
+        makePanel(mCheckPanel, mProductivity.getBoxes(), "Checklist", BoxType.check);
+        makePanel(mDailyPanel, SettingsPanel.getDaily().getBoxes(), "Daily", BoxType.daily);
         
-        Productivity.getInstance().repaintFrame(); // reset() is called in multiple places where repainting is needed + home needs to repaint
+        mProductivity.repaintFrame(); // reset() is called in multiple places where repainting is needed + home needs to repaint
     }
     
     private JPanel makePanel(JPanel panel, JCheckBox[] boxes, String title, BoxType type) {
@@ -59,13 +68,10 @@ public class HomePanel extends JPanel {
                         Productivity.showConfetti();
                     switch (type) {
                         case check:
-                        Productivity.getInstance().setSelected(checkBox.isSelected(), index);
+                        mProductivity.setSelected(checkBox.isSelected(), index);
                         break;
                         case daily:
-                        DailyChecklist.setCheckBoxes(checkBox.isSelected(), index);
                         SettingsPanel.setDailySelected(checkBox.isSelected(), index);
-                        break;
-                        default:
                         break;
                     }
                 });

@@ -29,6 +29,7 @@
 # notification text area static size
 # improve notification info preview
 - regex
+- less Productivity.getInstance()
 # timer text fields resizing with long text
 - only re-get things if they change
 - daily refresh or home refresh sometimes duplicating (only refresh if something changes)

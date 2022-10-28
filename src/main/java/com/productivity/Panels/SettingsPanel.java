@@ -66,7 +66,6 @@ public class SettingsPanel extends JTabbedPane {
     TimerTask mTask;
     
     public SettingsPanel() {
-        super.setFocusable(false);
         mDailyPanel = new CheckBoxes(mNameFile, mStateFile, mColorFile, true);
         runBoolean allOnTop = (a) -> Productivity.getInstance().setOnTop(a);
         addSetting("Always on top", "onTop", "Makes window always on your screen unless you minimize it", settingTypes.checkbox, allOnTop, false, null);
@@ -236,7 +235,6 @@ public class SettingsPanel extends JTabbedPane {
             JLabel confettiLabel = new JLabel(name);
             String[] typesOfConfetti = {"High", "Low"};
             JComboBox<String> confettiField = new JComboBox<String>(typesOfConfetti);
-            confettiField.setFocusable(false);
             confettiField.addActionListener(e -> {
                 mSettings.put(key, Integer.toString(confettiField.getSelectedIndex()));
                 saveSettings();
@@ -265,7 +263,6 @@ public class SettingsPanel extends JTabbedPane {
                                     "Moonlight Contrast", "Night Owl Contrast",
                                     "Solarized Dark Contrast"};	
             JComboBox<String> lafField = new JComboBox<String>(typesOfLaf);
-            lafField.setFocusable(false);
             lafField.addActionListener(e -> {
                 mSettings.put(key, Integer.toString(lafField.getSelectedIndex()));
                 if (rt != null) {
@@ -294,7 +291,6 @@ public class SettingsPanel extends JTabbedPane {
     private void reminder() {
         int[] data = loadTimer();
         JComboBox<String> timeList = new JComboBox<>(kTimeOptions);
-        timeList.setFocusable(false);
         timeList.addActionListener(e -> {
             switch(timeList.getSelectedIndex()) {
                 case 0:
@@ -446,6 +442,10 @@ public class SettingsPanel extends JTabbedPane {
     public static void setDailySelected(boolean state, int index) {
         mDailyPanel.setSelected(state, index);
     }
+
+    public static CheckBoxes getDaily() {
+        return mDailyPanel;
+    }
     
     public static String getSetting(String key) {
         return mSettings.get(key);
@@ -527,10 +527,7 @@ public class SettingsPanel extends JTabbedPane {
     }
     
     private static void writeData(String[] dataArr, File file) {
-        String data = "";
-        for (int i = 0; i < dataArr.length; i++) {
-            data += (dataArr[i] + "\n");
-        }
+        String data = String.join("\n", dataArr);
         writeData(data, file);
     }
     

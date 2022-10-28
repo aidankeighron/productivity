@@ -9,7 +9,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
-import com.productivity.Panels.DailyChecklist;
 import com.productivity.Panels.HomePanel;
 import com.productivity.Util.JTextFieldLimit;
 import com.productivity.Util.Popup;
@@ -20,8 +19,6 @@ import java.util.Scanner;
 import java.io.File;
 import java.io.FileWriter;
 import java.nio.file.Files;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -43,7 +40,7 @@ public class CheckBoxes extends JPanel {
 	private int mNumCheckBox = 0;
 	private boolean mDaily;
 	
-	private enum fileType {
+	private enum FileType {
 		name,
 		check,
 		color
@@ -65,19 +62,18 @@ public class CheckBoxes extends JPanel {
 			addCheckBox(text, mSelectedColor, false);
 			input.setText("");
 			if (mDaily) {
-				DailyChecklist.resetBoxes(false);
+				HomePanel.getInstance().reset(HomePanel.FileType.all, true);
 			}
 		});
 		JComboBox<String> colorChooser = new JComboBox<>(kColorNames);
 		colorChooser.addActionListener(e -> {
 			mSelectedColor = kColors[colorChooser.getSelectedIndex()];
 		});
-		colorChooser.setFocusable(false);
 		JButton reset = new JButton("Reset");
 		reset.addActionListener( e -> {
 			removeCheckBoxes();
 			if (mDaily) {
-				DailyChecklist.resetBoxes(false);
+				HomePanel.getInstance().reset(HomePanel.FileType.remove, false);
 			}
 		});
 		// reset.setMargin(new Insets(0, 0, 0, 0));
@@ -85,7 +81,7 @@ public class CheckBoxes extends JPanel {
 		clear.addActionListener(e -> {
 			clearSelected();
 			if (mDaily) {
-				DailyChecklist.resetBoxes(false);
+				HomePanel.getInstance().reset(HomePanel.FileType.all, false);
 			}
 		});
 
@@ -103,6 +99,13 @@ public class CheckBoxes extends JPanel {
 		super.add(reset, "span, center, split 2");
 		super.add(clear, "");
 	}
+
+	public void setToFalse() {
+		for (int i = 0; i < mCheckBoxes.size(); i++) {
+			mCheckBoxes.get(i).setSelected(false);
+		}
+		saveCheckBoxes(FileType.check);
+	}
 	
 	private boolean testValidFileName(String text) {
 		return text.matches("^[a-zA-Z0-9._ <>{}\\[\\]\\|\\\\`~!@#$%^&*()-=+;:'\",?\\/]+$");
@@ -119,9 +122,9 @@ public class CheckBoxes extends JPanel {
 		checkBox.addActionListener(e -> {
 			if (checkBox.isSelected() && !mDaily)
 				Productivity.showConfetti();
-			saveCheckBoxes(fileType.check);
+			saveCheckBoxes(FileType.check);
 			if (mDaily) {
-				DailyChecklist.resetBoxes(false);
+				HomePanel.getInstance().reset(HomePanel.FileType.check, false);
 			}
 		});
 		checkBox.setForeground(color);
@@ -134,9 +137,9 @@ public class CheckBoxes extends JPanel {
 			if (input != null) {
 				checkBox.setText(input);
 			}
-			saveCheckBoxes(fileType.name);
+			saveCheckBoxes(FileType.name);
 			if (mDaily) {
-				DailyChecklist.resetBoxes(false);
+				HomePanel.getInstance().reset(HomePanel.FileType.name, false);
 			}
 		});
 		items[1] = new JMenuItem("Change color");
@@ -157,9 +160,9 @@ public class CheckBoxes extends JPanel {
 				}
 			}
 			checkBox.setForeground(newColor);
-			saveCheckBoxes(fileType.color);
+			saveCheckBoxes(FileType.color);
 			if (mDaily) {
-				DailyChecklist.resetBoxes(false);
+				HomePanel.getInstance().reset(HomePanel.FileType.color, false);
 			}
 		});
 		items[2] = new JMenuItem("Remove");
@@ -167,9 +170,9 @@ public class CheckBoxes extends JPanel {
 			mCheckBoxes.remove(checkBox);
 			mChecklistPanel.remove(checkBox);
 			mNumCheckBox--;
-			saveCheckBoxes();
+			saveCheckBoxes(false);
 			if (mDaily) {
-				DailyChecklist.resetBoxes(false);
+				HomePanel.getInstance().reset(HomePanel.FileType.all, false);
 			}
 		});
 		Popup pop = new Popup(items);
@@ -178,7 +181,7 @@ public class CheckBoxes extends JPanel {
 		mCheckBoxLimit = rows * kColumns;
 		if (rows <= 0) rows = 1;
 		mChecklistPanel.add(checkBox, "width "+ (int)(Productivity.kWidth/kColumns) +", wmax " + (int)(Productivity.kWidth/kColumns) + (((mChecklistPanel.getComponentCount()+1) % rows == 0)?", wrap":""));
-		saveCheckBoxes();
+		saveCheckBoxes(true);
 		
 	}
 	
@@ -190,7 +193,7 @@ public class CheckBoxes extends JPanel {
 				mNumCheckBox--;
 			}
 		}
-		saveCheckBoxes();
+		saveCheckBoxes(false);
 	}
 	
 	private void removeCheckBoxes() {
@@ -202,7 +205,7 @@ public class CheckBoxes extends JPanel {
 		writeData("", mCheckFile);
 		writeData("", mColorFile);
 		mNumCheckBox = 0;
-		HomePanel.getInstance().reset();
+		HomePanel.getInstance().reset(HomePanel.FileType.remove, false);
 	}
 	
 	private void loadCheckBoxes() {
@@ -217,48 +220,8 @@ public class CheckBoxes extends JPanel {
 				return;
 			}
 			for (int i = 0; i < name.length; i++) {
-				if (mDaily) {
-					boolean reset = false; 
-					try {
-						if (!DateTimeFormatter.ofPattern("dd/MM/yyyy").format(LocalDateTime.now()).equals(readData(Productivity.getSave("Saves/time.TXT"))[0])) {
-							reset = true;
-						}
-					} catch (Exception e) { e.printStackTrace(); }
-					if (!reset) addCheckBox(name[i], new Color(Integer.parseInt(color[i])), false);
-					else addCheckBox(name[i], new Color(Integer.parseInt(color[i])), Boolean.parseBoolean(states[i]));
-				}
-				else {
-					addCheckBox(name[i], new Color(Integer.parseInt(color[i])), Boolean.parseBoolean(states[i]));
-				}
+				addCheckBox(name[i], new Color(Integer.parseInt(color[i])), Boolean.parseBoolean(states[i]));
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			writeData("2", mNameFile);
-			writeData("2", mCheckFile);
-			writeData("2", mColorFile);
-		}
-		
-	}
-	
-	private void saveCheckBoxes() {
-		String[] name = new String[mCheckBoxes.size()];
-		String[] state = new String[mCheckBoxes.size()];
-		String[] color = new String[mCheckBoxes.size()];
-		for (int i = 0; i < mCheckBoxes.size(); i++) {
-			name[i] = mCheckBoxes.get(i).getText();
-			state[i] = Boolean.toString(mCheckBoxes.get(i).isSelected());
-			color[i] = Integer.toString(mCheckBoxes.get(i).getForeground().getRGB());
-		}
-		try {
-			if (!(name.length == state.length && state.length == color.length)) {
-				writeData("", mNameFile);
-				writeData("", mCheckFile);
-				writeData("", mColorFile);
-				return;
-			}
-			writeData(name, mNameFile);
-			writeData(state, mCheckFile);
-			writeData(color, mColorFile);
 		} catch (Exception e) {
 			e.printStackTrace();
 			writeData("", mNameFile);
@@ -266,10 +229,58 @@ public class CheckBoxes extends JPanel {
 			writeData("", mColorFile);
 		}
 		
-		HomePanel.getInstance().reset();
 	}
 	
-	private void saveCheckBoxes(fileType type) {
+	private void saveCheckBoxes(Boolean append) {
+		if (!append) {
+			String[] name = new String[mCheckBoxes.size()];
+			String[] state = new String[mCheckBoxes.size()];
+			String[] color = new String[mCheckBoxes.size()];
+			for (int i = 0; i < mCheckBoxes.size(); i++) {
+				name[i] = mCheckBoxes.get(i).getText();
+				state[i] = Boolean.toString(mCheckBoxes.get(i).isSelected());
+				color[i] = Integer.toString(mCheckBoxes.get(i).getForeground().getRGB());
+			}
+			try {
+				if (!(name.length == state.length && state.length == color.length)) {
+					writeData("", mNameFile);
+					writeData("", mCheckFile);
+					writeData("", mColorFile);
+					return;
+				}
+				writeData(name, mNameFile);
+				writeData(state, mCheckFile);
+				writeData(color, mColorFile);
+			} catch (Exception e) {
+				e.printStackTrace();
+				writeData("", mNameFile);
+				writeData("", mCheckFile);
+				writeData("", mColorFile);
+			}
+		}
+		else {
+			int index = mCheckBoxes.size()-1;
+			appendFile(mCheckBoxes.get(index).getText(), mNameFile);
+			appendFile(Boolean.toString(mCheckBoxes.get(index).isSelected()), mCheckFile);
+			appendFile(Integer.toString(mCheckBoxes.get(index).getForeground().getRGB()), mColorFile);
+		}
+		
+		HomePanel.getInstance().reset(HomePanel.FileType.all, false);
+	}
+
+	private static void appendFile(String data, File file) {
+        try  {
+            FileWriter writer = new FileWriter(file, true);
+            writer.write(data+"\n");
+            writer.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+	
+	private void saveCheckBoxes(FileType type) {
+		HomePanel.FileType homeType = HomePanel.FileType.all;
 		switch (type) {
 			case name:
 			String[] name = new String[mCheckBoxes.size()];
@@ -282,6 +293,7 @@ public class CheckBoxes extends JPanel {
 				e.printStackTrace();
 				writeData("", mNameFile);
 			}
+			homeType = HomePanel.FileType.name;
 			break;
 			case check:
 			String[] check = new String[mCheckBoxes.size()];
@@ -294,6 +306,7 @@ public class CheckBoxes extends JPanel {
 				e.printStackTrace();
 				writeData("", mCheckFile);
 			}
+			homeType = HomePanel.FileType.check;
 			break;
 			case color:
 			String[] color = new String[mCheckBoxes.size()];
@@ -306,11 +319,12 @@ public class CheckBoxes extends JPanel {
 				e.printStackTrace();
 				writeData("", mColorFile);
 			}
+			homeType = HomePanel.FileType.color;
 			break;
 			default:
 			break;
 		}		
-		HomePanel.getInstance().reset();
+		HomePanel.getInstance().reset(homeType, false);
 	}
 	
 	private String[] readData(File file) {
@@ -343,16 +357,13 @@ public class CheckBoxes extends JPanel {
 	}
 	
 	private void writeData(String[] dataArr, File file) {
-		String data = "";
-		for (int i = 0; i < dataArr.length; i++) {
-			data += (dataArr[i] + "\n");
-		}
+		String data = String.join("\n", dataArr);
 		writeData(data, file);
 	}
 	
 	public void setSelected(boolean state, int index) {
 		mCheckBoxes.get(index).setSelected(state);
-		saveCheckBoxes(fileType.check);
+		saveCheckBoxes(FileType.check);
 	}
 	
 	public JCheckBox[] getBoxes() {
