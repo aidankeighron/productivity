@@ -8,8 +8,6 @@ Checklist for task organization. Tasks can be edited by right clicking. The "Cle
 Daily Checklist where the checked status of every item is set to false at the start of every day.
 ### Timers
 Timers with multiple configuration options.
-### Notes
-Ten files for note taking.
 ### Custom
 Collection of all custom checklists.
 ### Settings
