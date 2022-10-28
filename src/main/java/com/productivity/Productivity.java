@@ -22,6 +22,8 @@ import javax.swing.LookAndFeel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import java.awt.AlphaComposite;
 import java.awt.image.BufferedImage;
@@ -77,6 +79,7 @@ public class Productivity extends JFrame {
 	private static final JLayeredPane mLayeredPane = new JLayeredPane();
 	private static CustomCheckList mCustomCheckList;
 	private static SettingsPanel mSettingsPanel;
+	private static HomePanel mHomePanel;
 	
 	private static File mNameFile = getSave("Saves/list.TXT");
 	private static File mStateFile = getSave("Saves/listCheck.TXT");;
@@ -99,6 +102,16 @@ public class Productivity extends JFrame {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				Productivity.getInstance().createAndShowGUI();
+				ChangeListener changeListener = new ChangeListener() {
+					public void stateChanged(ChangeEvent changeEvent) {
+					  JTabbedPane sourceTabbedPane = (JTabbedPane) changeEvent.getSource();
+					  int index = sourceTabbedPane.getSelectedIndex();
+					  if (index == 0) {
+						mHomePanel.reset(false);
+					  }
+					}
+				  };
+				mTabbedPane.addChangeListener(changeListener);
 			}
 		});
 	}
@@ -139,8 +152,9 @@ public class Productivity extends JFrame {
 		setConfetti(Integer.parseInt(SettingsPanel.getSetting("currentConfetti")));
 		mCustomCheckList = CustomCheckList.getInstance();
 		mSettingsPanel = new SettingsPanel();
-		mCheckBoxes = new CheckBoxes(mNameFile, mStateFile, mColorFile, false);
+		mCheckBoxes = new CheckBoxes(mNameFile, mStateFile, mColorFile);
 		mTimerPanel = new TimerPanel();
+		mHomePanel = HomePanel.getInstance();
 		mTabbedPane.setUI(new CustomTabbedUI(UIManager.getColor("Panel.background")));
 		mTabbedPane.addTab("Checklist", mCheckBoxes);
 		mTabbedPane.addTab("Timers", mTimerPanel);
@@ -149,7 +163,7 @@ public class Productivity extends JFrame {
 			mTabbedPane.addTab("Custom", mCustomCheckList);
 		}
 		mTabbedPane.addTab("Settings", mSettingsPanel);
-		mTabbedPane.insertTab("Home", null, HomePanel.getInstance(), null, 0);
+		mTabbedPane.insertTab("Home", null, mHomePanel, null, 0);
 
 		JButton close = new JButton("X");
 		close.setFocusPainted(false);
@@ -370,6 +384,7 @@ public class Productivity extends JFrame {
         task = new TimerTask()
         {
             int i = 0;
+			Productivity productivity = Productivity.getInstance();
             @Override
             public void run()
             {
@@ -378,7 +393,7 @@ public class Productivity extends JFrame {
 				}
 				if (i >= kConfettiTime*kScale) {
 					mLayeredPane.remove(label);
-					Productivity.getInstance().repaintFrame();
+					productivity.repaintFrame();
 					task.cancel();
 					time.cancel();
 					time.purge();

@@ -9,7 +9,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
-import com.productivity.Panels.HomePanel;
 import com.productivity.Util.JTextFieldLimit;
 import com.productivity.Util.Popup;
 
@@ -29,16 +28,17 @@ public class CheckBoxes extends JPanel {
 	private static final String[] kColorNames = {"White", "Red", "Blue", "Green"};
 	private static final Color[] kColors = {Color.WHITE, new Color(190, 50, 50), new Color(90, 90, 255), new Color(50, 200, 50)};
 	private static final int kCharLimit = 35;
-	
-	private int mCheckBoxLimit = 20;
+	private static Productivity mProductivity = Productivity.getInstance();
+	// mChecklist Panel Height / JCheckList Height
+	private static final int kRows = (int)(214 / 20);
+	private int mCheckBoxLimit = kRows * kColumns;
 	private ArrayList<JCheckBox> mCheckBoxes = new ArrayList<JCheckBox>();
-	private JPanel mChecklistPanel = new JPanel(new MigLayout("gap 0px 0px, ins 0, flowy"));
+	private JPanel mChecklistPanel = new JPanel(new MigLayout("gap 0px 0px, ins 0, flowy, wrap " + kRows));
 	private File mNameFile;
 	private File mCheckFile;
 	private File mColorFile;
 	private Color mSelectedColor = kColors[0];
 	private int mNumCheckBox = 0;
-	private boolean mDaily;
 	
 	private enum FileType {
 		name,
@@ -46,8 +46,7 @@ public class CheckBoxes extends JPanel {
 		color
 	}
 	
-	public CheckBoxes(File name, File check, File color, boolean daily) {
-		mDaily = daily;
+	public CheckBoxes(File name, File check, File color) {
 		mNameFile = name;
 		mCheckFile = check;
 		mColorFile = color;
@@ -61,9 +60,7 @@ public class CheckBoxes extends JPanel {
 			}
 			addCheckBox(text, mSelectedColor, false);
 			input.setText("");
-			if (mDaily) {
-				HomePanel.getInstance().reset(HomePanel.FileType.all, true);
-			}
+			mProductivity.repaintFrame();
 		});
 		JComboBox<String> colorChooser = new JComboBox<>(kColorNames);
 		colorChooser.addActionListener(e -> {
@@ -72,17 +69,11 @@ public class CheckBoxes extends JPanel {
 		JButton reset = new JButton("Reset");
 		reset.addActionListener( e -> {
 			removeCheckBoxes();
-			if (mDaily) {
-				HomePanel.getInstance().reset(HomePanel.FileType.remove, false);
-			}
 		});
 		// reset.setMargin(new Insets(0, 0, 0, 0));
 		JButton clear = new JButton("Clear Selected");
 		clear.addActionListener(e -> {
 			clearSelected();
-			if (mDaily) {
-				HomePanel.getInstance().reset(HomePanel.FileType.all, false);
-			}
 		});
 
 		SwingUtilities.invokeLater(new Runnable() {
@@ -106,7 +97,7 @@ public class CheckBoxes extends JPanel {
 		}
 		saveCheckBoxes(FileType.check);
 	}
-	
+
 	private boolean testValidFileName(String text) {
 		return text.matches("^[a-zA-Z0-9._ <>{}\\[\\]\\|\\\\`~!@#$%^&*()-=+;:'\",?\\/]+$");
 	}
@@ -119,17 +110,14 @@ public class CheckBoxes extends JPanel {
 			return;
 		}
 		JCheckBox checkBox = new JCheckBox(name);
+		mCheckBoxes.add(checkBox);
 		checkBox.addActionListener(e -> {
-			if (checkBox.isSelected() && !mDaily)
+			if (checkBox.isSelected())
 				Productivity.showConfetti();
 			saveCheckBoxes(FileType.check);
-			if (mDaily) {
-				HomePanel.getInstance().reset(HomePanel.FileType.check, false);
-			}
 		});
 		checkBox.setForeground(color);
 		checkBox.setSelected(state);
-		mCheckBoxes.add(checkBox);
 		JMenuItem[] items = new JMenuItem[3];
 		items[0] = new JMenuItem("Edit");
 		items[0].addActionListener(e -> {
@@ -138,9 +126,6 @@ public class CheckBoxes extends JPanel {
 				checkBox.setText(input);
 			}
 			saveCheckBoxes(FileType.name);
-			if (mDaily) {
-				HomePanel.getInstance().reset(HomePanel.FileType.name, false);
-			}
 		});
 		items[1] = new JMenuItem("Change color");
 		items[1].addActionListener(e -> {
@@ -161,9 +146,6 @@ public class CheckBoxes extends JPanel {
 			}
 			checkBox.setForeground(newColor);
 			saveCheckBoxes(FileType.color);
-			if (mDaily) {
-				HomePanel.getInstance().reset(HomePanel.FileType.color, false);
-			}
 		});
 		items[2] = new JMenuItem("Remove");
 		items[2].addActionListener(e -> {
@@ -171,16 +153,15 @@ public class CheckBoxes extends JPanel {
 			mChecklistPanel.remove(checkBox);
 			mNumCheckBox--;
 			saveCheckBoxes(false);
-			if (mDaily) {
-				HomePanel.getInstance().reset(HomePanel.FileType.all, false);
-			}
+			mProductivity.repaintFrame();
 		});
 		Popup pop = new Popup(items);
 		checkBox.addMouseListener(pop.new PopClickListener());
-		int rows = (int)(mChecklistPanel.getHeight() / checkBox.getPreferredSize().getHeight());
-		mCheckBoxLimit = rows * kColumns;
-		if (rows <= 0) rows = 1;
-		mChecklistPanel.add(checkBox, "width "+ (int)(Productivity.kWidth/kColumns) +", wmax " + (int)(Productivity.kWidth/kColumns) + (((mChecklistPanel.getComponentCount()+1) % rows == 0)?", wrap":""));
+		// int rows = (int)(mChecklistPanel.getHeight() / checkBox.getPreferredSize().getHeight());
+		// mCheckBoxLimit = rows * kColumns;
+		// if (rows <= 0) rows = 1;
+		// mChecklistPanel.add(checkBox, "width "+ (int)(Productivity.kWidth/kColumns) +", wmax " + (int)(Productivity.kWidth/kColumns) + (((mChecklistPanel.getComponentCount()+1) % rows == 0)?", wrap":""));
+		mChecklistPanel.add(checkBox, "width "+ (int)(Productivity.kWidth/kColumns) +", wmax " + (int)(Productivity.kWidth/kColumns));
 		saveCheckBoxes(true);
 		
 	}
@@ -194,6 +175,7 @@ public class CheckBoxes extends JPanel {
 			}
 		}
 		saveCheckBoxes(false);
+		mProductivity.repaintFrame();
 	}
 	
 	private void removeCheckBoxes() {
@@ -205,7 +187,7 @@ public class CheckBoxes extends JPanel {
 		writeData("", mCheckFile);
 		writeData("", mColorFile);
 		mNumCheckBox = 0;
-		HomePanel.getInstance().reset(HomePanel.FileType.remove, false);
+		mProductivity.repaintFrame();
 	}
 	
 	private void loadCheckBoxes() {
@@ -264,8 +246,6 @@ public class CheckBoxes extends JPanel {
 			appendFile(Boolean.toString(mCheckBoxes.get(index).isSelected()), mCheckFile);
 			appendFile(Integer.toString(mCheckBoxes.get(index).getForeground().getRGB()), mColorFile);
 		}
-		
-		HomePanel.getInstance().reset(HomePanel.FileType.all, false);
 	}
 
 	private static void appendFile(String data, File file) {
@@ -280,7 +260,6 @@ public class CheckBoxes extends JPanel {
     }
 	
 	private void saveCheckBoxes(FileType type) {
-		HomePanel.FileType homeType = HomePanel.FileType.all;
 		switch (type) {
 			case name:
 			String[] name = new String[mCheckBoxes.size()];
@@ -293,7 +272,6 @@ public class CheckBoxes extends JPanel {
 				e.printStackTrace();
 				writeData("", mNameFile);
 			}
-			homeType = HomePanel.FileType.name;
 			break;
 			case check:
 			String[] check = new String[mCheckBoxes.size()];
@@ -306,7 +284,6 @@ public class CheckBoxes extends JPanel {
 				e.printStackTrace();
 				writeData("", mCheckFile);
 			}
-			homeType = HomePanel.FileType.check;
 			break;
 			case color:
 			String[] color = new String[mCheckBoxes.size()];
@@ -319,12 +296,10 @@ public class CheckBoxes extends JPanel {
 				e.printStackTrace();
 				writeData("", mColorFile);
 			}
-			homeType = HomePanel.FileType.color;
 			break;
 			default:
 			break;
 		}		
-		HomePanel.getInstance().reset(homeType, false);
 	}
 	
 	private String[] readData(File file) {

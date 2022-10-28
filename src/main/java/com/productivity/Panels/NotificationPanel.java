@@ -50,6 +50,7 @@ public class NotificationPanel extends JPanel {
     private final JPanel mPanel = new JPanel(new MigLayout(Productivity.kMigDebug?"debug":""));
     private int mNumberOfNotifications = 0;
     private final int kMaxNumberOfNotifications = 15;
+    private Productivity mProductivity = Productivity.getInstance();
 
     private static TimePickerSettings mTimePickerSettings = new TimePickerSettings();
     static {
@@ -110,7 +111,7 @@ public class NotificationPanel extends JPanel {
                         if (notification.getNextDate() == -1) {
                             NotificationPanel.super.remove(notification.getPanel());
                             notificationToRemove = notification;
-                            Productivity.getInstance().repaint();
+                            mProductivity.repaint();
                         }
                         else {
                             saveNotifications(false);
@@ -128,6 +129,7 @@ public class NotificationPanel extends JPanel {
                     String fileContents = readData(mTimeFile)[0];
                     if (!dtf.format(now).equals(fileContents)) {
                         SettingsPanel.getDaily().setToFalse();
+                        HomePanel.getInstance().reset(true);
                         try {
                             writeData(dtf.format(now), mTimeFile);
                         } catch (Exception e) {
@@ -144,10 +146,11 @@ public class NotificationPanel extends JPanel {
     }
     
     private void notificationPopup() {
-        JDialog infoBox = new JDialog(Productivity.getInstance(), "Create Notification");
+        JDialog infoBox = new JDialog(mProductivity, "Create Notification");
         
         JLabel nameLbl = new JLabel("Name:");
         JTextField name = new JTextField(10);
+        name.setDocument(new JTextFieldLimit(10));
 
         JLabel textLbl = new JLabel("Description");
         JTextArea text = new JTextArea(5, 15);
@@ -187,8 +190,12 @@ public class NotificationPanel extends JPanel {
             infoBox.dispose();
         });
         name.addActionListener(e -> {
-            if (name.getText().equals("")) {
-                JOptionPane.showMessageDialog(this, "Name field can not be blank", "Warning", JOptionPane.INFORMATION_MESSAGE);
+            if (name.getText().equals("") && !testValidFileName(name.getText())) {
+                JOptionPane.showMessageDialog(this, "Please enter valid name", "Warning", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+            if (!testValidFileName(text.getText())) {
+                JOptionPane.showMessageDialog(this, "Please enter valid description", "Warning", JOptionPane.INFORMATION_MESSAGE);
                 return;
             }
             if (datePicker.getDate() == null) {
@@ -221,16 +228,20 @@ public class NotificationPanel extends JPanel {
         infoBox.add(repeat, "wrap");
         infoBox.add(confirm, "dock south, span, grow, push");
         infoBox.setSize(210, 400);
-        infoBox.setLocation(Productivity.getInstance().getLocation());
+        infoBox.setLocation(mProductivity.getLocation());
         infoBox.setVisible(true);
     }
+
+    private boolean testValidFileName(String text) {
+		return text.matches("^[a-zA-Z0-9._ <>{}\\[\\]\\|\\\\`~!@#$%^&*()-=+;:'\",?\\/]+$");
+	}
 
     private void showNotification(String name, String message, Notification notification, int repeat, int amount) {
         if (mNumberOfNotifications >= kMaxNumberOfNotifications) return;
         mNumberOfNotifications++;
         JButton delete = new JButton("Remove");
         LocalDateTime ldt = Instant.ofEpochSecond(notification.getStartDate()).atZone(ZoneId.systemDefault()).toLocalDateTime();
-        JLabel info = new JLabel(name+" | Repeat every: "+amount+" "+kRepeatOptions[repeat]+" | Next notification "+ldt.format(mFormatter));
+        JLabel info = new JLabel(name+" | Repeat every: "+amount+" "+kRepeatOptions[repeat]+" | "+ldt.format(mFormatter));
         JPanel panel = new JPanel(new MigLayout());
         
         panel.add(info);
@@ -241,10 +252,10 @@ public class NotificationPanel extends JPanel {
             mPanel.remove(panel);
             mNumberOfNotifications--;
             saveNotifications(false);
-            Productivity.getInstance().repaint();
+            mProductivity.repaint();
         });
         mPanel.add(panel, "wrap, growx, pushx, spanx");
-        Productivity.getInstance().repaint();
+        mProductivity.repaint();
     }
 
     private void saveNotifications(Boolean append) {

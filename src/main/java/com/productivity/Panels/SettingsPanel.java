@@ -49,6 +49,7 @@ public class SettingsPanel extends JTabbedPane {
     private JPanel mConfigPanel = new JPanel(new MigLayout((Productivity.kMigDebug?"debug":"")));
     private JPanel mReminderPanel = new JPanel(new MigLayout((Productivity.kMigDebug?"debug":"")));
     private BlockSites mBlockSites = new BlockSites();
+    private Productivity mProductivity = Productivity.getInstance();
     
     private static CheckBoxes mDailyPanel;
     private static int mTimeMultiplier = -1;
@@ -66,8 +67,8 @@ public class SettingsPanel extends JTabbedPane {
     TimerTask mTask;
     
     public SettingsPanel() {
-        mDailyPanel = new CheckBoxes(mNameFile, mStateFile, mColorFile, true);
-        runBoolean allOnTop = (a) -> Productivity.getInstance().setOnTop(a);
+        mDailyPanel = new CheckBoxes(mNameFile, mStateFile, mColorFile);
+        runBoolean allOnTop = (a) -> mProductivity.setOnTop(a);
         addSetting("Always on top", "onTop", "Makes window always on your screen unless you minimize it", settingTypes.checkbox, allOnTop, false, null);
         runBoolean reminderActive = (a) -> {
             boolean reminderExists = false;
@@ -103,7 +104,7 @@ public class SettingsPanel extends JTabbedPane {
             }
         };
         addSetting("Reminder", "reminderActive", "Activates reminder tab", settingTypes.checkbox, reminderActive, false, null);
-        runBoolean runOnStartup = (a) -> Productivity.getInstance().runOnStartup(a);
+        runBoolean runOnStartup = (a) -> mProductivity.runOnStartup(a);
         addSetting("Run on startup", "runOnStartup", "Runs program when your computer starts", settingTypes.checkbox, runOnStartup, true, "Are you sure");
         runBoolean blockSitesActive = (a) -> {
             boolean exists = false;
@@ -124,13 +125,13 @@ public class SettingsPanel extends JTabbedPane {
                     super.remove(mBlockSites);
                 }
             }
-            Productivity.getInstance().setAllowBlock(a);
+            mProductivity.setAllowBlock(a);
         };
         addSetting("Block Sites", "blockSites", "Allows you to block sites", settingTypes.checkbox, blockSitesActive, true, "Are you sure");
         addSetting("Confetti", "wantConfetti", "Enable/Disable Confetti", settingTypes.checkbox, null, false, null);
         addSetting("Selected Confetti: ", "currentConfetti", "", settingTypes.confetti, null, false, null);
         runBoolean changeLaf = (a) -> {
-            Productivity.getInstance().updateLaf();
+            mProductivity.updateLaf();
         };
         addSetting("Look and Feel", "laf", "Changes look of app", settingTypes.laf, changeLaf , false, null);
         super.setUI(new CustomTabbedUI(UIManager.getColor("Panel.background")));
@@ -238,7 +239,7 @@ public class SettingsPanel extends JTabbedPane {
             confettiField.addActionListener(e -> {
                 mSettings.put(key, Integer.toString(confettiField.getSelectedIndex()));
                 saveSettings();
-                Productivity.getInstance().setConfetti(confettiField.getSelectedIndex());
+                mProductivity.setConfetti(confettiField.getSelectedIndex());
             });
             try {
                 confettiField.setSelectedIndex(Integer.parseInt(mSettings.get(key)));

@@ -29,7 +29,8 @@ public class AddCustomCheckList extends JPanel {
     private static ArrayList<String> mNames = new ArrayList<String>();
     private static HashMap<String, CheckBoxes> mCheckBoxes = new HashMap<String, CheckBoxes>();
     private static int mCurrentNumCheckLists = 0;
-
+    private static Productivity mProductivity = Productivity.getInstance();
+    private static CustomCheckList mCustomCheckList = CustomCheckList.getInstance();
     private static JPanel mCustomPanel = new JPanel(new MigLayout("flowy, gap 5px 5px, ins 5" + (Productivity.kMigDebug?", debug":"")));
     
     public AddCustomCheckList() {
@@ -48,7 +49,7 @@ public class AddCustomCheckList extends JPanel {
                 addCheckList(name.getText());
                 mCurrentNumCheckLists++;
                 if (getNumberOfChecklists() == 1) {
-                    Productivity.getInstance().customCheckListVisibility(true);
+                    mProductivity.customCheckListVisibility(true);
                 }
                 name.setText("");
             }
@@ -137,10 +138,10 @@ public class AddCustomCheckList extends JPanel {
         int rows = (int)(mCustomPanel.getHeight() / (button.getPreferredSize().getHeight()+5));
         if (rows <= 0) rows = 1;
         mCustomPanel.add(button, (((mCustomPanel.getComponentCount()+1) % rows == 0)?"wrap":""));
-        CheckBoxes checkBox = new CheckBoxes(name, check, color, false);
+        CheckBoxes checkBox = new CheckBoxes(name, check, color);
         mCheckBoxes.put(n, checkBox);
         saveChecklists(true);
-        CustomCheckList.getInstance().addCheckList(checkBox, n);
+        mCustomCheckList.addCheckList(checkBox, n);
     }
     
     private static void deleteChecklist(String n) {
@@ -152,9 +153,9 @@ public class AddCustomCheckList extends JPanel {
         check.delete();
         mNames.remove(n);
         mCheckBoxes.remove(n);
-        CustomCheckList.getInstance().removeChecklist(n);
+        mCustomCheckList.removeChecklist(n);
         if (mNames.size() <= 0) {
-            Productivity.getInstance().customCheckListVisibility(false);
+            mProductivity.customCheckListVisibility(false);
         }
         mCurrentNumCheckLists--;
     }

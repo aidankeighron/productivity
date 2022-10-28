@@ -4,7 +4,6 @@ import javax.swing.BorderFactory;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 
 import java.awt.Color;
 
@@ -22,28 +21,20 @@ public class HomePanel extends JPanel {
         check,
         daily,
     }
-
-    public enum FileType {
-        name,
-        color,
-        check,
-        all,
-        remove,
-    }
     
     public HomePanel() {
         super.setLayout(new MigLayout("gap 5px 5px, ins 5" + (Productivity.kMigDebug?", debug":"")));
         super.add(mCheckPanel, "split 2, grow, push, span, hmax " + (Productivity.kHeight - Productivity.kTabHeight - 20) + ", wmax " + (Productivity.kWidth-15)/2);
         super.add(mDailyPanel, "grow, push, span, hmax " + (Productivity.kHeight - Productivity.kTabHeight - 20) + ", wmax " + (Productivity.kWidth-15)/2);
-        SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-                reset(FileType.all, false);
-			}
-		}
-		);
     }
     
-    public void reset(FileType type, Boolean append) {
+    public void reset(boolean isDaily) {
+        if (isDaily) {
+            mDailyPanel.removeAll();
+            makePanel(mDailyPanel, SettingsPanel.getDaily().getBoxes(), "Daily", BoxType.daily);
+            mProductivity.repaintFrame(); // reset() is called in multiple places where repainting is needed + home needs to repaint
+            return;
+        }
         mCheckPanel.removeAll();
         mDailyPanel.removeAll();
         
