@@ -278,7 +278,7 @@ public class TimerPanel extends JPanel {
         mProductivity.repaintFrame();
     }
     
-    private void removeProgressBar(JButton button, JProgressBar progressBar, TimerTask task, Timer time, Boolean isBlockedTimer) {
+    private void removeProgressBar(JButton button, JProgressBar progressBar, TimerTask task, Timer time, boolean isBlockedTimer) {
         if (mIsBlocked && mBlockedTimerActive && isBlockedTimer) {
             BlockSites.unBlockSites();
             mBlockedTimerActive = false;

@@ -12,7 +12,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
 
 import com.productivity.CheckBoxes;
 import com.productivity.Productivity;
@@ -34,6 +33,8 @@ public class AddCustomCheckList extends JPanel {
     private static JPanel mCustomPanel = new JPanel(new MigLayout("flowy, gap 5px 5px, ins 5" + (Productivity.kMigDebug?", debug":"")));
     
     public AddCustomCheckList() {
+        int rows = (int)(180 / 31);
+		mCustomPanel = new JPanel(new MigLayout("flowy, gap 5px 5px, ins 5, wrap "+rows+(Productivity.kMigDebug?", debug":"")));
         JTextField name = new JTextField();
         name.setDocument(new JTextFieldLimit(kCharLimit));
         name.addActionListener(e -> {
@@ -46,7 +47,7 @@ public class AddCustomCheckList extends JPanel {
                 return;
             }
             if (!mNames.contains(name.getText()) && !name.getText().equals("")) {
-                addCheckList(name.getText());
+                addCheckList(name.getText(), false);
                 mCurrentNumCheckLists++;
                 if (getNumberOfChecklists() == 1) {
                     mProductivity.customCheckListVisibility(true);
@@ -63,13 +64,7 @@ public class AddCustomCheckList extends JPanel {
         super.add(nameLbl, "wrap");
         super.add(name, "split 2, growx, wrap");
         super.add(mCustomPanel, "grow, push, span");
-
-        SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				loadCheckLists();
-			}
-		}
-		);
+		loadCheckLists();
     }
     
     private boolean testValidFileName(String text) {
@@ -93,7 +88,7 @@ public class AddCustomCheckList extends JPanel {
             String[] data = readData(kCustomNames);
             for (int i = 0; i < data.length; i++) {
                 mNames.add(data[i]);
-                addCheckList(data[i]);
+                addCheckList(data[i], true);
                 mCurrentNumCheckLists++;
             }
 
@@ -113,7 +108,7 @@ public class AddCustomCheckList extends JPanel {
         mCheckBoxes.get(name).setSelected(state, index);
     }
     
-    private static void addCheckList(String n) {
+    private static void addCheckList(String n, boolean loading) {
         File name = new File(Productivity.kPath + n + "Name.TXT");
         File color = new File(Productivity.kPath + n + "Color.TXT");
         File check = new File(Productivity.kPath + n + "Check.TXT");
@@ -135,12 +130,11 @@ public class AddCustomCheckList extends JPanel {
             deleteChecklist(n);
             saveChecklists(false);
         });
-        int rows = (int)(mCustomPanel.getHeight() / (button.getPreferredSize().getHeight()+5));
-        if (rows <= 0) rows = 1;
-        mCustomPanel.add(button, (((mCustomPanel.getComponentCount()+1) % rows == 0)?"wrap":""));
-        CheckBoxes checkBox = new CheckBoxes(name, check, color);
+        mCustomPanel.add(button);
+        CheckBoxes checkBox = new CheckBoxes(name, check, color, true);
         mCheckBoxes.put(n, checkBox);
-        saveChecklists(true);
+        if (!loading)
+            saveChecklists(true);
         mCustomCheckList.addCheckList(checkBox, n);
     }
     
@@ -171,6 +165,7 @@ public class AddCustomCheckList extends JPanel {
         else {
             appendChecklists(mNames.get(mNames.size()-1), kCustomNames);
         }
+        mProductivity.repaintFrame();
     }
 
     private static void appendChecklists(String data, File file) {

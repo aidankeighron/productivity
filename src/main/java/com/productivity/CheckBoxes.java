@@ -30,10 +30,10 @@ public class CheckBoxes extends JPanel {
 	private static final int kCharLimit = 35;
 	private static Productivity mProductivity = Productivity.getInstance();
 	// mChecklist Panel Height / JCheckList Height
-	private static final int kRows = (int)(214 / 20);
-	private int mCheckBoxLimit = kRows * kColumns;
+	private static int kRows;
+	private int mCheckBoxLimit;
 	private ArrayList<JCheckBox> mCheckBoxes = new ArrayList<JCheckBox>();
-	private JPanel mChecklistPanel = new JPanel(new MigLayout("gap 0px 0px, ins 0, flowy, wrap " + kRows));
+	private JPanel mChecklistPanel;
 	private File mNameFile;
 	private File mCheckFile;
 	private File mColorFile;
@@ -46,7 +46,10 @@ public class CheckBoxes extends JPanel {
 		color
 	}
 	
-	public CheckBoxes(File name, File check, File color) {
+	public CheckBoxes(File name, File check, File color, boolean custom) {
+		kRows = (int)((custom?180:214) / 20);
+		mCheckBoxLimit = kRows * kColumns;
+		mChecklistPanel = new JPanel(new MigLayout("gap 0px 0px, ins 0, flowy, wrap " + kRows));
 		mNameFile = name;
 		mCheckFile = check;
 		mColorFile = color;
@@ -58,7 +61,7 @@ public class CheckBoxes extends JPanel {
 				input.setText("");
 				return;
 			}
-			addCheckBox(text, mSelectedColor, false);
+			addCheckBox(text, mSelectedColor, false, false);
 			input.setText("");
 			mProductivity.repaintFrame();
 		});
@@ -102,7 +105,7 @@ public class CheckBoxes extends JPanel {
 		return text.matches("^[a-zA-Z0-9._ <>{}\\[\\]\\|\\\\`~!@#$%^&*()-=+;:'\",?\\/]+$");
 	}
 	
-	private void addCheckBox(String name, Color color, Boolean state) {
+	private void addCheckBox(String name, Color color, boolean state, boolean loading) {
 		if (mNumCheckBox < mCheckBoxLimit) {
 			mNumCheckBox++;
 		}
@@ -157,13 +160,9 @@ public class CheckBoxes extends JPanel {
 		});
 		Popup pop = new Popup(items);
 		checkBox.addMouseListener(pop.new PopClickListener());
-		// int rows = (int)(mChecklistPanel.getHeight() / checkBox.getPreferredSize().getHeight());
-		// mCheckBoxLimit = rows * kColumns;
-		// if (rows <= 0) rows = 1;
-		// mChecklistPanel.add(checkBox, "width "+ (int)(Productivity.kWidth/kColumns) +", wmax " + (int)(Productivity.kWidth/kColumns) + (((mChecklistPanel.getComponentCount()+1) % rows == 0)?", wrap":""));
 		mChecklistPanel.add(checkBox, "width "+ (int)(Productivity.kWidth/kColumns) +", wmax " + (int)(Productivity.kWidth/kColumns));
-		saveCheckBoxes(true);
-		
+		if (!loading)
+			saveCheckBoxes(true);
 	}
 	
 	private void clearSelected() {
@@ -202,7 +201,7 @@ public class CheckBoxes extends JPanel {
 				return;
 			}
 			for (int i = 0; i < name.length; i++) {
-				addCheckBox(name[i], new Color(Integer.parseInt(color[i])), Boolean.parseBoolean(states[i]));
+				addCheckBox(name[i], new Color(Integer.parseInt(color[i])), Boolean.parseBoolean(states[i]), true);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -213,7 +212,7 @@ public class CheckBoxes extends JPanel {
 		
 	}
 	
-	private void saveCheckBoxes(Boolean append) {
+	private void saveCheckBoxes(boolean append) {
 		if (!append) {
 			String[] name = new String[mCheckBoxes.size()];
 			String[] state = new String[mCheckBoxes.size()];

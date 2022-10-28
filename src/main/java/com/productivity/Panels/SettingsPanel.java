@@ -67,7 +67,7 @@ public class SettingsPanel extends JTabbedPane {
     TimerTask mTask;
     
     public SettingsPanel() {
-        mDailyPanel = new CheckBoxes(mNameFile, mStateFile, mColorFile);
+        mDailyPanel = new CheckBoxes(mNameFile, mStateFile, mColorFile, true);
         runBoolean allOnTop = (a) -> mProductivity.setOnTop(a);
         addSetting("Always on top", "onTop", "Makes window always on your screen unless you minimize it", settingTypes.checkbox, allOnTop, false, null);
         runBoolean reminderActive = (a) -> {
@@ -533,10 +533,10 @@ public class SettingsPanel extends JTabbedPane {
     }
     
     interface runBoolean {
-        void operation(Boolean a);
+        void operation(boolean a);
     }
     
-    private static void runOperation(Boolean a, runBoolean rt) {
+    private static void runOperation(boolean a, runBoolean rt) {
         rt.operation(a);
     }
     

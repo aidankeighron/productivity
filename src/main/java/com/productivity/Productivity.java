@@ -72,7 +72,7 @@ public class Productivity extends JFrame {
 	public static final int kWidth = 400; // 400
 	public static final int kHeight = 300; // 300
 	public static final int kTabHeight = 30;
-	public static final Boolean kMigDebug = false;
+	public static final boolean kMigDebug = false;
 	public static String kPath = "";
 	
 	private static final JTabbedPane mTabbedPane = new JTabbedPane();
@@ -152,7 +152,7 @@ public class Productivity extends JFrame {
 		setConfetti(Integer.parseInt(SettingsPanel.getSetting("currentConfetti")));
 		mCustomCheckList = CustomCheckList.getInstance();
 		mSettingsPanel = new SettingsPanel();
-		mCheckBoxes = new CheckBoxes(mNameFile, mStateFile, mColorFile);
+		mCheckBoxes = new CheckBoxes(mNameFile, mStateFile, mColorFile, false);
 		mTimerPanel = new TimerPanel();
 		mHomePanel = HomePanel.getInstance();
 		mTabbedPane.setUI(new CustomTabbedUI(UIManager.getColor("Panel.background")));
@@ -313,7 +313,7 @@ public class Productivity extends JFrame {
 		}
 	}
 	
-	public void runOnStartup(Boolean value) {
+	public void runOnStartup(boolean value) {
 		String path = System.getenv("APPDATA") + "\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\productivity.bat";
 		
 		if (value) {
@@ -325,7 +325,6 @@ public class Productivity extends JFrame {
 				String currentDir = System.getProperty("user.dir");
 				String data = "start " + currentDir + "\\Productivity.exe";
 				writeData(data, startupFile);
-				System.out.println("Writing to: " + startupFile.getPath());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

@@ -32,9 +32,9 @@
 # daily refresh or home refresh sometimes duplicating (only refresh if something changes)
 # improve timers? 1 loop vs multiple
 - Better exe
-- change notification delay to 1 min
+# change notification delay to 1 min
 # flickering on home
-- regex
+# regex
 # enter valid positive time -> enter valid positive duration
 # checklist columns mess up when deleting boxes
 # home gets messed up when deleting boxes

@@ -142,7 +142,7 @@ public class NotificationPanel extends JPanel {
                 iterations++;
             }
         };
-        time.schedule(task, 0, 1000);
+        time.schedule(task, 0, 160000);
     }
     
     private void notificationPopup() {
@@ -241,7 +241,7 @@ public class NotificationPanel extends JPanel {
         mNumberOfNotifications++;
         JButton delete = new JButton("Remove");
         LocalDateTime ldt = Instant.ofEpochSecond(notification.getStartDate()).atZone(ZoneId.systemDefault()).toLocalDateTime();
-        JLabel info = new JLabel(name+" | Repeat every: "+amount+" "+kRepeatOptions[repeat]+" | "+ldt.format(mFormatter));
+        JLabel info = new JLabel(name+" | Repeat: "+amount+" "+kRepeatOptions[repeat]+" | "+ldt.format(mFormatter));
         JPanel panel = new JPanel(new MigLayout());
         
         panel.add(info);
@@ -258,7 +258,7 @@ public class NotificationPanel extends JPanel {
         mProductivity.repaint();
     }
 
-    private void saveNotifications(Boolean append) {
+    private void saveNotifications(boolean append) {
         if (!append) {
             String[] data = new String[mNotifications.size()];
             for (int j = 0; j < data.length; j++) {
