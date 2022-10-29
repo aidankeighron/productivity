@@ -31,7 +31,7 @@
 # only re-get things if they change
 # daily refresh or home refresh sometimes duplicating (only refresh if something changes)
 # improve timers? 1 loop vs multiple
-- Better exe
+# Better exe
 # change notification delay to 1 min
 # flickering on home
 # regex
@@ -59,5 +59,5 @@
 # Home.reset()
 # Productivity.refresh()
 
-- Version 5 Exe improvements
+- Version 6 Exe improvements
 - Discord API (in-between)
