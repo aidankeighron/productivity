@@ -61,3 +61,4 @@
 
 - Version 6 Exe improvements
 - Discord API (in-between)
+- Saving window position does not work with 2 monitors
