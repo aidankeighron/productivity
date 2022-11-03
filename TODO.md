@@ -62,3 +62,4 @@
 - Version 6 Exe improvements
 - Discord API (in-between)
 - Path with special characters does not work
+- add setting to make home 1 row
