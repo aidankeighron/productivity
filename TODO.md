@@ -60,6 +60,5 @@
 # Productivity.refresh()
 
 - Version 6 Improvements
-- Path with special characters does not work -?
-- Add setting to make home 1 row
 - Daily checklist streak
+- Checklist getting stuff removed

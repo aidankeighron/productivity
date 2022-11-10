@@ -16,6 +16,7 @@ public class HomePanel extends JPanel {
     private JPanel mCheckPanel = new JPanel(new MigLayout("flowy, gap 0px 0px, ins 0" + (Productivity.kMigDebug?", debug":"")));
     private JPanel mDailyPanel = new JPanel(new MigLayout("flowy, gap 0px 0px, ins 0" + (Productivity.kMigDebug?", debug":"")));
     private Productivity mProductivity = Productivity.getInstance();
+    private int mStreak = 0;
 
     private enum BoxType {
         check,
@@ -28,9 +29,10 @@ public class HomePanel extends JPanel {
         super.add(mDailyPanel, "grow, push, span, hmax " + (Productivity.kHeight - Productivity.kTabHeight - 20) + ", wmax " + (Productivity.kWidth-15)/2);
     }
     
-    public void reset(boolean isDaily) {
+    public void reset(boolean isDaily, int streak) {
         if (isDaily) {
             mDailyPanel.removeAll();
+            mStreak = streak;
             makePanel(mDailyPanel, SettingsPanel.getDaily().getBoxes(), "Daily", BoxType.daily);
             mProductivity.repaintFrame(); // reset() is called in multiple places where repainting is needed + home needs to repaint
             return;
@@ -46,7 +48,7 @@ public class HomePanel extends JPanel {
     
     private JPanel makePanel(JPanel panel, JCheckBox[] boxes, String title, BoxType type) {
         panel.setBorder(BorderFactory.createLineBorder(Color.black));
-        JLabel label = new JLabel(title);
+        JLabel label = new JLabel(title + ((type == BoxType.daily)?"-Streak:"+mStreak:""));
         panel.add(label, "spanx 2, center, pushx");
         if (boxes != null && boxes.length > 0) {
             for (int i = 0; i < boxes.length; i++) {

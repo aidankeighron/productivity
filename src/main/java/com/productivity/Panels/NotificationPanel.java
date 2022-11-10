@@ -126,15 +126,17 @@ public class NotificationPanel extends JPanel {
                 if (iterations >= 10) { // Check every 10 min
                     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");  
                     LocalDateTime now = LocalDateTime.now();
-                    String fileContents = readData(mTimeFile)[0];
-                    if (!dtf.format(now).equals(fileContents)) {
-                        SettingsPanel.getDaily().setToFalse();
-                        HomePanel.getInstance().reset(true);
+                    String[] fileContents = readData(mTimeFile);
+                    String currentTime = fileContents[0];
+                    String currentStreak = fileContents[1];
+                    if (!dtf.format(now).equals(currentTime)) {
+                        int streak = SettingsPanel.getDaily().setToFalse(Integer.parseInt(currentStreak));
+                        HomePanel.getInstance().reset(true, streak);
                         try {
-                            writeData(dtf.format(now), mTimeFile);
+                            writeData(new String[]{dtf.format(now), Integer.toString(streak)}, mTimeFile);
                         } catch (Exception e) {
                             e.printStackTrace();
-                            writeData("11/11/2020", mTimeFile);
+                            writeData(new String[]{"11/11/2020", "0"}, mTimeFile);
                         }
                     }
                     iterations = 0;
@@ -142,7 +144,7 @@ public class NotificationPanel extends JPanel {
                 iterations++;
             }
         };
-        time.schedule(task, 0, 160000);
+        time.schedule(task, 0, 1000); //160000 
     }
     
     private void notificationPopup() {

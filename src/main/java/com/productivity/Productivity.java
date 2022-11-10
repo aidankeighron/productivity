@@ -5,6 +5,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.util.Scanner;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.prefs.Preferences;
@@ -107,7 +109,7 @@ public class Productivity extends JFrame {
 					  JTabbedPane sourceTabbedPane = (JTabbedPane) changeEvent.getSource();
 					  int index = sourceTabbedPane.getSelectedIndex();
 					  if (index == 0) {
-						mHomePanel.reset(false);
+						mHomePanel.reset(false, Integer.parseInt(readData(getSave("Saves/time.TXT"))[1]));
 					  }
 					}
 				  };
@@ -291,6 +293,24 @@ public class Productivity extends JFrame {
 		if (PromptResult == 0) {
 			System.exit(0);          
 		}
+	}
+
+	private static String[] readData(File file) {
+		String[] result = new String[0];
+		try {
+			result = new String[(int)Files.lines(file.toPath()).count()];
+			Scanner scanner = new Scanner(file);
+			int index = 0;
+			while (scanner.hasNextLine()) {
+				result[index] = scanner.nextLine();
+				index++;
+			}
+			scanner.close();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 	
 	private void writeData(String data, File file) {

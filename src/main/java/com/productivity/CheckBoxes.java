@@ -94,11 +94,18 @@ public class CheckBoxes extends JPanel {
 		super.add(clear, "");
 	}
 
-	public void setToFalse() {
+	public int setToFalse(int streak) {
+		boolean allChecked = true;
 		for (int i = 0; i < mCheckBoxes.size(); i++) {
+			if (!mCheckBoxes.get(i).isSelected()) {
+				allChecked = false;
+			}
 			mCheckBoxes.get(i).setSelected(false);
 		}
 		saveCheckBoxes(FileType.check);
+		if (allChecked) streak++;
+		else streak = 0;
+		return streak;
 	}
 
 	private boolean testValidFileName(String text) {
