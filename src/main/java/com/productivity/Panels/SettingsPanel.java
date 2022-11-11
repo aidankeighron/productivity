@@ -15,7 +15,6 @@ import java.awt.AWTException;
 import java.awt.Component;
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -173,8 +172,8 @@ public class SettingsPanel extends JTabbedPane {
                 checkBox.setSelected(Boolean.parseBoolean(mSettings.get(key)));
             }
             catch(Exception e) {
+                JOptionPane.showMessageDialog(this, "Failed getting setting:"+key, "Warning", JOptionPane.ERROR_MESSAGE);
                 e.printStackTrace();
-                System.out.println("Setting does not exist");
             }
             checkBox.setToolTipText(tooltip);
             mConfigPanel.add(checkBox, "wrap");
@@ -187,7 +186,6 @@ public class SettingsPanel extends JTabbedPane {
                 try {
                     Integer.parseInt(numField.getText());
                 } catch (Exception ex) {
-                    ex.printStackTrace();
                     notInt = true;
                 }
                 if (notInt || Integer.parseInt(numField.getText()) <= 0) {
@@ -202,8 +200,8 @@ public class SettingsPanel extends JTabbedPane {
                 numField.setText(mSettings.get(key));
             }
             catch(Exception e) {
+                JOptionPane.showMessageDialog(this, "Failed getting setting:"+key, "Warning", JOptionPane.ERROR_MESSAGE);
                 e.printStackTrace();
-                System.out.println("Setting does not exist");
             }
             numField.setToolTipText(tooltip);
             mConfigPanel.add(numLabel, "split 2");
@@ -225,8 +223,8 @@ public class SettingsPanel extends JTabbedPane {
                 txtField.setText(mSettings.get(key));
             }
             catch(Exception e) {
+                JOptionPane.showMessageDialog(this, "Failed getting setting:"+key, "Warning", JOptionPane.ERROR_MESSAGE);
                 e.printStackTrace();
-                System.out.println("Setting does not exist");
             }
             txtField.setToolTipText(tooltip);
             mConfigPanel.add(txtLabel, "split 2");
@@ -245,8 +243,8 @@ public class SettingsPanel extends JTabbedPane {
                 confettiField.setSelectedIndex(Integer.parseInt(mSettings.get(key)));
             }
             catch(Exception e) {
+                JOptionPane.showMessageDialog(this, "Failed getting setting:"+key, "Warning", JOptionPane.ERROR_MESSAGE);
                 e.printStackTrace();
-                System.out.println("Setting does not exist");
             }
             confettiField.setToolTipText(tooltip);
             mConfigPanel.add(confettiLabel, "split 2");
@@ -275,8 +273,8 @@ public class SettingsPanel extends JTabbedPane {
                 lafField.setSelectedIndex(Integer.parseInt(mSettings.get(key)));
             }
             catch(Exception e) {
+                JOptionPane.showMessageDialog(this, "Failed getting setting:"+key, "Warning", JOptionPane.ERROR_MESSAGE);
                 e.printStackTrace();
-                System.out.println("Setting does not exist");
             }
             lafField.setToolTipText(tooltip);
             mConfigPanel.add(lafLabel, "split 2");
@@ -320,7 +318,6 @@ public class SettingsPanel extends JTabbedPane {
                     notInt = true;
                 }
             } catch (Exception ex) {
-                ex.printStackTrace();
                 notInt = true;
             }
             if (textField.getText().equals("") || notInt) {
@@ -395,6 +392,7 @@ public class SettingsPanel extends JTabbedPane {
                         try {
                             Notification.displayTray("Reminder", "");
                         } catch (AWTException e) {
+                            JOptionPane.showMessageDialog(Productivity.getInstance(), "Failed displaying notification", "Warning", JOptionPane.ERROR_MESSAGE);
                             e.printStackTrace();
                         }
                     bar.setValue(i);
@@ -488,16 +486,6 @@ public class SettingsPanel extends JTabbedPane {
         writeData(data, mSettingsFile);
     }
     
-    public static void checkFile(File f) {
-        try {
-            if (f.exists()) {
-                f.createNewFile();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    
     private static String[] readData(File file) {
         String[] result = new String[0];
         try {
@@ -511,6 +499,7 @@ public class SettingsPanel extends JTabbedPane {
             scanner.close();
         }
         catch (Exception e) {
+            JOptionPane.showMessageDialog(Productivity.getInstance(), "Failed reading data in SettingsPanel", "Warning", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
         return result;
@@ -523,6 +512,7 @@ public class SettingsPanel extends JTabbedPane {
             writer.close();
         }
         catch (Exception e) {
+            JOptionPane.showMessageDialog(Productivity.getInstance(), "writing reading data in SettingsPanel", "Warning", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
     }

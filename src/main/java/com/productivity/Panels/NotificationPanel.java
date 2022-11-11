@@ -106,6 +106,7 @@ public class NotificationPanel extends JPanel {
                             }
                         }
                         catch (Exception e) {
+                            JOptionPane.showMessageDialog(Productivity.getInstance(), "Failed displaying notification", "Warning", JOptionPane.ERROR_MESSAGE);
                             e.printStackTrace();
                         }
                         if (notification.getNextDate() == -1) {
@@ -135,6 +136,7 @@ public class NotificationPanel extends JPanel {
                         try {
                             writeData(new String[]{dtf.format(now), Integer.toString(streak)}, mTimeFile);
                         } catch (Exception e) {
+                            JOptionPane.showMessageDialog(Productivity.getInstance(), "Failed updating time and streak", "Warning", JOptionPane.ERROR_MESSAGE);
                             e.printStackTrace();
                             writeData(new String[]{"11/11/2020", "0"}, mTimeFile);
                         }
@@ -144,7 +146,7 @@ public class NotificationPanel extends JPanel {
                 iterations++;
             }
         };
-        time.schedule(task, 0, 1000); //160000 
+        time.schedule(task, 0, 1000); //60000 
     }
     
     private void notificationPopup() {
@@ -311,6 +313,7 @@ public class NotificationPanel extends JPanel {
             writer.close();
         }
         catch (Exception e) {
+            JOptionPane.showMessageDialog(Productivity.getInstance(), "Failed appending in NotificationPanel", "Warning", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
     }
@@ -328,18 +331,20 @@ public class NotificationPanel extends JPanel {
 			scanner.close();
 		}
 		catch (Exception e) {
+            JOptionPane.showMessageDialog(Productivity.getInstance(), "Failed reading data in NotificationPanel", "Warning", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}
 		return result;
 	}
 	
 	private static void writeData(String data, File file) {
-		try  {
-			FileWriter writer = new FileWriter(file);
+        try  {
+            FileWriter writer = new FileWriter(file);
 			writer.write(data);
 			writer.close();
 		}
 		catch (Exception e) {
+            JOptionPane.showMessageDialog(Productivity.getInstance(), "Failed writing data in NotificationPanel", "Warning", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}
 	}

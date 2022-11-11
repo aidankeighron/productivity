@@ -205,12 +205,16 @@ public class CheckBoxes extends JPanel {
 				writeData("", mNameFile);
 				writeData("", mCheckFile);
 				writeData("", mColorFile);
+				if (name.length != states.length && name.length != color.length) JOptionPane.showMessageDialog(this, "Failed loading checkboxes because of name length", "Warning", JOptionPane.ERROR_MESSAGE);
+				if (states.length != name.length && states.length != color.length) JOptionPane.showMessageDialog(this, "Failed loading checkboxes because of states length", "Warning", JOptionPane.ERROR_MESSAGE);
+				if (color.length != name.length && color.length != states.length) JOptionPane.showMessageDialog(this, "Failed loading checkboxes because of color length", "Warning", JOptionPane.ERROR_MESSAGE);
 				return;
 			}
 			for (int i = 0; i < name.length; i++) {
 				addCheckBox(name[i], new Color(Integer.parseInt(color[i])), Boolean.parseBoolean(states[i]), true);
 			}
 		} catch (Exception e) {
+			JOptionPane.showMessageDialog(this, "Failed loading checkboxes", "Warning", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 			writeData("", mNameFile);
 			writeData("", mCheckFile);
@@ -234,12 +238,16 @@ public class CheckBoxes extends JPanel {
 					writeData("", mNameFile);
 					writeData("", mCheckFile);
 					writeData("", mColorFile);
+					if (name.length != state.length && name.length != color.length) JOptionPane.showMessageDialog(this, "Failed saving checkboxes because of name length", "Warning", JOptionPane.ERROR_MESSAGE);
+					if (state.length != name.length && state.length != color.length) JOptionPane.showMessageDialog(this, "Failed saving checkboxes because of states length", "Warning", JOptionPane.ERROR_MESSAGE);
+					if (color.length != name.length && color.length != state.length) JOptionPane.showMessageDialog(this, "Failed saving checkboxes because of color length", "Warning", JOptionPane.ERROR_MESSAGE);
 					return;
 				}
 				writeData(name, mNameFile);
 				writeData(state, mCheckFile);
 				writeData(color, mColorFile);
 			} catch (Exception e) {
+				JOptionPane.showMessageDialog(this, "Failed saving checkboxes", "Warning", JOptionPane.ERROR_MESSAGE);
 				e.printStackTrace();
 				writeData("", mNameFile);
 				writeData("", mCheckFile);
@@ -261,6 +269,7 @@ public class CheckBoxes extends JPanel {
             writer.close();
         }
         catch (Exception e) {
+			JOptionPane.showMessageDialog(Productivity.getInstance(), "Failed appending: "+data, "Warning", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
     }
@@ -275,6 +284,7 @@ public class CheckBoxes extends JPanel {
 			try {
 				writeData(name, mNameFile);
 			} catch (Exception e) {
+				JOptionPane.showMessageDialog(this, "Failed saving checkboxes of type:"+type.name(), "Warning", JOptionPane.ERROR_MESSAGE);
 				e.printStackTrace();
 				writeData("", mNameFile);
 			}
@@ -287,6 +297,7 @@ public class CheckBoxes extends JPanel {
 			try {
 				writeData(check, mCheckFile);
 			} catch (Exception e) {
+				JOptionPane.showMessageDialog(this, "Failed saving checkboxes of type:"+type.name(), "Warning", JOptionPane.ERROR_MESSAGE);
 				e.printStackTrace();
 				writeData("", mCheckFile);
 			}
@@ -299,6 +310,7 @@ public class CheckBoxes extends JPanel {
 			try {
 				writeData(color, mColorFile);
 			} catch (Exception e) {
+				JOptionPane.showMessageDialog(this, "Failed saving checkboxes of type:"+type.name(), "Warning", JOptionPane.ERROR_MESSAGE);
 				e.printStackTrace();
 				writeData("", mColorFile);
 			}
@@ -321,6 +333,7 @@ public class CheckBoxes extends JPanel {
 			scanner.close();
 		}
 		catch (Exception e) {
+			JOptionPane.showMessageDialog(this, "Failed reading data in CheckBoxes", "Warning", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}
 		return result;
@@ -333,6 +346,7 @@ public class CheckBoxes extends JPanel {
 			writer.close();
 		}
 		catch (Exception e) {
+			JOptionPane.showMessageDialog(this, "Failed writing data in CheckBoxes", "Warning", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}
 	}

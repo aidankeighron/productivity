@@ -93,12 +93,14 @@ public class AddCustomCheckList extends JPanel {
             }
 
         } catch (Exception e) {
+            JOptionPane.showMessageDialog(Productivity.getInstance(), "Failed loading custom checklists", "Warning", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
             File dir = new File(Productivity.kPath);
             purgeDirectory(dir);
             try {
                 kCustomNames.createNewFile();
             } catch (Exception e1) {
+                JOptionPane.showMessageDialog(Productivity.getInstance(), "Failed resetting custom names", "Warning", JOptionPane.ERROR_MESSAGE);
                 e1.printStackTrace();
             }
         }
@@ -118,6 +120,7 @@ public class AddCustomCheckList extends JPanel {
                 color.createNewFile();
                 check.createNewFile();
             } catch (Exception e) {
+                JOptionPane.showMessageDialog(Productivity.getInstance(), "Failed creating files for custom checklist", "Warning", JOptionPane.ERROR_MESSAGE);
                 e.printStackTrace();
             }
         }
@@ -175,6 +178,7 @@ public class AddCustomCheckList extends JPanel {
             writer.close();
         }
         catch (Exception e) {
+            JOptionPane.showMessageDialog(Productivity.getInstance(), "Failed appending to custom checklist:"+file.getName(), "Warning", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
     }
@@ -192,6 +196,7 @@ public class AddCustomCheckList extends JPanel {
             scanner.close();
         }
         catch (Exception e) {
+            JOptionPane.showMessageDialog(Productivity.getInstance(), "Failed reading data in AddCustomCheckList", "Warning", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
         return result;
@@ -204,6 +209,7 @@ public class AddCustomCheckList extends JPanel {
             writer.close();
         }
         catch (Exception e) {
+            JOptionPane.showMessageDialog(Productivity.getInstance(), "Failed writing data in AddCustomCheckList", "Warning", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
     }

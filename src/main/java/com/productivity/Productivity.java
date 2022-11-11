@@ -109,7 +109,8 @@ public class Productivity extends JFrame {
 					  JTabbedPane sourceTabbedPane = (JTabbedPane) changeEvent.getSource();
 					  int index = sourceTabbedPane.getSelectedIndex();
 					  if (index == 0) {
-						mHomePanel.reset(false, Integer.parseInt(readData(getSave("Saves/time.TXT"))[1]));
+						mHomePanel.reset(false, 0);
+						mHomePanel.reset(true, Integer.parseInt(readData(getSave("Saves/time.TXT"))[1]));
 					  }
 					}
 				  };
@@ -144,11 +145,12 @@ public class Productivity extends JFrame {
 				UIManager.setLookAndFeel(getLaf());
 			}
 			catch (Exception ex) {
-				System.out.print("Failed to initialize theme. Using fallback.");
+				JOptionPane.showMessageDialog(this, "Failed to load theme using fallback", "Warning", JOptionPane.ERROR_MESSAGE);
 				UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 			}
 			SwingUtilities.updateComponentTreeUI(mTabbedPane);
 		} catch (Exception e) {
+			JOptionPane.showMessageDialog(this, "Failed to load fallback using default", "Warning", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}
 		setConfetti(Integer.parseInt(SettingsPanel.getSetting("currentConfetti")));
@@ -217,6 +219,7 @@ public class Productivity extends JFrame {
 		try {
 			UIManager.setLookAndFeel(getLaf());
 		} catch (UnsupportedLookAndFeelException e) {
+			JOptionPane.showMessageDialog(this, "Failed updating look and feel", "Warning", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}
 		SwingUtilities.updateComponentTreeUI(this);
@@ -308,6 +311,7 @@ public class Productivity extends JFrame {
 			scanner.close();
 		}
 		catch (Exception e) {
+			JOptionPane.showMessageDialog(Productivity.getInstance(), "Failed reading data in Productivity", "Warning", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}
 		return result;
@@ -320,6 +324,7 @@ public class Productivity extends JFrame {
 			writer.close();
 		}
 		catch (Exception e) {
+			JOptionPane.showMessageDialog(this, "Failed writing data in Productivity", "Warning", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}
 	}
@@ -346,6 +351,7 @@ public class Productivity extends JFrame {
 				String data = "start " + currentDir + "\\Productivity.exe";
 				writeData(data, startupFile);
 			} catch (Exception e) {
+				JOptionPane.showMessageDialog(this, "Failed saving .bat to startup folder", "Warning", JOptionPane.ERROR_MESSAGE);
 				e.printStackTrace();
 			}
 		}
@@ -356,6 +362,7 @@ public class Productivity extends JFrame {
 					startupFile.delete();
 				}
 			} catch (Exception e) {
+				JOptionPane.showMessageDialog(this, "Failed deleting .bat from startup folder", "Warning", JOptionPane.ERROR_MESSAGE);
 				e.printStackTrace();
 			}
 		}
@@ -440,6 +447,7 @@ public class Productivity extends JFrame {
 			jarName = Productivity.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
 			jarName = jarName.substring(jarName.lastIndexOf("/") + 1) + "!";
 		} catch (URISyntaxException e) {
+			JOptionPane.showMessageDialog(Productivity.getInstance(), "Failed getting file:"+path, "Warning", JOptionPane.ERROR_MESSAGE);
 			jarName = "Productivity-4.0.0.jar!";
 		}
 		file = file.split("/", 2)[1].replaceFirst(jarName, "classes");

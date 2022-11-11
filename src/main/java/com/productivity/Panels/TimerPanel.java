@@ -227,6 +227,7 @@ public class TimerPanel extends JPanel {
                     try {
                         Notification.displayTray("Timer Done", title);
                     } catch (Exception e) {
+                        JOptionPane.showMessageDialog(Productivity.getInstance(), "Failed displaying notification", "Warning", JOptionPane.ERROR_MESSAGE);
                         e.printStackTrace();
                     }
                 }
@@ -237,6 +238,7 @@ public class TimerPanel extends JPanel {
                     try {
                         Notification.displayTray("Timer Done", title);
                     } catch (Exception e) {
+                        JOptionPane.showMessageDialog(Productivity.getInstance(), "Failed displaying notification", "Warning", JOptionPane.ERROR_MESSAGE);
                         e.printStackTrace();
                     }
                     i++;

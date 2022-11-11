@@ -58,12 +58,15 @@ public class NotesPanel extends JDesktopPane {
 			try {
 				data = readData(file);
 			} catch (Exception ex) {
+				JOptionPane.showMessageDialog(this, "Error loading note", "Warning", JOptionPane.ERROR_MESSAGE);
 				ex.printStackTrace();
-				JOptionPane.showMessageDialog(this, "Error when loading file");
 				file.delete();
 				try {
 					file.createNewFile();
-				} catch (IOException e1) { e1.printStackTrace(); }
+				} catch (IOException e1) { 
+					JOptionPane.showMessageDialog(this, "Error creating note", "Warning", JOptionPane.ERROR_MESSAGE);
+					e1.printStackTrace(); 
+				}
 				return;
 			}
 			if (data.length > 0) {
@@ -83,12 +86,15 @@ public class NotesPanel extends JDesktopPane {
 		try {
 			data = readData(file);
 		} catch (Exception ex) {
+			JOptionPane.showMessageDialog(this, "Failed reading note", "Warning", JOptionPane.ERROR_MESSAGE);
 			ex.printStackTrace();
-			JOptionPane.showMessageDialog(this, "Error when loading file");
 			file.delete();
 			try {
 				file.createNewFile();
-			} catch (IOException e1) { e1.printStackTrace(); }
+			} catch (IOException e1) { 
+				JOptionPane.showMessageDialog(this, "Failed creating note", "Warning", JOptionPane.ERROR_MESSAGE);
+				e1.printStackTrace(); 
+			}
 			return;
 		}
 		if (data.length > 0) {
@@ -126,6 +132,7 @@ public class NotesPanel extends JDesktopPane {
 			scanner.close();
 		}
 		catch (Exception e) {
+			JOptionPane.showMessageDialog(Productivity.getInstance(), "Failed reading data in NotesPanel", "Warning", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}
 		return result;
@@ -138,6 +145,7 @@ public class NotesPanel extends JDesktopPane {
 			writer.close();
 		}
 		catch (Exception e) {
+			JOptionPane.showMessageDialog(Productivity.getInstance(), "Failed writing data in NotesPanel", "Warning", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}
 	}

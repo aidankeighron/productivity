@@ -58,16 +58,18 @@ public class BlockSites extends JPanel {
             try {
                 Files.copy(mNewHosts.toPath(), kHostsFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
             } catch (Exception e) {
+                JOptionPane.showMessageDialog(Productivity.getInstance(), "Failed blocking sites", "Warning", JOptionPane.ERROR_MESSAGE);
                 e.printStackTrace();
                 try {
                     Files.copy(mBackupFile.toPath(), mNewHosts.toPath(), StandardCopyOption.REPLACE_EXISTING);
                 } catch (Exception e1) {
+                    JOptionPane.showMessageDialog(Productivity.getInstance(), "Failed resetting local hosts file", "Warning", JOptionPane.ERROR_MESSAGE);
                     e1.printStackTrace();
                 }
             }
         }
         else {
-            JOptionPane.showMessageDialog(null , "Run as administrator to use blocking");
+            JOptionPane.showMessageDialog(Productivity.getInstance() , "Run as administrator to use blocking");
         }
     }
     
@@ -76,6 +78,7 @@ public class BlockSites extends JPanel {
             try {
                 Files.copy(mBackupFile.toPath(), kHostsFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
             } catch (Exception e) {
+                JOptionPane.showMessageDialog(Productivity.getInstance(), "Failed unblocking sites", "Warning", JOptionPane.ERROR_MESSAGE);
                 e.printStackTrace();
             }
         }
@@ -92,6 +95,7 @@ public class BlockSites extends JPanel {
                 result += data[i] + "\n";
             }
         } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Failed loading blocked sites", "Warning", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
             writeData("", mBlockedSites);
         }
@@ -105,6 +109,7 @@ public class BlockSites extends JPanel {
             Matcher matcher = patt.matcher(s);
             return matcher.matches();
         } catch (Exception e) {
+            JOptionPane.showMessageDialog(Productivity.getInstance(), "Failed verifying site is valid", "Warning", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
             return false;
         }
@@ -159,6 +164,7 @@ public class BlockSites extends JPanel {
             }
             Files.copy(mBackupFile.toPath(), mNewHosts.toPath(), StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Failed resetting local hosts file", "Warning", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
         writeData("", mBlockedSites);
@@ -178,6 +184,7 @@ public class BlockSites extends JPanel {
             scanner.close();
         }
         catch (Exception e) {
+            JOptionPane.showMessageDialog(Productivity.getInstance(), "Failed reading data in BlockSites", "Warning", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
         return result;
@@ -190,6 +197,7 @@ public class BlockSites extends JPanel {
             writer.close();
         }
         catch (Exception e) {
+            JOptionPane.showMessageDialog(Productivity.getInstance(), "Failed writing data in BlockSites", "Warning", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
     }
