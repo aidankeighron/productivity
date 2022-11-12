@@ -103,7 +103,7 @@ public class CheckBoxes extends JPanel {
 			mCheckBoxes.get(i).setSelected(false);
 		}
 		saveCheckBoxes(FileType.check);
-		if (allChecked) streak++;
+		if (allChecked && mCheckBoxes.size() > 0) streak++;
 		else streak = 0;
 		return streak;
 	}
