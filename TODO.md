@@ -63,5 +63,5 @@
 # Daily checklist streak
 # streak set to 0 on load
 # better error messages writeData(")
-- notification timer loop set to 60000
-- Checklist getting stuff removed
+# notification timer loop set to 60000
+# Checklist getting stuff removed

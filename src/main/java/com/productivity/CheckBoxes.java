@@ -281,6 +281,7 @@ public class CheckBoxes extends JPanel {
 			for (int i = 0; i < mCheckBoxes.size(); i++) {
 				name[i] = mCheckBoxes.get(i).getText();
 			}
+			name[name.length-1] += "\n";
 			try {
 				writeData(name, mNameFile);
 			} catch (Exception e) {
@@ -294,6 +295,7 @@ public class CheckBoxes extends JPanel {
 			for (int i = 0; i < mCheckBoxes.size(); i++) {
 				check[i] = Boolean.toString(mCheckBoxes.get(i).isSelected());
 			}
+			check[check.length-1] += "\n";
 			try {
 				writeData(check, mCheckFile);
 			} catch (Exception e) {
@@ -307,6 +309,7 @@ public class CheckBoxes extends JPanel {
 			for (int i = 0; i < mCheckBoxes.size(); i++) {
 				color[i] = Integer.toString(mCheckBoxes.get(i).getForeground().getRGB());
 			}
+			color[color.length-1] += "\n";
 			try {
 				writeData(color, mColorFile);
 			} catch (Exception e) {

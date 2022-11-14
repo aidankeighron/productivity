@@ -146,7 +146,7 @@ public class NotificationPanel extends JPanel {
                 iterations++;
             }
         };
-        time.schedule(task, 0, 1000); //60000 
+        time.schedule(task, 0, 60000);
     }
     
     private void notificationPopup() {
