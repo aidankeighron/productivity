@@ -1,4 +1,4 @@
-# Version 4 UI Update
+- Version 4 UI Update
 # Remove Mac?
 # Expand limits for char count and checkbox count
 # Clean up codebase and put into folders
@@ -65,3 +65,5 @@
 # better error messages writeData(")
 # notification timer loop set to 60000
 # Checklist getting stuff removed
+
+- Version 7
