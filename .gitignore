@@ -1,0 +1,16 @@
+### Java ###
+# Compiled class file
+*.class
+
+### VisualStudioCode ###
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+.gradle
+.classpath
+.project
+.vscode/settings.json
+src/main/java/com/productivity/test.java
