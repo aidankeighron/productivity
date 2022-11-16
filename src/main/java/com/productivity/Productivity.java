@@ -38,6 +38,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.GraphicsEnvironment;
 
 import com.productivity.Custom.AddCustomCheckList;
 import com.productivity.Custom.CustomCheckList;
@@ -188,6 +189,16 @@ public class Productivity extends JFrame {
 		int xPos = prefs.getInt(xLast, 0);
 		int yPos = prefs.getInt(yLast, 0);
 
+		GraphicsEnvironment localGraphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		if (localGraphicsEnvironment.getScreenDevices().length != Integer.parseInt(readData(getSave("Saves/time.TXT"))[2])) {
+			xPos = 10;
+			yPos = 10;
+			prefs.putInt(xLast, xPos);
+			prefs.putInt(yLast, yPos);
+			String[] fileContents = readData(getSave("Saves/time.TXT"));
+			writeData(new String[]{fileContents[0], fileContents[1], Integer.toString(localGraphicsEnvironment.getScreenDevices().length)}, getSave("Saves/time.TXT"));
+		}
+
 		super.addComponentListener(new ComponentAdapter() {
 			@Override
 			public void componentMoved(ComponentEvent e) {
@@ -327,6 +338,11 @@ public class Productivity extends JFrame {
 			JOptionPane.showMessageDialog(this, "Failed writing data in Productivity", "Warning", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}
+	}
+
+	private void writeData(String[] dataArr, File file) {
+        String data = String.join("\n", dataArr);
+		writeData(data, file);
 	}
 	
 	public void customCheckListVisibility(boolean value) {

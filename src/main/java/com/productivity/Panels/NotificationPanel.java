@@ -9,6 +9,7 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 import com.github.lgooddatepicker.components.DatePicker;
@@ -88,65 +89,86 @@ public class NotificationPanel extends JPanel {
         super.add(addBtn, "growx");
         loadNotifications();
 
-        Timer time = new Timer();
-        TimerTask task = new TimerTask()
-        {
-            int iterations = 0;
-            @Override
-            public void run()
-            {
-                Notification notificationToRemove = null;
-                for (Notification notification : mNotifications) {
-                    long duration = notification.getStartDate() - (System.currentTimeMillis() / 1000l);
-                    
-                    if (0 >= duration) {
-                        try {
-                            if (duration >= -60*60) {
-                                com.productivity.Util.Notification.displayTray(notification.mName, notification.mText);
+        SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+                // Check once on load // Yes I know this should be a method but im getting lazy and it technically will not make the code slower
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");  
+                LocalDateTime now = LocalDateTime.now();
+                String[] fileContents = readData(mTimeFile);
+                String currentTime = fileContents[0];
+                String currentStreak = fileContents[1];
+                if (!dtf.format(now).equals(currentTime)) {
+                    int streak = SettingsPanel.getDaily().setToFalse(Integer.parseInt(currentStreak));
+                    HomePanel.getInstance().reset(true, streak);
+                    try {
+                        writeData(new String[]{dtf.format(now), Integer.toString(streak), fileContents[2]}, mTimeFile);
+                    } catch (Exception e) {
+                        JOptionPane.showMessageDialog(Productivity.getInstance(), "Failed updating time and streak", "Warning", JOptionPane.ERROR_MESSAGE);
+                        e.printStackTrace();
+                        writeData(new String[]{"11/11/2020", "0"}, mTimeFile);
+                    }
+                }
+                Timer time = new Timer();
+                TimerTask task = new TimerTask()
+                {
+                    int iterations = 0;
+                    @Override
+                    public void run()
+                    {
+                        Notification notificationToRemove = null;
+                        for (Notification notification : mNotifications) {
+                            long duration = notification.getStartDate() - (System.currentTimeMillis() / 1000l);
+                            
+                            if (0 >= duration) {
+                                try {
+                                    if (duration >= -60*60) {
+                                        com.productivity.Util.Notification.displayTray(notification.mName, notification.mText);
+                                    }
+                                }
+                                catch (Exception e) {
+                                    JOptionPane.showMessageDialog(Productivity.getInstance(), "Failed displaying notification", "Warning", JOptionPane.ERROR_MESSAGE);
+                                    e.printStackTrace();
+                                }
+                                if (notification.getNextDate() == -1) {
+                                    NotificationPanel.super.remove(notification.getPanel());
+                                    notificationToRemove = notification;
+                                    mProductivity.repaint();
+                                }
+                                else {
+                                    saveNotifications(false);
+                                }
                             }
                         }
-                        catch (Exception e) {
-                            JOptionPane.showMessageDialog(Productivity.getInstance(), "Failed displaying notification", "Warning", JOptionPane.ERROR_MESSAGE);
-                            e.printStackTrace();
-                        }
-                        if (notification.getNextDate() == -1) {
-                            NotificationPanel.super.remove(notification.getPanel());
-                            notificationToRemove = notification;
-                            mProductivity.repaint();
-                        }
-                        else {
+                        if (notificationToRemove != null) {
+                            mNotifications.remove(notificationToRemove);
+                            mNumberOfNotifications--;
                             saveNotifications(false);
                         }
-                    }
-                }
-                if (notificationToRemove != null) {
-                    mNotifications.remove(notificationToRemove);
-                    mNumberOfNotifications--;
-                    saveNotifications(false);
-                }
-                if (iterations >= 10) { // Check every 10 min
-                    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");  
-                    LocalDateTime now = LocalDateTime.now();
-                    String[] fileContents = readData(mTimeFile);
-                    String currentTime = fileContents[0];
-                    String currentStreak = fileContents[1];
-                    if (!dtf.format(now).equals(currentTime)) {
-                        int streak = SettingsPanel.getDaily().setToFalse(Integer.parseInt(currentStreak));
-                        HomePanel.getInstance().reset(true, streak);
-                        try {
-                            writeData(new String[]{dtf.format(now), Integer.toString(streak)}, mTimeFile);
-                        } catch (Exception e) {
-                            JOptionPane.showMessageDialog(Productivity.getInstance(), "Failed updating time and streak", "Warning", JOptionPane.ERROR_MESSAGE);
-                            e.printStackTrace();
-                            writeData(new String[]{"11/11/2020", "0"}, mTimeFile);
+                        if (iterations >= 10) { // Check every 10 min
+                            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");  
+                            LocalDateTime now = LocalDateTime.now();
+                            String[] fileContents = readData(mTimeFile);
+                            String currentTime = fileContents[0];
+                            String currentStreak = fileContents[1];
+                            if (!dtf.format(now).equals(currentTime)) {
+                                int streak = SettingsPanel.getDaily().setToFalse(Integer.parseInt(currentStreak));
+                                HomePanel.getInstance().reset(true, streak);
+                                try {
+                                    writeData(new String[]{dtf.format(now), Integer.toString(streak), fileContents[2]}, mTimeFile);
+                                } catch (Exception e) {
+                                    JOptionPane.showMessageDialog(Productivity.getInstance(), "Failed updating time and streak", "Warning", JOptionPane.ERROR_MESSAGE);
+                                    e.printStackTrace();
+                                    writeData(new String[]{"11/11/2020", "0"}, mTimeFile);
+                                }
+                            }
+                            iterations = 0;
                         }
+                        iterations++;
                     }
-                    iterations = 0;
-                }
-                iterations++;
+                };
+                time.schedule(task, 0, 60000);
             }
-        };
-        time.schedule(task, 0, 60000);
+        });
     }
     
     private void notificationPopup() {

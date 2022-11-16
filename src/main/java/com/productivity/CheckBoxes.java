@@ -96,13 +96,15 @@ public class CheckBoxes extends JPanel {
 
 	public int setToFalse(int streak) {
 		boolean allChecked = true;
-		for (int i = 0; i < mCheckBoxes.size(); i++) {
-			if (!mCheckBoxes.get(i).isSelected()) {
-				allChecked = false;
+		if (mCheckBoxes.size() > 0) {
+			for (int i = 0; i < mCheckBoxes.size(); i++) {
+				if (!mCheckBoxes.get(i).isSelected()) {
+					allChecked = false;
+				}
+				mCheckBoxes.get(i).setSelected(false);
 			}
-			mCheckBoxes.get(i).setSelected(false);
+			saveCheckBoxes(FileType.check);
 		}
-		saveCheckBoxes(FileType.check);
 		if (allChecked && mCheckBoxes.size() > 0) streak++;
 		else streak = 0;
 		return streak;
