@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.productivity</groupId>
   <artifactId>Productivity</artifactId>
-  <version>4.0.0</version>
+  <version>7.0.0</version>
   <build>
     <resources>
       <resource>
