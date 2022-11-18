@@ -58,7 +58,7 @@ public class TimerPanel extends JPanel {
             }
             if (timeField.getText().equals("") || notInt || (!notInt) && Integer.parseInt(timeField.getText()) > 1000 || nameFelid.getText().length() > 10) {
                 timeField.setText("");
-                JOptionPane.showMessageDialog(this, "Enter valid positive duration");
+                JOptionPane.showMessageDialog(this, "Enter valid positive integer duration");
             }
             else {
                 if (mNumTimers < kMaxTimers) {
@@ -83,7 +83,7 @@ public class TimerPanel extends JPanel {
             }
             if (timeField.getText().equals("") || notInt || (!notInt) && Integer.parseInt(timeField.getText()) > 1000 || nameFelid.getText().length() > 10) {
                 timeField.setText("");
-                JOptionPane.showMessageDialog(this, "Enter valid positive duration");
+                JOptionPane.showMessageDialog(this, "Enter valid positive integer duration");
             }
             else {
                 if (mNumTimers < kMaxTimers) {
@@ -129,7 +129,7 @@ public class TimerPanel extends JPanel {
             }
             if (timeField.getText().equals("") || notInt) {
                 timeField.setText("");
-                JOptionPane.showMessageDialog(this, "Enter valid positive time");
+                JOptionPane.showMessageDialog(this, "Enter valid positive integer time");
             }
             else {
                 if (mNumTimers < kMaxTimers) {

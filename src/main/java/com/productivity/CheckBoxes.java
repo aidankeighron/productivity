@@ -175,14 +175,17 @@ public class CheckBoxes extends JPanel {
 	}
 	
 	private void clearSelected() {
+		boolean changed = false;
 		for (int i = mCheckBoxes.size() - 1; i >= 0; i--) {
 			if (mCheckBoxes.get(i).isSelected()) {
 				mChecklistPanel.remove(mCheckBoxes.get(i));
 				mCheckBoxes.remove(mCheckBoxes.get(i));
 				mNumCheckBox--;
+				changed = true;
 			}
 		}
-		saveCheckBoxes(false);
+		if (changed)
+			saveCheckBoxes(false);
 		mProductivity.repaintFrame();
 	}
 	
@@ -235,6 +238,9 @@ public class CheckBoxes extends JPanel {
 				state[i] = Boolean.toString(mCheckBoxes.get(i).isSelected());
 				color[i] = Integer.toString(mCheckBoxes.get(i).getForeground().getRGB());
 			}
+			name[name.length-1] += "\n";
+			state[state.length-1] += "\n";
+			color[color.length-1] += "\n";
 			try {
 				if (!(name.length == state.length && state.length == color.length)) {
 					writeData("", mNameFile);

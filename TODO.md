@@ -66,6 +66,6 @@
 # notification timer loop set to 60000
 # Checklist getting stuff removed
 
-- Version 7 Bug Fix
+- Version 6.1 Bug Fix
 # time not checked on load
 # if you remove a monitor program can open off screen

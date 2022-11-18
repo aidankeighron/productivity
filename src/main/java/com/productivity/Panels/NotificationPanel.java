@@ -211,7 +211,14 @@ public class NotificationPanel extends JPanel {
                 JOptionPane.showMessageDialog(this, "Date/Time can't be in the past", "Warning", JOptionPane.INFORMATION_MESSAGE);
                 return;
             }
-            int amount = repeatAmount.getText().equals("") ? 0 : Integer.parseInt(repeatAmount.getText());
+            int amount = 0;
+            try {
+                amount = repeatAmount.getText().equals("") ? 0 : Integer.parseInt(repeatAmount.getText());
+            }
+            catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Repeat needs to be a integer number", "Warning", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
             newNotification(name.getText(), text.getText(), repeat.getSelectedIndex(), amount, datePicker.getDate(), timePicker.getTime());
             infoBox.dispose();
         });
@@ -234,7 +241,14 @@ public class NotificationPanel extends JPanel {
                 JOptionPane.showMessageDialog(this, "Date/Time can't be in the past", "Warning", JOptionPane.INFORMATION_MESSAGE);
                 return;
             }
-            int amount = repeatAmount.getText().equals("") ? 0 : Integer.parseInt(repeatAmount.getText());
+            int amount = 0;
+            try {
+                amount = repeatAmount.getText().equals("") ? 0 : Integer.parseInt(repeatAmount.getText());
+            }
+            catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Repeat needs to be a integer number", "Warning", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
             newNotification(name.getText(), text.getText(), repeat.getSelectedIndex(), amount, datePicker.getDate(), timePicker.getTime());
             infoBox.dispose();
         });

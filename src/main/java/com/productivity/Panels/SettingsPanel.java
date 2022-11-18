@@ -189,7 +189,7 @@ public class SettingsPanel extends JTabbedPane {
                     notInt = true;
                 }
                 if (notInt || Integer.parseInt(numField.getText()) <= 0) {
-                    JOptionPane.showMessageDialog(this, "Enter valid positive number");
+                    JOptionPane.showMessageDialog(this, "Enter valid positive integer");
                 }
                 else {
                     mSettings.put(key, numField.getText());
@@ -321,7 +321,7 @@ public class SettingsPanel extends JTabbedPane {
                 notInt = true;
             }
             if (textField.getText().equals("") || notInt) {
-                JOptionPane.showMessageDialog(this, "Enter valid positive time");
+                JOptionPane.showMessageDialog(this, "Enter valid positive integer time");
             }
             else {
                 progressBar.setMaximum(Integer.parseInt(textField.getText()) * mTimeMultiplier);
@@ -353,7 +353,7 @@ public class SettingsPanel extends JTabbedPane {
                 notInt = true;
             }
             if (textField.getText().equals("") || notInt) {
-                JOptionPane.showMessageDialog(this, "Enter valid positive time");
+                JOptionPane.showMessageDialog(this, "Enter valid positive integer time");
             }
             else {
                 progressBar.setMaximum(Integer.parseInt(textField.getText()) * mTimeMultiplier);
