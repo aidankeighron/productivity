@@ -15,5 +15,6 @@ public class Notification {
         trayIcon.setToolTip(null);
         tray.add(trayIcon);
         trayIcon.displayMessage(title, description, MessageType.INFO);
+        tray.remove(trayIcon);
     }
 }
