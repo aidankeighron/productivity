@@ -69,3 +69,20 @@
 - Version 6.1 Bug Fix
 # time not checked on load
 # if you remove a monitor program can open off screen
+
+- Version 7.0 Clean-up
+- Notification fix
+- Productivity
+- CheckBoxes
+- BlockSites
+# Popup
+# Notification
+# JTextFieldLimit
+# CustomTabbedUI
+# ComponentMover
+- TimerPanel
+- SettingsPanel
+- NotificationPanel
+- HomePanel
+- AddCustomCheckList
+- CustomCheckList

@@ -1,15 +1,15 @@
 runOnStartup
-laf
 onTop
 reminderActive
 wantConfetti
 currentConfetti
 blockSites
+laf
 *
 false
-1
 true
 false
 true
 0
 false
+1

@@ -39,7 +39,7 @@ public class SettingsPanel extends JTabbedPane {
     private static final String[] kTimeOptions = {"Seconds", "Minutes", "Hours"};
     
     private static HashMap<String, String> mSettings = new HashMap<String, String>();
-    private static File mSettingsFile = Productivity.getSave("Saves/settings.TXT");;
+    private static File mSettingsFile = Productivity.getSave("Saves/settings.TXT");
     private static File mNameFile = Productivity.getSave("Saves/daily.TXT");
     private static File mStateFile = Productivity.getSave("Saves/dailyCheck.TXT");
     private static File mColorFile = Productivity.getSave("Saves/dailyColor.TXT");

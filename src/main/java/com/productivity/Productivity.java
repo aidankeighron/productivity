@@ -85,8 +85,8 @@ public class Productivity extends JFrame {
 	private static HomePanel mHomePanel;
 	
 	private static File mNameFile = getSave("Saves/list.TXT");
-	private static File mStateFile = getSave("Saves/listCheck.TXT");;
-	private static File mColorFile = getSave("Saves/listColor.TXT");;
+	private static File mStateFile = getSave("Saves/listCheck.TXT");
+	private static File mColorFile = getSave("Saves/listColor.TXT");
 	private static CheckBoxes mCheckBoxes;
 	private static TimerPanel mTimerPanel;
 
@@ -178,7 +178,8 @@ public class Productivity extends JFrame {
 		close.addActionListener(e -> close());
 		minimize.addActionListener(e -> setState(Frame.ICONIFIED));
 		JPanel taskBar = new JPanel(new MigLayout((kMigDebug?"debug, ":"")+"gap 0px 0px, ins 0"));
-		taskBar.add(close); taskBar.add(minimize);
+		taskBar.add(close);
+		taskBar.add(minimize);
 		int index = mTabbedPane.getTabCount();
 		mTabbedPane.insertTab("", null, null, "", index);
         mTabbedPane.setTabComponentAt(index, taskBar);
@@ -242,23 +243,6 @@ public class Productivity extends JFrame {
 	}
 
 	private LookAndFeel getLaf() {
-		// UIManager.setLookAndFeel(new FlatDarculaLaf());
-		// UIManager.setLookAndFeel(new FlatMaterialOceanicContrastIJTheme());
-		// UIManager.setLookAndFeel(new FlatMaterialDeepOceanContrastIJTheme());
-		// UIManager.setLookAndFeel(new FlatCarbonIJTheme());
-		// UIManager.setLookAndFeel(new FlatGruvboxDarkHardIJTheme());				
-		// UIManager.setLookAndFeel(new FlatMaterialDesignDarkIJTheme());				
-		// UIManager.setLookAndFeel(new FlatMonokaiProContrastIJTheme());
-		// UIManager.setLookAndFeel(new FlatOneDarkIJTheme());
-		// UIManager.setLookAndFeel(new FlatArcDarkContrastIJTheme());
-		// UIManager.setLookAndFeel(new FlatAtomOneDarkContrastIJTheme());
-		// UIManager.setLookAndFeel(new FlatDraculaContrastIJTheme());
-		// UIManager.setLookAndFeel(new FlatGitHubDarkContrastIJTheme());
-		// UIManager.setLookAndFeel(new FlatMaterialDarkerContrastIJTheme());
-		// UIManager.setLookAndFeel(new FlatMaterialPalenightContrastIJTheme());
-		// UIManager.setLookAndFeel(new FlatMoonlightContrastIJTheme());
-		// UIManager.setLookAndFeel(new FlatNightOwlContrastIJTheme());
-		// UIManager.setLookAndFeel(new FlatSolarizedDarkContrastIJTheme());
 		switch (Integer.parseInt(SettingsPanel.getSetting("laf"))) {
 			case 0:
 			return new FlatDarculaLaf();

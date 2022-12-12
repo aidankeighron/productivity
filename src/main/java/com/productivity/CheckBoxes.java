@@ -24,7 +24,7 @@ import net.miginfocom.swing.MigLayout;
 public class CheckBoxes extends JPanel {
 	
 	public static final int kColumns = 2;
-
+	
 	private static final String[] kColorNames = {"White", "Red", "Blue", "Green"};
 	private static final Color[] kColors = {Color.WHITE, new Color(190, 50, 50), new Color(90, 90, 255), new Color(50, 200, 50)};
 	private static final int kCharLimit = 35;
@@ -78,14 +78,14 @@ public class CheckBoxes extends JPanel {
 		clear.addActionListener(e -> {
 			clearSelected();
 		});
-
+		
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				loadCheckBoxes();
 			}
 		}
 		);
-
+		
 		super.setLayout(new MigLayout("gap 0px 0px, ins 0" + ((Productivity.kMigDebug)?",debug":"")));
 		super.add(input, "");
 		super.add(colorChooser, "wrap");
@@ -93,7 +93,7 @@ public class CheckBoxes extends JPanel {
 		super.add(reset, "span, center, split 2");
 		super.add(clear, "");
 	}
-
+	
 	public int setToFalse(int streak) {
 		boolean allChecked = true;
 		if (mCheckBoxes.size() > 0) {
@@ -109,7 +109,7 @@ public class CheckBoxes extends JPanel {
 		else streak = 0;
 		return streak;
 	}
-
+	
 	private boolean testValidFileName(String text) {
 		return text.matches("^[a-zA-Z0-9._ <>{}\\[\\]\\|\\\\`~!@#$%^&*()-=+;:'\",?\\/]+$");
 	}
@@ -125,7 +125,7 @@ public class CheckBoxes extends JPanel {
 		mCheckBoxes.add(checkBox);
 		checkBox.addActionListener(e -> {
 			if (checkBox.isSelected())
-				Productivity.showConfetti();
+			Productivity.showConfetti();
 			saveCheckBoxes(FileType.check);
 		});
 		checkBox.setForeground(color);
@@ -171,7 +171,7 @@ public class CheckBoxes extends JPanel {
 		checkBox.addMouseListener(pop.new PopClickListener());
 		mChecklistPanel.add(checkBox, "width "+ (int)(Productivity.kWidth/kColumns) +", wmax " + (int)(Productivity.kWidth/kColumns));
 		if (!loading)
-			saveCheckBoxes(true);
+		saveCheckBoxes(true);
 	}
 	
 	private void clearSelected() {
@@ -185,7 +185,7 @@ public class CheckBoxes extends JPanel {
 			}
 		}
 		if (changed)
-			saveCheckBoxes(false);
+		saveCheckBoxes(false);
 		mProductivity.repaintFrame();
 	}
 	
@@ -269,18 +269,6 @@ public class CheckBoxes extends JPanel {
 			appendFile(Integer.toString(mCheckBoxes.get(index).getForeground().getRGB()), mColorFile);
 		}
 	}
-
-	private static void appendFile(String data, File file) {
-        try  {
-            FileWriter writer = new FileWriter(file, true);
-            writer.write(data+"\n");
-            writer.close();
-        }
-        catch (Exception e) {
-			JOptionPane.showMessageDialog(Productivity.getInstance(), "Failed appending: "+data, "Warning", JOptionPane.ERROR_MESSAGE);
-            e.printStackTrace();
-        }
-    }
 	
 	private void saveCheckBoxes(FileType type) {
 		switch (type) {
@@ -329,6 +317,18 @@ public class CheckBoxes extends JPanel {
 			default:
 			break;
 		}		
+	}
+	
+	private static void appendFile(String data, File file) {
+		try  {
+			FileWriter writer = new FileWriter(file, true);
+			writer.write(data+"\n");
+			writer.close();
+		}
+		catch (Exception e) {
+			JOptionPane.showMessageDialog(Productivity.getInstance(), "Failed appending: "+data, "Warning", JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
+		}
 	}
 	
 	private String[] readData(File file) {

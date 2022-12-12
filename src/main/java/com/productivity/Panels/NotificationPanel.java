@@ -117,7 +117,7 @@ public class NotificationPanel extends JPanel {
                     {
                         Notification notificationToRemove = null;
                         for (Notification notification : mNotifications) {
-                            long duration = notification.getStartDate() - (System.currentTimeMillis() / 1000l);
+                            long duration = notification.getStartDate() - (System.currentTimeMillis() / 1000L);
                             
                             if (0 >= duration) {
                                 try {
@@ -207,7 +207,7 @@ public class NotificationPanel extends JPanel {
             if (timePicker.getTime() == null) {
                 timePicker.setTime(LocalTime.now());
             }
-            if (convertDateToLong(LocalDateTime.of(datePicker.getDate(), timePicker.getTime())) - (System.currentTimeMillis() / 1000l) <= -60*60) {
+            if (convertDateToLong(LocalDateTime.of(datePicker.getDate(), timePicker.getTime())) - (System.currentTimeMillis() / 1000L) <= -60*60) {
                 JOptionPane.showMessageDialog(this, "Date/Time can't be in the past", "Warning", JOptionPane.INFORMATION_MESSAGE);
                 return;
             }
@@ -237,7 +237,7 @@ public class NotificationPanel extends JPanel {
             if (timePicker.getTime() == null) {
                 timePicker.setTime(LocalTime.now());
             }
-            if (convertDateToLong(LocalDateTime.of(datePicker.getDate(), timePicker.getTime())) - (System.currentTimeMillis() / 1000l) <= -60*60) {
+            if (convertDateToLong(LocalDateTime.of(datePicker.getDate(), timePicker.getTime())) - (System.currentTimeMillis() / 1000L) <= -60*60) {
                 JOptionPane.showMessageDialog(this, "Date/Time can't be in the past", "Warning", JOptionPane.INFORMATION_MESSAGE);
                 return;
             }
