@@ -364,7 +364,7 @@ public class SettingsPanel extends JTabbedPane {
         });
         progressBar.setValue(0);
         progressBar.setStringPainted(true);
-        JLabel info = new JLabel("Causes a beep to be played and notification to be shown every:");
+        JLabel info = new JLabel("Causes a beep and notification every:");
         mReminderPanel.add(info, "wrap, pushx, center");
         mReminderPanel.add(timeList, "wrap, center");
         mReminderPanel.add(textField, "wrap, center");
