@@ -26,6 +26,8 @@ Timers with multiple configuration options.
 
 Block websites while blocking timer is active.
 
+\* Block sites modifies your systems host file, do not use if you have existing content in your host file.
+
 ### Notifications
 <img src="/images/notification.png" height=300><img src="/images/create_notification_filled.png" height=300>
 
