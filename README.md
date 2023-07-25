@@ -1,5 +1,5 @@
 # Productivity
-An organization app designed to help with time management and task completion.
+Productivity is a project I developed to help with task organization and time management. It started as a basic checklist to help with task visualization. It has expanded into so much more throughout the course of its development, including timers, notifications, and a number of customizable settings.
 
 ### Home
 <img src="/images/home.png" height=300>
