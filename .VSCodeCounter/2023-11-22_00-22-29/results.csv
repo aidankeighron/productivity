@@ -1,0 +1,23 @@
+"filename", "language", "Markdown", "XML", "Java Properties", "Java", "comment", "blank", "total"
+"c:\Users\Billy1301\Documents\Programming\Programs\Productivity\LICENSE.md", "Markdown", 17, 0, 0, 0, 0, 5, 22
+"c:\Users\Billy1301\Documents\Programming\Programs\Productivity\README.md", "Markdown", 48, 0, 0, 0, 0, 21, 69
+"c:\Users\Billy1301\Documents\Programming\Programs\Productivity\TODO.md", "Markdown", 84, 0, 0, 0, 0, 4, 88
+"c:\Users\Billy1301\Documents\Programming\Programs\Productivity\dependency-reduced-pom.xml", "XML", 0, 45, 0, 0, 0, 1, 46
+"c:\Users\Billy1301\Documents\Programming\Programs\Productivity\pom.xml", "XML", 0, 69, 0, 0, 0, 14, 83
+"c:\Users\Billy1301\Documents\Programming\Programs\Productivity\src\main\java\com\productivity\BlockSites.java", "Java", 0, 0, 0, 186, 0, 24, 210
+"c:\Users\Billy1301\Documents\Programming\Programs\Productivity\src\main\java\com\productivity\CheckBoxes.java", "Java", 0, 0, 0, 352, 2, 27, 381
+"c:\Users\Billy1301\Documents\Programming\Programs\Productivity\src\main\java\com\productivity\Custom\AddCustomCheckList.java", "Java", 0, 0, 0, 199, 0, 23, 222
+"c:\Users\Billy1301\Documents\Programming\Programs\Productivity\src\main\java\com\productivity\Custom\CustomCheckList.java", "Java", 0, 0, 0, 90, 7, 24, 121
+"c:\Users\Billy1301\Documents\Programming\Programs\Productivity\src\main\java\com\productivity\Panels\HomePanel.java", "Java", 0, 0, 0, 73, 0, 14, 87
+"c:\Users\Billy1301\Documents\Programming\Programs\Productivity\src\main\java\com\productivity\Panels\NotesPanel.java", "Java", 0, 0, 0, 139, 0, 19, 158
+"c:\Users\Billy1301\Documents\Programming\Programs\Productivity\src\main\java\com\productivity\Panels\NotificationPanel.java", "Java", 0, 0, 0, 406, 1, 44, 451
+"c:\Users\Billy1301\Documents\Programming\Programs\Productivity\src\main\java\com\productivity\Panels\SettingsPanel.java", "Java", 0, 0, 0, 506, 6, 37, 549
+"c:\Users\Billy1301\Documents\Programming\Programs\Productivity\src\main\java\com\productivity\Panels\TimerPanel.java", "Java", 0, 0, 0, 281, 0, 16, 297
+"c:\Users\Billy1301\Documents\Programming\Programs\Productivity\src\main\java\com\productivity\Productivity.java", "Java", 0, 0, 0, 458, 5, 50, 513
+"c:\Users\Billy1301\Documents\Programming\Programs\Productivity\src\main\java\com\productivity\Util\ComponentMover.java", "Java", 0, 0, 0, 168, 120, 42, 330
+"c:\Users\Billy1301\Documents\Programming\Programs\Productivity\src\main\java\com\productivity\Util\CustomTabbedUI.java", "Java", 0, 0, 0, 70, 2, 11, 83
+"c:\Users\Billy1301\Documents\Programming\Programs\Productivity\src\main\java\com\productivity\Util\JTextFieldLimit.java", "Java", 0, 0, 0, 17, 0, 7, 24
+"c:\Users\Billy1301\Documents\Programming\Programs\Productivity\src\main\java\com\productivity\Util\Notification.java", "Java", 0, 0, 0, 16, 0, 4, 20
+"c:\Users\Billy1301\Documents\Programming\Programs\Productivity\src\main\java\com\productivity\Util\Popup.java", "Java", 0, 0, 0, 32, 0, 9, 41
+"c:\Users\Billy1301\Documents\Programming\Programs\Productivity\target\maven-archiver\pom.properties", "Java Properties", 0, 0, 3, 0, 2, 1, 6
+"Total", "-", 149, 114, 3, 2993, 145, 397, 3801

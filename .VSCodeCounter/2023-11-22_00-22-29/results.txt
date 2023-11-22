@@ -1,0 +1,60 @@
+Date : 2023-11-22 00:22:29
+Directory : c:\Users\Billy1301\Documents\Programming\Programs\Productivity
+Total : 21 files,  3259 codes, 145 comments, 397 blanks, all 3801 lines
+
+Languages
++-----------------+------------+------------+------------+------------+------------+
+| language        | files      | code       | comment    | blank      | total      |
++-----------------+------------+------------+------------+------------+------------+
+| Java            |         15 |      2,993 |        143 |        351 |      3,487 |
+| Markdown        |          3 |        149 |          0 |         30 |        179 |
+| XML             |          2 |        114 |          0 |         15 |        129 |
+| Java Properties |          1 |          3 |          2 |          1 |          6 |
++-----------------+------------+------------+------------+------------+------------+
+
+Directories
++------------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                                                         | files      | code       | comment    | blank      | total      |
++------------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                                                            |         21 |      3,259 |        145 |        397 |      3,801 |
+| . (Files)                                                                                                                    |          5 |        263 |          0 |         45 |        308 |
+| src                                                                                                                          |         15 |      2,993 |        143 |        351 |      3,487 |
+| src\main                                                                                                                     |         15 |      2,993 |        143 |        351 |      3,487 |
+| src\main\java                                                                                                                |         15 |      2,993 |        143 |        351 |      3,487 |
+| src\main\java\com                                                                                                            |         15 |      2,993 |        143 |        351 |      3,487 |
+| src\main\java\com\productivity                                                                                               |         15 |      2,993 |        143 |        351 |      3,487 |
+| src\main\java\com\productivity (Files)                                                                                       |          3 |        996 |          7 |        101 |      1,104 |
+| src\main\java\com\productivity\Custom                                                                                        |          2 |        289 |          7 |         47 |        343 |
+| src\main\java\com\productivity\Panels                                                                                        |          5 |      1,405 |          7 |        130 |      1,542 |
+| src\main\java\com\productivity\Util                                                                                          |          5 |        303 |        122 |         73 |        498 |
+| target                                                                                                                       |          1 |          3 |          2 |          1 |          6 |
+| target\maven-archiver                                                                                                        |          1 |          3 |          2 |          1 |          6 |
++------------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++------------------------------------------------------------------------------------------------------------------------------+-----------------+------------+------------+------------+------------+
+| filename                                                                                                                     | language        | code       | comment    | blank      | total      |
++------------------------------------------------------------------------------------------------------------------------------+-----------------+------------+------------+------------+------------+
+| c:\Users\Billy1301\Documents\Programming\Programs\Productivity\LICENSE.md                                                    | Markdown        |         17 |          0 |          5 |         22 |
+| c:\Users\Billy1301\Documents\Programming\Programs\Productivity\README.md                                                     | Markdown        |         48 |          0 |         21 |         69 |
+| c:\Users\Billy1301\Documents\Programming\Programs\Productivity\TODO.md                                                       | Markdown        |         84 |          0 |          4 |         88 |
+| c:\Users\Billy1301\Documents\Programming\Programs\Productivity\dependency-reduced-pom.xml                                    | XML             |         45 |          0 |          1 |         46 |
+| c:\Users\Billy1301\Documents\Programming\Programs\Productivity\pom.xml                                                       | XML             |         69 |          0 |         14 |         83 |
+| c:\Users\Billy1301\Documents\Programming\Programs\Productivity\src\main\java\com\productivity\BlockSites.java                | Java            |        186 |          0 |         24 |        210 |
+| c:\Users\Billy1301\Documents\Programming\Programs\Productivity\src\main\java\com\productivity\CheckBoxes.java                | Java            |        352 |          2 |         27 |        381 |
+| c:\Users\Billy1301\Documents\Programming\Programs\Productivity\src\main\java\com\productivity\Custom\AddCustomCheckList.java | Java            |        199 |          0 |         23 |        222 |
+| c:\Users\Billy1301\Documents\Programming\Programs\Productivity\src\main\java\com\productivity\Custom\CustomCheckList.java    | Java            |         90 |          7 |         24 |        121 |
+| c:\Users\Billy1301\Documents\Programming\Programs\Productivity\src\main\java\com\productivity\Panels\HomePanel.java          | Java            |         73 |          0 |         14 |         87 |
+| c:\Users\Billy1301\Documents\Programming\Programs\Productivity\src\main\java\com\productivity\Panels\NotesPanel.java         | Java            |        139 |          0 |         19 |        158 |
+| c:\Users\Billy1301\Documents\Programming\Programs\Productivity\src\main\java\com\productivity\Panels\NotificationPanel.java  | Java            |        406 |          1 |         44 |        451 |
+| c:\Users\Billy1301\Documents\Programming\Programs\Productivity\src\main\java\com\productivity\Panels\SettingsPanel.java      | Java            |        506 |          6 |         37 |        549 |
+| c:\Users\Billy1301\Documents\Programming\Programs\Productivity\src\main\java\com\productivity\Panels\TimerPanel.java         | Java            |        281 |          0 |         16 |        297 |
+| c:\Users\Billy1301\Documents\Programming\Programs\Productivity\src\main\java\com\productivity\Productivity.java              | Java            |        458 |          5 |         50 |        513 |
+| c:\Users\Billy1301\Documents\Programming\Programs\Productivity\src\main\java\com\productivity\Util\ComponentMover.java       | Java            |        168 |        120 |         42 |        330 |
+| c:\Users\Billy1301\Documents\Programming\Programs\Productivity\src\main\java\com\productivity\Util\CustomTabbedUI.java       | Java            |         70 |          2 |         11 |         83 |
+| c:\Users\Billy1301\Documents\Programming\Programs\Productivity\src\main\java\com\productivity\Util\JTextFieldLimit.java      | Java            |         17 |          0 |          7 |         24 |
+| c:\Users\Billy1301\Documents\Programming\Programs\Productivity\src\main\java\com\productivity\Util\Notification.java         | Java            |         16 |          0 |          4 |         20 |
+| c:\Users\Billy1301\Documents\Programming\Programs\Productivity\src\main\java\com\productivity\Util\Popup.java                | Java            |         32 |          0 |          9 |         41 |
+| c:\Users\Billy1301\Documents\Programming\Programs\Productivity\target\maven-archiver\pom.properties                          | Java Properties |          3 |          2 |          1 |          6 |
+| Total                                                                                                                        |                 |      3,259 |        145 |        397 |      3,801 |
++------------------------------------------------------------------------------------------------------------------------------+-----------------+------------+------------+------------+------------+
